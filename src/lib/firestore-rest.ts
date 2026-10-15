@@ -1,0 +1,165 @@
+/**
+ * Firestore REST API Client
+ * Provides 100% serverless cloud persistence directly over HTTPS with zero dependency on local files
+ */
+
+export const FIRESTORE_PROJECT_ID = "saas-64015";
+export const FIRESTORE_API_KEY = "AIzaSyB7nnrGVSUxVTmKw4t6qXrBVxAGbxarVvE";
+const PROJECT_ID = FIRESTORE_PROJECT_ID;
+const API_KEY = FIRESTORE_API_KEY;
+const BASE_URL = `https://firestore.googleapis.com/v1/projects/${FIRESTORE_PROJECT_ID}/databases/(default)/documents`;
+
+function toFirestoreFields(obj: Record<string, any>): Record<string, any> {
+  const fields: Record<string, any> = {};
+  for (const [key, value] of Object.entries(obj)) {
+    if (value === null || value === undefined) {
+      fields[key] = { nullValue: null };
+    } else if (typeof value === "string") {
+      fields[key] = { stringValue: value };
+    } else if (typeof value === "number") {
+      fields[key] = Number.isInteger(value) ? { integerValue: String(value) } : { doubleValue: value };
+    } else if (typeof value === "boolean") {
+      fields[key] = { booleanValue: value };
+    } else if (Array.isArray(value)) {
+      fields[key] = {
+        arrayValue: {
+          values: value.map((item) =>
+            typeof item === "string" ? { stringValue: item } : { stringValue: JSON.stringify(item) }
+          ),
+        },
+      };
+    } else if (typeof value === "object") {
+      fields[key] = { stringValue: JSON.stringify(value) };
+    }
+  }
+  return fields;
+}
+
+function fromFirestoreDoc(doc: any): any {
+  if (!doc || !doc.fields) return null;
+  const result: Record<string, any> = {};
+  const docPath = doc.name || "";
+  result.id = docPath.split("/").pop() || "";
+
+  for (const [key, valObj] of Object.entries<any>(doc.fields)) {
+    if (valObj.stringValue !== undefined) {
+      try {
+        if ((valObj.stringValue.startsWith("{") && valObj.stringValue.endsWith("}")) || (valObj.stringValue.startsWith("[") && valObj.stringValue.endsWith("]"))) {
+          result[key] = JSON.parse(valObj.stringValue);
+        } else {
+          result[key] = valObj.stringValue;
+        }
+      } catch {
+        result[key] = valObj.stringValue;
+      }
+    } else if (valObj.integerValue !== undefined) {
+      result[key] = parseInt(valObj.integerValue, 10);
+    } else if (valObj.doubleValue !== undefined) {
+      result[key] = valObj.doubleValue;
+    } else if (valObj.booleanValue !== undefined) {
+      result[key] = valObj.booleanValue;
+    } else if (valObj.arrayValue !== undefined) {
+      if (valObj.arrayValue.values && Array.isArray(valObj.arrayValue.values)) {
+        result[key] = valObj.arrayValue.values.map((v: any) => v.stringValue ?? Object.values(v)[0]);
+      } else {
+        result[key] = [];
+      }
+    } else if (valObj.nullValue !== undefined) {
+      result[key] = null;
+    }
+  }
+  return result;
+}
+
+export const FirestoreREST = {
+  async setDocument(collection: string, docId: string, data: Record<string, any>): Promise<any> {
+    try {
+      const url = `${BASE_URL}/${collection}/${encodeURIComponent(docId)}?key=${API_KEY}`;
+      const res = await fetch(url, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fields: toFirestoreFields(data) }),
+      });
+      if (!res.ok) {
+        const err = await res.text();
+        console.warn(`Firestore REST setDocument [${collection}/${docId}] error:`, res.status, err);
+        return null;
+      }
+      const json = await res.json();
+      return fromFirestoreDoc(json);
+    } catch (err) {
+      console.warn(`Firestore REST setDocument [${collection}/${docId}] fetch failed:`, err);
+      return null;
+    }
+  },
+
+  async getDocument(collection: string, docId: string): Promise<any | null> {
+    try {
+      const url = `${BASE_URL}/${collection}/${encodeURIComponent(docId)}?key=${API_KEY}`;
+      const res = await fetch(url, { cache: "no-store" });
+      if (res.status === 404) return null;
+      if (!res.ok) {
+        console.warn(`Firestore getDocument [${collection}/${docId}] error:`, res.status);
+        return null;
+      }
+      const json = await res.json();
+      return fromFirestoreDoc(json);
+    } catch (err) {
+      console.warn(`Firestore getDocument [${collection}/${docId}] fetch failed:`, err);
+      return null;
+    }
+  },
+
+  async queryDocuments(collection: string, field: string, value: string, limit = 5000): Promise<any[]> {
+    try {
+      const url = `${BASE_URL}:runQuery?key=${API_KEY}`;
+      const queryBody = {
+        structuredQuery: {
+          from: [{ collectionId: collection }],
+          where: {
+            fieldFilter: {
+              field: { fieldPath: field },
+              op: "EQUAL",
+              value: { stringValue: value },
+            },
+          },
+          limit: limit,
+        },
+      };
+
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(queryBody),
+        cache: "no-store",
+      });
+
+      if (!res.ok) return [];
+      const json = await res.json();
+      if (!Array.isArray(json)) return [];
+
+      return json
+        .filter((item) => item.document)
+        .map((item) => fromFirestoreDoc(item.document));
+    } catch {
+      return [];
+    }
+  },
+
+  async listDocuments(collection: string, limit = 50): Promise<any[]> {
+    try {
+      const url = `${BASE_URL}/${collection}?pageSize=${limit}&key=${API_KEY}`;
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) {
+        console.warn(`Firestore listDocuments [${collection}] error:`, res.status, await res.text());
+        return [];
+      }
+      const json = await res.json();
+      if (!json.documents || !Array.isArray(json.documents)) return [];
+      return json.documents.map(fromFirestoreDoc);
+    } catch (err) {
+      console.warn(`Firestore listDocuments [${collection}] fetch failed:`, err);
+      return [];
+    }
+  },
+};
