@@ -2,14 +2,14 @@ import nodemailer from "nodemailer";
 
 /**
  * Real Email Dispatch Service
- * Uses Hostinger SMTP (noreply@welurik.com) or fallback providers.
+ * Uses SMTP (e.g. Hostinger, Gmail) or Ethereal fallback.
  */
 async function getMailTransporter() {
   const smtpHost = process.env.SMTP_HOST;
   const smtpUser = process.env.SMTP_USER || process.env.SMTP_EMAIL;
   const smtpPass = process.env.SMTP_PASS || process.env.SMTP_PASSWORD;
   const smtpPort = parseInt(process.env.SMTP_PORT || "465", 10);
-  const smtpFrom = process.env.SMTP_FROM || `"Welurik Review" <noreply@welurik.com>`;
+  const smtpFrom = process.env.SMTP_FROM || `"SmartReview" <noreply@smartreview.in>`;
 
   let transporter: nodemailer.Transporter;
   let isEthereal = false;
@@ -85,7 +85,7 @@ export async function sendPasswordResetEmail({
       </head>
       <body>
         <div class="card">
-          <div class="logo">W <span style="color:#cbd5e1; font-weight:300;">|</span> Welurik Review</div>
+          <div class="logo">SmartReview <span style="color:#cbd5e1; font-weight:300;">|</span> AI Review Assistant</div>
           <div class="badge">Security Notification</div>
           <h1>Password Reset Request</h1>
           <p>Hello,</p>
@@ -100,7 +100,7 @@ export async function sendPasswordResetEmail({
           <div class="footer">
             <p>If the button above doesn't work, copy and paste this link into your browser:</p>
             <p><a href="${resetLink}" class="link-fallback">${resetLink}</a></p>
-            <p style="margin-top: 16px;">© 2026 Welurik Review • 100% Google Policy Compliant Review Assistant</p>
+            <p style="margin-top: 16px;">© 2026 SmartReview • 100% Google Policy Compliant Review Assistant</p>
           </div>
         </div>
       </body>
@@ -110,7 +110,7 @@ export async function sendPasswordResetEmail({
     const info = await transporter.sendMail({
       from: smtpFrom,
       to,
-      subject: `Reset your Welurik Review account password`,
+      subject: `Reset your SmartReview account password`,
       text: `Reset your password by opening this link in your browser: ${resetLink} (Valid for 1 hour)`,
       html: htmlContent,
     });
@@ -153,7 +153,7 @@ export async function sendFeedbackNotificationEmail({
   customerEmail,
   message,
   issueTopics = [],
-  dashboardLink = "https://review.welurik.com/feedback",
+  dashboardLink = "/feedback",
 }: {
   to: string;
   businessName: string;
@@ -203,10 +203,10 @@ export async function sendFeedbackNotificationEmail({
       </head>
       <body>
         <div class="card">
-          <div class="logo">W <span style="color:#cbd5e1; font-weight:300;">|</span> Welurik Review</div>
+          <div class="logo">SmartReview <span style="color:#cbd5e1; font-weight:300;">|</span> AI Reputation Shield</div>
           <div><span class="alert-badge">Private Feedback Alert</span></div>
           <h1>New Customer Feedback for ${safeBusinessName}</h1>
-          <p>A customer just submitted private feedback through your review funnel. Because you're using Welurik Review, this feedback was intercepted privately and <strong>was NOT posted to Google Maps</strong>.</p>
+          <p>A customer just submitted private feedback through your review funnel. Because you're using SmartReview, this feedback was intercepted privately and <strong>was NOT posted to Google Maps</strong>.</p>
           
           <div class="feedback-box">
             "${safeMessage}"
@@ -234,7 +234,7 @@ export async function sendFeedbackNotificationEmail({
           </div>
 
           <div class="footer">
-            <p>© 2026 Welurik Review • Protecting and Growing Local Business Reputations</p>
+            <p>© 2026 SmartReview • Protecting and Growing Local Business Reputations</p>
           </div>
         </div>
       </body>

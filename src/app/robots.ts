@@ -16,6 +16,6 @@ export default function robots(): MetadataRoute.Robots {
         "/admin/",
       ],
     },
-    sitemap: "https://review.welurik.com/sitemap.xml",
+    sitemap: `${process.env.NEXT_PUBLIC_APP_URL || "https://smartreview.vercel.app"}/sitemap.xml`,
   };
 }

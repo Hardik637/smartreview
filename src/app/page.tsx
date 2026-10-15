@@ -14,30 +14,28 @@ import {
   ArrowRight,
   TrendingUp,
   ChevronDown,
-  ChevronLeft,
-  ChevronRight,
   Menu,
   X,
   Copy,
   Check,
   Play,
-  Pause,
-  Volume2,
-  VolumeX
+  QrCode,
+  Layers,
+  Cpu,
+  Database,
+  Lock,
+  ExternalLink,
+  GraduationCap,
+  Github,
 } from "lucide-react";
-import WelurikLogo from "@/components/Logo";
+import Logo from "@/components/Logo";
 
 export default function LandingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [pricingDropdownOpen, setPricingDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const pricingCarouselRef = useRef<HTMLDivElement>(null);
-  const [activePricingSlide, setActivePricingSlide] = useState(0);
-  const [isPricingInteracting, setIsPricingInteracting] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [isMuted, setIsMuted] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [copiedSample, setCopiedSample] = useState(false);
 
   // Close pricing dropdown when clicking outside
   useEffect(() => {
@@ -50,248 +48,192 @@ export default function LandingPage() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Auto-scroll pricing cards carousel on mobile (< 768px)
-  useEffect(() => {
-    if (isPricingInteracting) return;
-
-    const interval = setInterval(() => {
-      if (typeof window !== "undefined" && window.innerWidth >= 768) return;
-
-      const container = pricingCarouselRef.current;
-      if (!container) return;
-
-      setActivePricingSlide((prev) => {
-        const nextSlide = (prev + 1) % 3;
-        const card = container.children[nextSlide] as HTMLElement;
-        if (card) {
-          const offsetLeft =
-            card.offsetLeft -
-            container.offsetLeft -
-            (container.clientWidth - card.clientWidth) / 2;
-          container.scrollTo({
-            left: Math.max(0, offsetLeft),
-            behavior: "smooth",
-          });
-        }
-        return nextSlide;
-      });
-    }, 3800);
-
-    return () => clearInterval(interval);
-  }, [isPricingInteracting]);
-
-  const handlePricingScroll = () => {
-    const container = pricingCarouselRef.current;
-    if (!container) return;
-    const scrollLeft = container.scrollLeft;
-    const card = container.children[0] as HTMLElement;
-    const cardWidth = card ? card.clientWidth + 20 : container.clientWidth * 0.85;
-    const index = Math.round(scrollLeft / (cardWidth || 1));
-    const clampedIndex = Math.max(0, Math.min(2, index));
-    if (clampedIndex !== activePricingSlide) {
-      setActivePricingSlide(clampedIndex);
-    }
-  };
-
-  const scrollToPricingSlide = (index: number) => {
-    setActivePricingSlide(index);
-    setIsPricingInteracting(true);
-    const container = pricingCarouselRef.current;
-    if (!container) return;
-    const card = container.children[index] as HTMLElement;
-    if (card) {
-      const offsetLeft =
-        card.offsetLeft -
-        container.offsetLeft -
-        (container.clientWidth - card.clientWidth) / 2;
-      container.scrollTo({
-        left: Math.max(0, offsetLeft),
-        behavior: "smooth",
-      });
-    }
-    setTimeout(() => setIsPricingInteracting(false), 5000);
-  };
-
-  // Video starts PAUSED - Plays with full unmuted sound when user clicks Play
-  const togglePlay = () => {
-    const video = videoRef.current;
-    if (!video) return;
-    if (video.paused) {
-      video.muted = isMuted;
-      video.volume = 1.0;
-      video.play().then(() => {
-        setIsPlaying(true);
-      }).catch((err) => {
-        console.error("Play error:", err);
-      });
-    } else {
-      video.pause();
-      setIsPlaying(false);
-    }
-  };
-
-  const toggleMute = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const video = videoRef.current;
-    if (!video) return;
-    const newMuted = !video.muted;
-    video.muted = newMuted;
-    setIsMuted(newMuted);
-  };
-
   const toggleFaq = (index: number) => {
     setOpenFaq(openFaq === index ? null : index);
   };
 
+  const handleCopySample = () => {
+    const text =
+      "Absolutely phenomenal coffee and welcoming atmosphere at The Coffee House! The specialty brew was rich and fragrant, and the artisan pastries were fresh. Exemplary customer service throughout!";
+    navigator.clipboard.writeText(text);
+    setCopiedSample(true);
+    setTimeout(() => setCopiedSample(false), 2500);
+  };
+
   const faqs = [
     {
-      q: "Does this violate Google's Review Gating policies?",
-      a: "No. Welurik Review is 100% Google policy compliant. All customers have direct access to leave a Google review regardless of their rating. We provide a private feedback option for direct feedback without restricting anyone from posting on Google.",
+      q: "What is SmartReview and what problem does it address?",
+      a: "SmartReview is an AI-powered customer review acceleration and reputation management platform developed as a college minor project. It eliminates customer 'writer's block' by providing contextual keyword-driven AI review generation for satisfied patrons, while deflecting critical complaints into private feedback channels before they harm public business ratings.",
     },
     {
-      q: "How does this boost my Google Maps (GMB) ranking?",
-      a: "Google's algorithm prioritizes businesses with frequent, detailed reviews that naturally mention key services (e.g., 'Specialty Coffee', 'Keratin Treatment', 'Ceramic Coating'). Our AI naturally weaves your configured service keywords into the customer's review, signaling local relevance to Google's ranking engine.",
+      q: "How does the AI Review Generator work?",
+      a: "When a customer rates an experience 4 or 5 stars, the system displays quick category-specific tags (e.g., 'Fresh Pastries', 'Friendly Staff', 'Fast Service'). Google Gemini AI (with a zero-cost local NLP fallback) instantaneously constructs an authentic, natural paragraph weaving in those key phrases, ready for 1-click copy to Google Reviews.",
     },
     {
-      q: "How much does the AI cost to run monthly?",
-      a: "Virtually ₹0. The system uses a high-speed hybrid engine: local NLP phrase templates that cost ₹0, backed by ultra-affordable Google Gemini Flash (~₹0.003 per generation). There are zero hidden API bills.",
+      q: "How does private feedback deflection work?",
+      a: "If a customer indicates an issue by selecting 1, 2, or 3 stars, SmartReview gracefully routes them to an internal customer satisfaction form. The complaint is stored securely in the business feedback database and alerts the business owner immediately, preventing public 1-star reviews.",
     },
     {
-      q: "Can I print standees for multiple tables or counters?",
-      a: "Yes! You get unlimited access to the Standee Studio. You can download and print high-resolution QR standees formatted for standard 4\" x 6\" acrylic frames, foldable table tents, or counter stickers for as many tables as you have.",
+      q: "Does SmartReview comply with Google Review policies?",
+      a: "Yes. SmartReview is fully policy compliant. Customers always retain access to post directly to Google Reviews if they choose, and the system never offers prohibited monetary incentives or gifts in exchange for ratings.",
     },
     {
-      q: "Is there any monthly subscription fee?",
-      a: "No monthly subscriptions or hidden charges. Choose from our transparent plans: 18 months (₹1,999), 24 months (₹2,499), or 48 months (₹3,499) with full software access and zero recurring surprises.",
+      q: "What technologies were used to engineer this project?",
+      a: "The project is engineered with Next.js 14 (App Router & Server Actions), TypeScript, Tailwind CSS, Prisma ORM (SQLite / PostgreSQL), Google Gemini AI API, Razorpay payment gateway integration, Lucide React icons, and deployed on Vercel.",
     },
   ];
 
   return (
-    <div className="neo-canvas-bg min-h-screen text-[#0C0E14] font-sans selection:bg-[#15803D] selection:text-white relative overflow-x-hidden">
-      
-      {/* Active Neo-Grid Background */}
-      <div className="neo-grid-overlay absolute inset-0 w-full h-full pointer-events-none -z-10 opacity-75" />
-      <div className="absolute top-[2%] right-[-5%] sm:right-[5%] w-[350px] sm:w-[600px] h-[350px] sm:h-[600px] bg-[#bbf7d0]/40 rounded-full blur-[100px] sm:blur-[140px] pointer-events-none -z-10" />
-      <div className="absolute top-[8%] left-[-10%] sm:left-[2%] w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-[#dcfce7]/50 rounded-full blur-[90px] sm:blur-[130px] pointer-events-none -z-10" />
-      <div className="absolute top-[50%] right-[5%] w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-[#bbf7d0]/30 rounded-full blur-[110px] pointer-events-none -z-10" />
+    <div className="academic-bg min-h-screen text-slate-900 font-sans selection:bg-[#173B67] selection:text-white relative overflow-x-hidden">
+      {/* Blueprint grid subtle pattern */}
+      <div className="academic-grid absolute inset-0 w-full h-full pointer-events-none -z-10 opacity-80" />
+
+      {/* Ambient background soft glow */}
+      <div className="absolute top-0 right-[10%] w-[500px] h-[500px] bg-[#3478C8]/10 rounded-full blur-[140px] pointer-events-none -z-10" />
+      <div className="absolute top-[35%] left-[5%] w-[450px] h-[450px] bg-[#173B67]/8 rounded-full blur-[130px] pointer-events-none -z-10" />
+
+      {/* Top Academic Banner */}
+      <div className="w-full bg-[#173B67] text-white text-xs py-2 px-4 text-center font-medium border-b border-[#235FA9]/40 flex items-center justify-center gap-2">
+        <GraduationCap className="w-4 h-4 text-[#93C5FD]" />
+        <span>
+          <strong>College Minor Project:</strong> SmartReview — AI-Powered Customer Review Management System by Hardik
+        </span>
+        <a
+          href="https://github.com/Hardik637/smartreview"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hidden sm:inline-flex items-center gap-1 text-[#BFDBFE] hover:text-white underline ml-2 text-[11px]"
+        >
+          <Github className="w-3 h-3" /> GitHub Repo
+        </a>
+      </div>
 
       {/* 
         ========================================================================
-        FLOATING STADIUM PILL NAVBAR
+        NAVBAR
         ========================================================================
       */}
-      <div className="w-full max-w-[1080px] mx-auto px-3.5 sm:px-4 pt-3.5 sm:pt-6 z-40 relative">
-        <motion.header
-          initial={{ y: -25, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full bg-white border-2 border-black rounded-full px-3.5 sm:px-6 py-1.5 sm:py-2.5 shadow-[3px_3px_0px_#000000] sm:shadow-[4px_4px_0px_#000000] flex items-center justify-between"
-        >
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 pt-4 sm:pt-6 z-40 relative">
+        <header className="w-full bg-white/95 backdrop-blur-md border border-slate-200/80 rounded-2xl px-4 sm:px-6 py-3 shadow-subtle flex items-center justify-between">
           {/* Brand Logo */}
-          <Link href="/" className="group hover:opacity-90 transition-opacity flex items-center">
-            <WelurikLogo className="h-7 sm:h-9" />
+          <Link href="/" className="flex items-center">
+            <Logo height={34} />
           </Link>
 
           {/* Desktop Nav Links */}
-          <nav className="hidden md:flex items-center gap-7 text-[13.5px] font-semibold text-slate-700">
-            <Link href="/#how-it-works" className="hover:text-black transition-colors">How It Works</Link>
-            <Link href="/#features" className="hover:text-black transition-colors">Features</Link>
-            <Link href="/#pricing" className="hover:text-black transition-colors">Pricing</Link>
-            <Link href="/#faq" className="hover:text-black transition-colors">FAQ</Link>
-            <Link href="/r/the-coffee-house" className="text-[#15803D] font-bold hover:text-[#166534] transition-colors">Demo</Link>
-            <Link href="/dashboard" className="hover:text-black transition-colors">Admin Dashboard</Link>
+          <nav className="hidden md:flex items-center gap-7 text-[13.5px] font-semibold text-slate-600">
+            <a href="#how-it-works" className="hover:text-[#173B67] transition-colors">How It Works</a>
+            <a href="#features" className="hover:text-[#173B67] transition-colors">Features</a>
+            <a href="#architecture" className="hover:text-[#173B67] transition-colors">Architecture</a>
+            <a href="#pricing" className="hover:text-[#173B67] transition-colors">Pricing</a>
+            <a href="#faq" className="hover:text-[#173B67] transition-colors">FAQ</a>
+            <Link
+              href="/r/the-coffee-house"
+              className="text-[#3478C8] font-bold hover:text-[#173B67] transition-colors flex items-center gap-1"
+            >
+              <Play className="w-3 h-3 fill-current" /> Live Demo
+            </Link>
           </nav>
 
-          {/* Action / Auth Buttons */}
+          {/* Auth & Action Buttons */}
           <div className="flex items-center gap-2 sm:gap-3">
             <Link
+              href="/dashboard"
+              className="hidden lg:inline-flex text-xs font-semibold text-slate-700 hover:text-[#173B67] px-3 py-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+            >
+              Dashboard
+            </Link>
+            <Link
               href="/login"
-              className="text-sm sm:text-[15px] font-black text-black hover:text-slate-600 transition-colors px-2.5 py-1.5"
+              className="text-xs sm:text-[13px] font-bold text-[#173B67] hover:text-[#235FA9] px-3 py-1.5 transition-colors"
             >
               Sign In
             </Link>
 
-            {/* Desktop Only: Get Started Button with tactile spring */}
-            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-              <Link
-                href="/signup"
-                className="hidden md:inline-flex text-[13px] font-bold text-white bg-black hover:bg-neutral-800 px-5 py-2 rounded-full border border-black shadow-[2px_2px_0px_#000000] transition-all"
-              >
-                Get Started
-              </Link>
-            </motion.div>
+            <Link
+              href="/signup"
+              className="text-xs sm:text-[13px] font-bold text-white bg-[#173B67] hover:bg-[#1C4982] px-4 sm:px-5 py-2 rounded-xl shadow-subtle hover:shadow transition-all"
+            >
+              Get Started
+            </Link>
 
             {/* Mobile Hamburger Toggle */}
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-1 text-black hover:bg-slate-100 rounded-full transition-colors"
+              className="md:hidden p-1.5 text-slate-700 hover:bg-slate-100 rounded-lg transition-colors"
               aria-label="Toggle navigation menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
-        </motion.header>
+        </header>
 
         {/* Mobile Dropdown Drawer */}
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
-              initial={{ opacity: 0, y: -10, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -10, scale: 0.98 }}
-              transition={{ duration: 0.2 }}
-              className="md:hidden absolute top-full left-3.5 right-3.5 mt-2 bg-white border-2 border-black rounded-3xl p-4 sm:p-5 shadow-[4px_4px_0px_#000000] space-y-2.5 z-50"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              className="md:hidden absolute top-full left-4 right-4 mt-2 bg-white border border-slate-200 rounded-2xl p-5 shadow-elevated space-y-3 z-50"
             >
-              <Link
-                href="/#how-it-works"
+              <a
+                href="#how-it-works"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block py-1 text-sm font-bold text-black"
+                className="block text-sm font-semibold text-slate-800"
               >
                 How It Works
-              </Link>
-              <Link
-                href="/#features"
+              </a>
+              <a
+                href="#features"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block py-1 text-sm font-bold text-black"
+                className="block text-sm font-semibold text-slate-800"
               >
                 Features
-              </Link>
-              <Link
-                href="/#pricing"
+              </a>
+              <a
+                href="#architecture"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block py-1 text-sm font-bold text-black"
+                className="block text-sm font-semibold text-slate-800"
               >
-                Pricing
-              </Link>
-              <Link
-                href="/#faq"
+                System Architecture
+              </a>
+              <a
+                href="#pricing"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block py-1 text-sm font-bold text-black"
+                className="block text-sm font-semibold text-slate-800"
               >
-                FAQ
-              </Link>
+                Pricing Plans
+              </a>
+              <a
+                href="#faq"
+                onClick={() => setMobileMenuOpen(false)}
+                className="block text-sm font-semibold text-slate-800"
+              >
+                Project FAQ
+              </a>
               <Link
                 href="/r/the-coffee-house"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block py-1 text-sm font-bold text-[#15803D]"
+                className="block text-sm font-bold text-[#3478C8]"
               >
-                Customer Demo Funnel
+                Try Customer Demo Funnel
               </Link>
               <Link
                 href="/dashboard"
                 onClick={() => setMobileMenuOpen(false)}
-                className="block py-1 text-sm font-bold text-black"
+                className="block text-sm font-semibold text-slate-800"
               >
                 Admin Dashboard
               </Link>
-              <div className="pt-2 border-t-2 border-black/10 flex flex-col gap-2">
+              <div className="pt-3 border-t border-slate-100 flex flex-col gap-2">
                 <Link
-                  href="/#pricing"
+                  href="/signup"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="w-full py-2.5 text-center text-xs font-bold text-white bg-[#15803D] border-2 border-black rounded-full shadow-[2px_2px_0px_#000000]"
+                  className="w-full py-2.5 text-center text-xs font-bold text-white bg-[#173B67] rounded-xl shadow-subtle"
                 >
-                  View Plans (From ₹1,999)
+                  Create Business Account
                 </Link>
               </div>
             </motion.div>
@@ -301,283 +243,198 @@ export default function LandingPage() {
 
       {/* 
         ========================================================================
-        HERO SECTION (Optimized Mobile Flow + Desktop Power)
+        HERO SECTION
         ========================================================================
       */}
-      <section className="w-full max-w-[1140px] mx-auto px-4 sm:px-8 pt-12 sm:pt-16 md:pt-20 pb-10 sm:pb-20 relative z-10">
-        
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-10 items-center">
+      <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 pt-12 sm:pt-16 md:pt-20 pb-16 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           
-          {/* LEFT COLUMN: Typography & CTAs (Tight & Punchy on Mobile) */}
-          <div className="lg:col-span-7 space-y-4 sm:space-y-6 text-center lg:text-left pr-0 lg:pr-4">
-            
-            {/* Headline */}
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-[26px] xs:text-[34px] sm:text-5xl lg:text-[60px] font-black text-black tracking-[-0.035em] leading-[1.1] sm:leading-[1.04]"
-            >
-              Turn Happy Customers <br className="hidden xs:inline" />
-              into <span className="text-[#15803D] underline decoration-4 decoration-[#15803D]/30">5-Star Reviews</span>
-            </motion.h1>
+          {/* LEFT COLUMN: Title & Value Proposition */}
+          <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
+            {/* Academic Badge */}
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 shadow-subtle text-xs font-semibold text-slate-700">
+              <span className="w-2 h-2 rounded-full bg-[#3478C8] animate-pulse" />
+              <span>College Minor Project • AI & Cloud Architecture</span>
+            </div>
 
-            {/* Subtitle */}
-            <motion.p
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="text-[13px] sm:text-base lg:text-[17px] text-slate-700 font-medium leading-[1.5] sm:leading-[1.6] max-w-[510px] mx-auto lg:mx-0"
-            >
-              AI-powered QR standees that eliminate customer writer's block and multiply your Google Maps reviews in 30 seconds.
-            </motion.p>
+            {/* Main Headline */}
+            <h1 className="text-3xl sm:text-5xl lg:text-[54px] font-black text-slate-900 tracking-tight leading-[1.12]">
+              AI-Powered Customer <br />
+              <span className="text-[#173B67]">Review Acceleration</span> & <br />
+              <span className="text-[#3478C8]">Feedback Deflection</span>
+            </h1>
 
-            {/* Visual Standee Card for Mobile & Tablet */}
-            <div className="lg:hidden p-3 bg-gradient-to-r from-emerald-50 via-white to-amber-50 rounded-2xl border-2 border-black shadow-[3px_3px_0px_#000000] flex items-center gap-3 text-left my-2">
-              <img
-                src="/images/hero-standee-badge.jpg"
-                alt="4x6 Table Standee"
-                className="w-16 h-16 rounded-xl border-2 border-black object-cover shrink-0 shadow-[1px_1px_0px_#000000]"
-              />
-              <div className="min-w-0 flex-1 space-y-0.5">
-                <div className="flex items-center gap-1">
-                  <span className="text-[9.5px] font-black uppercase tracking-wider bg-[#15803D] text-white px-2 py-0.5 rounded-md">
-                    Print-Ready
-                  </span>
-                </div>
-                <p className="text-xs font-black text-slate-900 truncate">4" x 6" Acrylic Table Standee</p>
-                <p className="text-[10.5px] text-slate-600 font-medium">Place on tables or billing counter • Scan in 30s</p>
+            {/* Description */}
+            <p className="text-base sm:text-lg text-slate-600 font-medium leading-relaxed max-w-xl mx-auto lg:mx-0">
+              Turn satisfied visitors into articulate 5-star Google Reviews with generative AI assistance, while deflecting critical feedback into a private resolution channel.
+            </p>
+
+            {/* Key Value Badges */}
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 text-xs font-semibold text-slate-600 pt-1">
+              <div className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-[#3478C8]" />
+                <span>Zero Review Writer’s Block</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-[#3478C8]" />
+                <span>Private Feedback Gatekeeping</span>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-[#3478C8]" />
+                <span>Printable QR Standees</span>
               </div>
             </div>
 
-            {/* Clean Mobile & Desktop CTAs with Tactile Spring Interaction */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-              className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-3 sm:gap-4 pt-1.5"
-            >
-              {/* Dropdown Menu for First Pricing Place */}
-              <div className="relative w-full sm:w-auto" ref={dropdownRef}>
-                <motion.div
-                  whileHover={{ scale: 1.03, y: -2 }}
-                  whileTap={{ scale: 0.97, y: 1 }}
-                  className="w-full sm:w-auto"
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-3.5 pt-3">
+              {/* Primary Call to Action */}
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  type="button"
+                  onClick={() => setPricingDropdownOpen(!pricingDropdownOpen)}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-[#173B67] hover:bg-[#1C4982] text-white rounded-xl text-sm font-bold shadow-subtle hover:shadow transition-all"
                 >
-                  <button
-                    type="button"
-                    onClick={() => setPricingDropdownOpen(!pricingDropdownOpen)}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 sm:px-8 py-3.5 sm:py-4 bg-[#15803D] hover:bg-[#166534] text-white rounded-full text-sm sm:text-[15px] font-black border-2 border-black shadow-[3px_3px_0px_#000000] sm:shadow-[4px_4px_0px_#000000] transition-all cursor-pointer text-center"
-                    aria-expanded={pricingDropdownOpen}
-                    aria-haspopup="true"
-                  >
-                    <span>Get this at 1,999</span>
-                    <ChevronDown
-                      className={`w-4 h-4 transition-transform duration-200 ${
-                        pricingDropdownOpen ? "rotate-180" : ""
-                      }`}
-                    />
-                  </button>
-                </motion.div>
+                  <span>Explore Subscription Plans</span>
+                  <ChevronDown className={`w-4 h-4 transition-transform ${pricingDropdownOpen ? "rotate-180" : ""}`} />
+                </button>
 
-                {/* Dropdown Options Popover */}
+                {/* Popover Options */}
                 <AnimatePresence>
                   {pricingDropdownOpen && (
                     <motion.div
-                      initial={{ opacity: 0, y: 8, scale: 0.96 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 8, scale: 0.96 }}
-                      transition={{ duration: 0.18, ease: "easeOut" }}
-                      className="absolute left-0 sm:left-0 right-0 sm:right-auto sm:w-[320px] mt-2.5 bg-white border-2 border-black rounded-2xl p-2.5 shadow-[5px_5px_0px_#000000] z-50 space-y-1.5 text-left"
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 8 }}
+                      className="absolute left-0 right-0 sm:right-auto sm:w-72 mt-2 bg-white border border-slate-200 rounded-xl p-2.5 shadow-elevated z-50 space-y-1.5 text-left"
                     >
-                      {/* Option 1: At 1,999 for 18 months */}
                       <Link
                         href="/signup?plan=18m"
                         onClick={() => setPricingDropdownOpen(false)}
-                        className="group flex items-center justify-between p-3 rounded-xl hover:bg-emerald-50 border border-transparent hover:border-black/10 transition-all cursor-pointer"
+                        className="block p-2.5 rounded-lg hover:bg-slate-50 transition-colors"
                       >
-                        <div>
-                          <p className="text-xs sm:text-[13px] font-black text-black group-hover:text-[#15803D] transition-colors">
-                            At 1,999 for 18 months
-                          </p>
-                          <p className="text-[11px] text-slate-500 font-semibold">
-                            ₹111/mo • 18 Months License
-                          </p>
-                        </div>
-                        <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-[#15803D] group-hover:translate-x-1 transition-all shrink-0" />
+                        <p className="text-xs font-bold text-slate-900">Standard Plan • ₹1,999</p>
+                        <p className="text-[11px] text-slate-500">18 Months License • QR & AI</p>
                       </Link>
-
-                      {/* Option 2: At 2,499 for 24 months */}
                       <Link
                         href="/signup?plan=24m"
                         onClick={() => setPricingDropdownOpen(false)}
-                        className="group flex items-center justify-between p-3 rounded-xl bg-emerald-50/70 hover:bg-emerald-100/70 border border-[#15803D]/30 transition-all cursor-pointer relative"
+                        className="block p-2.5 rounded-lg bg-blue-50/60 hover:bg-blue-50 transition-colors border border-blue-100"
                       >
-                        <div>
-                          <div className="flex items-center gap-1.5 mb-0.5">
-                            <span className="text-[9.5px] font-black uppercase tracking-wider bg-[#15803D] text-white px-1.5 py-0.2 rounded">
-                              Most Popular
-                            </span>
-                            <span className="text-[10px] font-bold text-emerald-800">Best Value</span>
-                          </div>
-                          <p className="text-xs sm:text-[13px] font-black text-black group-hover:text-[#15803D] transition-colors">
-                            At 2,499 for 24 months
-                          </p>
-                          <p className="text-[11px] text-slate-600 font-semibold">
-                            ₹104/mo • 2 Full Years
-                          </p>
+                        <div className="flex items-center justify-between">
+                          <p className="text-xs font-bold text-[#173B67]">Pro Plan • ₹2,499</p>
+                          <span className="text-[9px] font-bold uppercase tracking-wider bg-[#3478C8] text-white px-1.5 py-0.5 rounded">Popular</span>
                         </div>
-                        <ArrowRight className="w-4 h-4 text-[#15803D] group-hover:translate-x-1 transition-all shrink-0" />
+                        <p className="text-[11px] text-slate-600">24 Months License • Unlimited Standees</p>
                       </Link>
-
-                      {/* Option 3: At 3,499 for 48 months */}
                       <Link
                         href="/signup?plan=48m"
                         onClick={() => setPricingDropdownOpen(false)}
-                        className="group flex items-center justify-between p-3 rounded-xl hover:bg-emerald-50 border border-transparent hover:border-black/10 transition-all cursor-pointer"
+                        className="block p-2.5 rounded-lg hover:bg-slate-50 transition-colors"
                       >
-                        <div>
-                          <div className="flex items-center gap-1.5 mb-0.5">
-                            <span className="text-[9.5px] font-black uppercase tracking-wider bg-black text-white px-1.5 py-0.2 rounded">
-                              Max Savings
-                            </span>
-                            <span className="text-[10px] font-bold text-slate-700">₹72/mo only</span>
-                          </div>
-                          <p className="text-xs sm:text-[13px] font-black text-black group-hover:text-[#15803D] transition-colors">
-                            At 3,499 for 48 months
-                          </p>
-                          <p className="text-[11px] text-slate-500 font-semibold">
-                            ₹72/mo • 4 Full Years
-                          </p>
-                        </div>
-                        <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-[#15803D] group-hover:translate-x-1 transition-all shrink-0" />
+                        <p className="text-xs font-bold text-slate-900">Enterprise Plan • ₹3,499</p>
+                        <p className="text-[11px] text-slate-500">48 Months License • Multi-Counter</p>
                       </Link>
-
-                      <div className="pt-2 border-t border-black/10 flex items-center justify-between px-2 text-[11px]">
-                        <a
-                          href="#pricing"
-                          onClick={() => setPricingDropdownOpen(false)}
-                          className="font-bold text-slate-600 hover:text-black underline underline-offset-2 flex items-center gap-1"
-                        >
-                          Compare all 3 plans ↓
-                        </a>
-                        <span className="text-slate-400 font-medium">Instant Activation</span>
-                      </div>
                     </motion.div>
                   )}
                 </AnimatePresence>
               </div>
 
-              <motion.div
-                whileHover={{ scale: 1.03, y: -2 }}
-                whileTap={{ scale: 0.97, y: 1 }}
-                className="w-full sm:w-auto"
+              {/* Demo button */}
+              <Link
+                href="/r/the-coffee-house"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-white hover:bg-slate-50 text-slate-800 rounded-xl text-sm font-bold border border-slate-300 shadow-subtle transition-all"
               >
-                <Link
-                  href="/r/the-coffee-house"
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 sm:py-3.5 bg-white hover:bg-slate-50 text-black rounded-full text-xs sm:text-sm font-bold border-2 border-black shadow-[2px_2px_0px_#000000] sm:shadow-[4px_4px_0px_#000000] transition-shadow text-center"
-                >
-                  <Play className="w-3 h-3 fill-black text-black" /> Try Customer Demo
-                </Link>
-              </motion.div>
-            </motion.div>
-
+                <Play className="w-3.5 h-3.5 fill-current text-[#3478C8]" />
+                <span>Test Live Customer Funnel</span>
+              </Link>
+            </div>
           </div>
 
-          {/* RIGHT COLUMN: Interactive Smartphone Mockup + Standee Floating Card */}
-          <div className="lg:col-span-5 flex flex-col items-center justify-center relative pt-2 sm:py-4">
-            
-            {/* Background Standee Real Photo Preview Card with Gentle Ambient Floating Animation */}
-            <motion.div
-              animate={{ y: [-4, 6, -4], rotate: [6, 4, 6] }}
-              transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
-              whileHover={{ rotate: 0, scale: 1.05 }}
-              className="hidden xl:block absolute -top-6 -right-10 w-44 rounded-2xl border-2 border-black bg-white p-1.5 shadow-[4px_4px_0px_#000000] z-20 transition-all duration-300 cursor-pointer"
-            >
-              <img
-                src="/images/standee-cafe-counter.jpg"
-                alt="Acrylic QR Table Standee"
-                className="w-full h-28 object-cover rounded-xl"
-              />
-              <p className="text-[9px] font-black text-black pt-1 px-1 text-center">4"x6" Acrylic Standee</p>
-            </motion.div>
-            
-            {/* Phone Frame */}
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="w-full max-w-[280px] xs:max-w-[300px] sm:max-w-[320px] bg-black p-2 sm:p-2.5 rounded-[42px] sm:rounded-[48px] border-[3px] sm:border-[3.5px] border-black relative z-10 select-none shadow-[6px_6px_0px_#000000] sm:shadow-[8px_8px_0px_#000000] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[10px_10px_0px_#000000] transition-all group"
-            >
-              {/* Inside Screen Container with 9:16 Aspect Ratio */}
-              <div className="relative aspect-[9/16] w-full overflow-hidden rounded-[34px] sm:rounded-[38px] bg-slate-950 flex items-center justify-center">
-                
-                {/* Dynamic Island */}
-                <div className="absolute top-2 sm:top-2.5 left-1/2 -translate-x-1/2 z-30 pointer-events-none">
-                  <div className="w-[74px] sm:w-[82px] h-[16px] sm:h-[18px] bg-black rounded-full flex items-center justify-between px-2.5 shadow-md border border-white/10">
-                    <div className="w-2.5 h-2.5 rounded-full bg-slate-900 border border-slate-700/60" />
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          {/* RIGHT COLUMN: Interactive System Preview Card */}
+          <div className="lg:col-span-5">
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-card space-y-4">
+              {/* Header */}
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-[#173B67]/10 flex items-center justify-center text-[#173B67]">
+                    <Sparkles className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h3 className="text-xs font-black uppercase tracking-wider text-[#173B67]">SmartReview AI Engine</h3>
+                    <p className="text-[11px] text-slate-500 font-medium">Interactive Prototype Preview</p>
+                  </div>
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                  Ready
+                </span>
+              </div>
+
+              {/* Simulated Customer Experience */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-semibold text-slate-700">Customer Rating</span>
+                  <div className="flex text-amber-400">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <Star key={i} className="w-4 h-4 fill-amber-400" />
+                    ))}
                   </div>
                 </div>
 
-                {/* Video Player - Paused by Default */}
-                <video
-                  ref={videoRef}
-                  src="/video/welurik-demo.mp4"
-                  poster="/video/welurik-demo-poster.jpg"
-                  loop
-                  playsInline
-                  preload="none"
-                  onClick={togglePlay}
-                  onPlay={() => setIsPlaying(true)}
-                  onPause={() => setIsPlaying(false)}
-                  className="w-full h-full object-cover object-center cursor-pointer"
-                />
-
-                {/* Play Button Overlay when Paused */}
-                {!isPlaying && (
-                  <div 
-                    onClick={togglePlay}
-                    className="absolute inset-0 bg-black/40 backdrop-blur-[2px] flex flex-col items-center justify-center cursor-pointer z-20 transition-opacity group/play"
-                  >
-                    <motion.div
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="w-14 h-14 rounded-full bg-white text-black flex items-center justify-center shadow-2xl border-2 border-black"
-                    >
-                      <Play className="w-6 h-6 fill-black ml-0.5" />
-                    </motion.div>
-                    <span className="mt-2.5 text-[11px] font-black text-white bg-black/80 px-3 py-1 rounded-full border border-white/20 shadow-md">
-                      Watch Live Demo 🔊
-                    </span>
+                {/* Selected Keyword Tags */}
+                <div>
+                  <span className="text-[11px] font-semibold text-slate-500 block mb-1.5">Selected Tags:</span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {["Specialty Coffee", "Artisan Pastries", "Cozy Ambience", "Fast WiFi"].map((tag) => (
+                      <span
+                        key={tag}
+                        className="text-[11px] font-semibold bg-[#F0F4F9] text-[#173B67] border border-[#C3D3E7] px-2.5 py-1 rounded-lg"
+                      >
+                        ✓ {tag}
+                      </span>
+                    ))}
                   </div>
-                )}
+                </div>
 
-                {/* Floating Bottom Mute/Unmute Control (Defaults to Unmuted, option to mute) */}
-                <div className="absolute bottom-3 right-3 z-20 pointer-events-auto">
+                {/* AI Review Output Box */}
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-2">
+                  <div className="flex items-center justify-between text-[11px]">
+                    <span className="font-bold text-[#173B67] flex items-center gap-1">
+                      <Sparkles className="w-3 h-3 text-[#3478C8]" /> Generated Draft
+                    </span>
+                    <span className="text-slate-400">Tone: Natural</span>
+                  </div>
+                  <p className="text-xs text-slate-700 leading-relaxed italic">
+                    &quot;Absolutely phenomenal coffee and welcoming atmosphere at The Coffee House! The specialty brew was rich and fragrant, and the artisan pastries were fresh. Exemplary customer service throughout!&quot;
+                  </p>
+                </div>
+
+                {/* Action button in preview */}
+                <div className="flex items-center gap-2 pt-1">
                   <button
                     type="button"
-                    onClick={toggleMute}
-                    className="px-2.5 py-1.5 rounded-full bg-black/80 backdrop-blur-md text-white flex items-center gap-1.5 hover:bg-black hover:scale-105 transition-all border border-white/20 shadow-md cursor-pointer text-[11px] font-bold"
-                    title={isMuted ? "Unmute Sound" : "Mute Sound"}
+                    onClick={handleCopySample}
+                    className="flex-1 py-2.5 px-3 bg-[#173B67] hover:bg-[#1C4982] text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
                   >
-                    {isMuted ? (
+                    {copiedSample ? (
                       <>
-                        <VolumeX className="w-3.5 h-3.5 text-rose-400" />
-                        <span>Mute</span>
+                        <Check className="w-3.5 h-3.5 text-emerald-300" /> Copied to Clipboard!
                       </>
                     ) : (
                       <>
-                        <Volume2 className="w-3.5 h-3.5 text-emerald-400" />
-                        <span>Sound On</span>
+                        <Copy className="w-3.5 h-3.5" /> 1-Click Copy & Go to Google
                       </>
                     )}
                   </button>
+                  <Link
+                    href="/r/the-coffee-house"
+                    className="p-2.5 border border-slate-200 rounded-xl hover:bg-slate-50 text-slate-600 transition-colors"
+                    title="Open live funnel"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                  </Link>
                 </div>
-
               </div>
-            </motion.div>
-
+            </div>
           </div>
 
         </div>
@@ -585,625 +442,323 @@ export default function LandingPage() {
 
       {/* 
         ========================================================================
-        HOW IT WORKS (3 Simple Steps)
+        HOW IT WORKS: 3-STEP PIPELINE
         ========================================================================
       */}
-      <section id="how-it-works" className="py-14 sm:py-20 px-4 sm:px-8 max-w-6xl mx-auto space-y-10 sm:space-y-14">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.5 }}
-          className="text-center space-y-2.5 max-w-xl mx-auto"
-        >
-          <span className="text-xs font-black text-[#15803D] uppercase tracking-widest bg-[#dcfce7] px-3.5 py-1 rounded-full border-2 border-black shadow-[2px_2px_0px_#000000] inline-block">
-            zero friction
-          </span>
-          <h2 className="text-2xl sm:text-4xl font-black text-black tracking-tight">
-            How It Works in 3 Simple Steps
-          </h2>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Step 1 Card with Photo */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.45, delay: 0.1 }}
-            whileHover={{ y: -6, transition: { duration: 0.2 } }}
-            className="bg-white p-6 rounded-[28px] border-2 border-black shadow-[4px_4px_0px_#000000] hover:shadow-[6px_6px_0px_#000000] transition-shadow space-y-4 flex flex-col justify-between overflow-hidden"
-          >
-            <div className="space-y-3">
-              <div className="w-10 h-10 bg-black text-white border-2 border-black rounded-xl flex items-center justify-center font-black text-sm shadow-[2px_2px_0px_#000000]">
-                1
-              </div>
-              <h3 className="text-base font-black text-black">Scan Table Standee</h3>
-              <p className="text-xs text-slate-600 font-medium leading-relaxed">
-                Place sleek 4" x 6" acrylic standees on tables, reception counters, or billing desks. Customers simply scan with their phone camera.
-              </p>
-            </div>
-            <div className="relative rounded-2xl border-2 border-black overflow-hidden shadow-[2px_2px_0px_#000000] mt-2 group">
-              <img
-                src="/images/standee-cafe-counter.jpg"
-                alt="Acrylic QR standee on cafe table"
-                className="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute bottom-2 left-2 bg-black/80 text-white text-[10px] font-bold px-2 py-0.5 rounded-md backdrop-blur-xs">
-                In-Store Table Tent
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Step 2 Card with Photo */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.45, delay: 0.2 }}
-            whileHover={{ y: -6, transition: { duration: 0.2 } }}
-            className="bg-white p-6 rounded-[28px] border-2 border-black shadow-[4px_4px_0px_#000000] hover:shadow-[6px_6px_0px_#000000] transition-shadow space-y-4 flex flex-col justify-between overflow-hidden"
-          >
-            <div className="space-y-3">
-              <div className="w-10 h-10 bg-[#15803D] text-white border-2 border-black rounded-xl flex items-center justify-center font-black text-sm shadow-[2px_2px_0px_#000000]">
-                2
-              </div>
-              <h3 className="text-base font-black text-black">Tap What They Loved</h3>
-              <p className="text-xs text-slate-600 font-medium leading-relaxed">
-                Customers tap simple pills (e.g. "Great Coffee", "Fast Wi-Fi"). AI instantly crafts a genuine, polite, keyword-rich 5-star review.
-              </p>
-            </div>
-            <div className="relative rounded-2xl border-2 border-black overflow-hidden shadow-[2px_2px_0px_#000000] mt-2 group">
-              <img
-                src="/images/step2-ai-tap.jpg"
-                alt="Customer selecting experience pills on mobile phone"
-                className="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute bottom-2 left-2 bg-[#15803D] text-white text-[10px] font-black px-2.5 py-0.5 rounded-md border border-black shadow-[1px_1px_0px_#000000]">
-                AI 5-Star Generator
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Step 3 Card with Photo */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.45, delay: 0.3 }}
-            whileHover={{ y: -6, transition: { duration: 0.2 } }}
-            className="bg-white p-6 rounded-[28px] border-2 border-black shadow-[4px_4px_0px_#000000] hover:shadow-[6px_6px_0px_#000000] transition-shadow space-y-4 flex flex-col justify-between overflow-hidden"
-          >
-            <div className="space-y-3">
-              <div className="w-10 h-10 bg-black text-white border-2 border-black rounded-xl flex items-center justify-center font-black text-sm shadow-[2px_2px_0px_#000000]">
-                3
-              </div>
-              <h3 className="text-base font-black text-black">1-Tap Google Post</h3>
-              <p className="text-xs text-slate-600 font-medium leading-relaxed">
-                The review copies to clipboard and instantly redirects to your Google Business profile. The customer pastes and submits in 5 seconds!
-              </p>
-            </div>
-            <div className="relative rounded-2xl border-2 border-black overflow-hidden shadow-[2px_2px_0px_#000000] mt-2 group">
-              <img
-                src="/images/step3-google-post.jpg"
-                alt="5-star Google review posted on mobile phone"
-                className="w-full h-44 object-cover group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute bottom-2 left-2 bg-emerald-700 text-white text-[10px] font-black px-2.5 py-0.5 rounded-md border border-black shadow-[1px_1px_0px_#000000]">
-                Verified Google Review
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* 
-        ========================================================================
-        BENTO GRID FEATURES
-        ========================================================================
-      */}
-      <section id="features" className="py-14 sm:py-20 px-4 sm:px-8 max-w-6xl mx-auto space-y-10 sm:space-y-14 border-t-2 border-black/10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.5 }}
-          className="text-center space-y-2 max-w-xl mx-auto"
-        >
-          <span className="text-xs font-black text-slate-500 uppercase tracking-widest">
-            powerful architecture
-          </span>
-          <h2 className="text-2xl sm:text-4xl font-black text-black tracking-tight">
-            Everything You Need To Dominate Google Maps
-          </h2>
-        </motion.div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-          {/* Feature 1 */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.4, delay: 0.05 }}
-            whileHover={{ y: -5, transition: { duration: 0.2 } }}
-            className="bg-white p-6 rounded-[24px] border-2 border-black shadow-[4px_4px_0px_#000000] space-y-3 flex flex-col justify-between"
-          >
-            <div className="space-y-2.5">
-              <div className="w-9 h-9 bg-slate-100 border-2 border-black rounded-xl flex items-center justify-center text-black">
-                <Printer className="w-4 h-4" />
-              </div>
-              <h3 className="text-sm sm:text-base font-black text-black">Standee & Table Tent Studio</h3>
-              <ul className="space-y-1.5 text-xs text-slate-700 font-medium">
-                <li className="flex items-start gap-2">
-                  <span className="text-[#15803D] font-bold">✓</span>
-                  <span>Ready-to-print 4" x 6" acrylic standee templates</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#15803D] font-bold">✓</span>
-                  <span>Foldable table tents & counter register badges</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#15803D] font-bold">✓</span>
-                  <span>Instant high-resolution vector QR code export</span>
-                </li>
-              </ul>
-            </div>
-          </motion.div>
-
-          {/* Feature 2 */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.4, delay: 0.1 }}
-            whileHover={{ y: -5, transition: { duration: 0.2 } }}
-            className="bg-white p-6 rounded-[24px] border-2 border-black shadow-[4px_4px_0px_#000000] space-y-3 flex flex-col justify-between"
-          >
-            <div className="space-y-2.5">
-              <div className="w-9 h-9 bg-amber-50 border-2 border-black rounded-xl flex items-center justify-center text-amber-600">
-                <TrendingUp className="w-4 h-4" />
-              </div>
-              <h3 className="text-sm sm:text-base font-black text-black">Target Keyword SEO Booster</h3>
-              <ul className="space-y-1.5 text-xs text-slate-700 font-medium">
-                <li className="flex items-start gap-2">
-                  <span className="text-[#15803D] font-bold">✓</span>
-                  <span>Naturally weaves your services into review text</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#15803D] font-bold">✓</span>
-                  <span>Helps rank in Google's Top 3 Local Map Pack</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#15803D] font-bold">✓</span>
-                  <span>Brings more nearby customers from Google searches</span>
-                </li>
-              </ul>
-            </div>
-          </motion.div>
-
-          {/* Feature 3 */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.4, delay: 0.15 }}
-            whileHover={{ y: -5, transition: { duration: 0.2 } }}
-            className="bg-white p-6 rounded-[24px] border-2 border-black shadow-[4px_4px_0px_#000000] space-y-3 flex flex-col justify-between"
-          >
-            <div className="space-y-2.5">
-              <div className="w-9 h-9 bg-[#dcfce7] border-2 border-black rounded-xl flex items-center justify-center text-[#15803D]">
-                <BarChart3 className="w-4 h-4" />
-              </div>
-              <h3 className="text-sm sm:text-base font-black text-black">Live Conversion Analytics</h3>
-              <ul className="space-y-1.5 text-xs text-slate-700 font-medium">
-                <li className="flex items-start gap-2">
-                  <span className="text-[#15803D] font-bold">✓</span>
-                  <span>Track camera scans & QR conversion in real time</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#15803D] font-bold">✓</span>
-                  <span>See which topics & services customers praise most</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#15803D] font-bold">✓</span>
-                  <span>Monitor Google Maps handoffs with clear KPIs</span>
-                </li>
-              </ul>
-            </div>
-          </motion.div>
-
-          {/* Feature 4 */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.4, delay: 0.2 }}
-            whileHover={{ y: -5, transition: { duration: 0.2 } }}
-            className="bg-white p-6 rounded-[24px] border-2 border-black shadow-[4px_4px_0px_#000000] space-y-3 flex flex-col justify-between"
-          >
-            <div className="space-y-2.5">
-              <div className="w-9 h-9 bg-rose-50 border-2 border-black rounded-xl flex items-center justify-center text-rose-600">
-                <MessageSquare className="w-4 h-4" />
-              </div>
-              <h3 className="text-sm sm:text-base font-black text-black">Private Grievance Inbox</h3>
-              <ul className="space-y-1.5 text-xs text-slate-700 font-medium">
-                <li className="flex items-start gap-2">
-                  <span className="text-[#15803D] font-bold">✓</span>
-                  <span>Catch complaints before customers post online</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#15803D] font-bold">✓</span>
-                  <span>Collect customer name, phone & private feedback</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#15803D] font-bold">✓</span>
-                  <span>Resolve issues directly & turn angry guests happy</span>
-                </li>
-              </ul>
-            </div>
-          </motion.div>
-
-          {/* Feature 5 */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.4, delay: 0.25 }}
-            whileHover={{ y: -5, transition: { duration: 0.2 } }}
-            className="bg-white p-6 rounded-[24px] border-2 border-black shadow-[4px_4px_0px_#000000] space-y-3 flex flex-col justify-between"
-          >
-            <div className="space-y-2.5">
-              <div className="w-9 h-9 bg-slate-100 border-2 border-black rounded-xl flex items-center justify-center text-[#15803D]">
-                <ShieldCheck className="w-4 h-4" />
-              </div>
-              <h3 className="text-sm sm:text-base font-black text-black">100% Policy Compliant</h3>
-              <ul className="space-y-1.5 text-xs text-slate-700 font-medium">
-                <li className="flex items-start gap-2">
-                  <span className="text-[#15803D] font-bold">✓</span>
-                  <span>Zero fake reviews or prohibited review gating</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#15803D] font-bold">✓</span>
-                  <span>Compliant with Google Maps & FTC policies</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#15803D] font-bold">✓</span>
-                  <span>Safeguards your Google Business Profile forever</span>
-                </li>
-              </ul>
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* 
-        ========================================================================
-        PRICING CARDS (3 Tiers: 18 Months, 24 Months, 48 Months)
-        ========================================================================
-      */}
-      <motion.section
-        id="pricing"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-60px" }}
-        transition={{ duration: 0.5 }}
-        className="py-14 sm:py-20 px-4 sm:px-8 max-w-6xl mx-auto text-center space-y-8"
-      >
-        <div className="space-y-3 max-w-2xl mx-auto">
-          <span className="text-xs font-black text-[#15803D] uppercase tracking-widest bg-[#dcfce7] px-3.5 py-1 rounded-full border-2 border-black shadow-[2px_2px_0px_#000000] inline-block">
-            Transparent Plans
-          </span>
-          <h2 className="text-2xl sm:text-4xl font-black text-black tracking-tight">
-            Choose the Perfect Plan for Your Business
-          </h2>
-          <p className="text-xs sm:text-sm font-medium text-slate-600">
-            No monthly subscription traps. Unlimited QR scans, AI review generation, and print-ready standees.
+      <section id="how-it-works" className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-16 border-t border-slate-200/70">
+        <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
+          <span className="text-xs font-extrabold uppercase tracking-wider text-[#3478C8]">Workflow Architecture</span>
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-900">How the Review Funnel Operates</h2>
+          <p className="text-sm text-slate-600">
+            A frictionless customer experience engineered to maximize Google Reviews while protecting private brand reputation.
           </p>
         </div>
 
-        {/* 3 Pricing Cards: Auto-Scroll Carousel on Mobile, Bento Grid on Desktop */}
-        <div
-          ref={pricingCarouselRef}
-          onScroll={handlePricingScroll}
-          onTouchStart={() => setIsPricingInteracting(true)}
-          onTouchEnd={() => setTimeout(() => setIsPricingInteracting(false), 4000)}
-          onMouseEnter={() => setIsPricingInteracting(true)}
-          onMouseLeave={() => setIsPricingInteracting(false)}
-          className="flex md:grid md:grid-cols-3 gap-5 sm:gap-6 lg:gap-8 items-stretch pt-4 text-left overflow-x-auto md:overflow-visible snap-x snap-mandatory scroll-smooth no-scrollbar pb-6 px-4 md:px-0 -mx-4 md:mx-0"
-        >
-          
-          {/* CARD 1: At 1,999 for 18 months */}
-          <motion.div
-            id="pricing-card-18m"
-            whileHover={{ y: -5 }}
-            transition={{ duration: 0.2 }}
-            className="w-[85vw] max-w-[340px] sm:w-[360px] md:w-auto md:max-w-none shrink-0 md:shrink snap-center bg-white border-2 border-black rounded-[28px] p-6 sm:p-7 space-y-5 flex flex-col justify-between shadow-[5px_5px_0px_#000000]"
-          >
-            <div className="space-y-4">
-              <div className="space-y-1">
-                <span className="text-[11px] font-black uppercase tracking-wider text-slate-500 bg-slate-100 px-2.5 py-0.5 rounded-full border border-black/10 inline-block">
-                  Standard Plan
-                </span>
-                <h3 className="text-lg sm:text-xl font-black text-black">18 Months Access</h3>
-                <p className="text-xs text-slate-500 font-medium">Ideal for single-location cafes, shops & clinics</p>
-              </div>
-
-              <div className="pt-2 border-t border-black/10">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-sm line-through text-slate-400 font-bold">₹3,999</span>
-                  <span className="text-3xl font-black text-black tracking-tight">₹1,999</span>
-                  <span className="text-xs font-bold text-slate-600">/ 18 months</span>
-                </div>
-                <p className="text-[11.5px] font-bold text-[#15803D] mt-1">
-                  At 1,999 for 18 months (Just ₹111/mo)
-                </p>
-              </div>
-
-              <ul className="space-y-2.5 text-xs text-slate-800 pt-2 border-t border-black/10">
-                {[
-                  "18 Months Full Software License",
-                  "Unlimited QR Camera Scans & Handoffs",
-                  "Ready-to-Print 4\" x 6\" Standee Studio",
-                  "AI Review Assistant (Gemini Flash + NLP)",
-                  "Custom Service Keywords & Topics",
-                  "Live Conversion Analytics Dashboard",
-                  "Private Grievance Inbox (Google Compliant)",
-                  "Standard Email & Chat Support",
-                ].map((f) => (
-                  <li key={f} className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[#15803D] shrink-0 mt-0.5" />
-                    <span className="font-semibold text-slate-800">{f}</span>
-                  </li>
-                ))}
-              </ul>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Step 1 */}
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-subtle space-y-3 relative">
+            <div className="w-10 h-10 rounded-xl bg-[#173B67] text-white flex items-center justify-center font-black text-sm">
+              01
             </div>
-
-            <div className="space-y-2 pt-4">
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Link
-                  href="/signup?plan=18m"
-                  className="w-full py-3.5 bg-white hover:bg-slate-50 text-black rounded-full font-black text-xs sm:text-sm flex items-center justify-center gap-2 border-2 border-black shadow-[3px_3px_0px_#000000] transition-shadow text-center cursor-pointer"
-                >
-                  Get At 1,999 for 18 months <ArrowRight className="w-4 h-4" />
-                </Link>
-              </motion.div>
-              <p className="text-center text-[10px] text-slate-400 font-semibold">One-time payment • No auto-debit</p>
-            </div>
-          </motion.div>
-
-          {/* CARD 2: At 2,499 for 24 months (BEST VALUE / MOST POPULAR) */}
-          <motion.div
-            id="pricing-card-24m"
-            whileHover={{ y: -6 }}
-            transition={{ duration: 0.2 }}
-            className="w-[85vw] max-w-[340px] sm:w-[360px] md:w-auto md:max-w-none shrink-0 md:shrink snap-center bg-white border-[3px] border-black rounded-[30px] p-6 sm:p-7 space-y-5 flex flex-col justify-between shadow-[8px_8px_0px_#15803D] relative md:-translate-y-2"
-          >
-            {/* Top Badge */}
-            <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#15803D] text-white text-[11px] font-black uppercase tracking-wider px-3.5 py-1 rounded-full border-2 border-black shadow-[2px_2px_0px_#000000] whitespace-nowrap">
-              ★ Most Popular • Best Value
-            </div>
-
-            <div className="space-y-4">
-              <div className="space-y-1 pt-1">
-                <span className="text-[11px] font-black uppercase tracking-wider text-[#15803D] bg-emerald-50 px-2.5 py-0.5 rounded-full border border-[#15803D]/30 inline-block">
-                  Growth Plan • 2 Full Years
-                </span>
-                <h3 className="text-xl sm:text-2xl font-black text-black">24 Months Access</h3>
-                <p className="text-xs text-slate-500 font-medium">Most chosen by high-growth cafes, restaurants & salons</p>
-              </div>
-
-              <div className="pt-2 border-t border-black/10">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-sm line-through text-slate-400 font-bold">₹5,999</span>
-                  <span className="text-3xl sm:text-4xl font-black text-[#15803D] tracking-tight">₹2,499</span>
-                  <span className="text-xs font-bold text-slate-600">/ 24 months</span>
-                </div>
-                <p className="text-[11.5px] font-black text-black mt-1">
-                  At 2,499 for 24 months (Only ₹104/mo • Save 58%)
-                </p>
-              </div>
-
-              <ul className="space-y-2.5 text-xs text-slate-800 pt-2 border-t border-black/10">
-                {[
-                  "Everything in 18 Months Plan",
-                  "24 Months Extended License (2 Full Years)",
-                  "Unlimited Multi-Standee Prints & Tents",
-                  "Priority AI Review Generation Engine",
-                  "Google Maps Local SEO Keyword Booster",
-                  "Multi-Counter QR Placement Studio",
-                  "Priority Business WhatsApp Support",
-                  "Free Standee Design Customization",
-                ].map((f, i) => (
-                  <li key={f} className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[#15803D] shrink-0 mt-0.5" />
-                    <span className={i < 2 ? "font-black text-black" : "font-semibold text-slate-800"}>{f}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="space-y-2 pt-4">
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Link
-                  href="/signup?plan=24m"
-                  className="w-full py-4 bg-[#15803D] hover:bg-[#166534] text-white rounded-full font-black text-sm flex items-center justify-center gap-2 border-2 border-black shadow-[4px_4px_0px_#000000] transition-shadow text-center cursor-pointer"
-                >
-                  Get At 2,499 for 24 months <ArrowRight className="w-4 h-4" />
-                </Link>
-              </motion.div>
-              <p className="text-center text-[10px] text-slate-500 font-bold">Instant activation via UPI, QR & Cards</p>
-            </div>
-          </motion.div>
-
-          {/* CARD 3: At 3,499 for 48 months (MAXIMUM SAVINGS) */}
-          <motion.div
-            id="pricing-card-48m"
-            whileHover={{ y: -5 }}
-            transition={{ duration: 0.2 }}
-            className="w-[85vw] max-w-[340px] sm:w-[360px] md:w-auto md:max-w-none shrink-0 md:shrink snap-center bg-white border-2 border-black rounded-[28px] p-6 sm:p-7 space-y-5 flex flex-col justify-between shadow-[5px_5px_0px_#000000]"
-          >
-            <div className="space-y-4">
-              <div className="space-y-1">
-                <span className="text-[11px] font-black uppercase tracking-wider text-black bg-amber-100 px-2.5 py-0.5 rounded-full border border-black/20 inline-block">
-                  Maximum Savings • 4 Years
-                </span>
-                <h3 className="text-lg sm:text-xl font-black text-black">48 Months Access</h3>
-                <p className="text-xs text-slate-500 font-medium">Long-term dominance with lowest monthly cost</p>
-              </div>
-
-              <div className="pt-2 border-t border-black/10">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-sm line-through text-slate-400 font-bold">₹9,999</span>
-                  <span className="text-3xl font-black text-black tracking-tight">₹3,499</span>
-                  <span className="text-xs font-bold text-slate-600">/ 48 months</span>
-                </div>
-                <p className="text-[11.5px] font-bold text-[#15803D] mt-1">
-                  At 3,499 for 48 months (Lowest rate: ₹72/mo)
-                </p>
-              </div>
-
-              <ul className="space-y-2.5 text-xs text-slate-800 pt-2 border-t border-black/10">
-                {[
-                  "Everything in 24 Months Plan",
-                  "48 Months Extended Access (4 Full Years)",
-                  "Lowest Cost: Just ₹72/month rate",
-                  "Unlimited Multi-Branch & Table QR Generation",
-                  "Zero Renewal Price Hikes Forever",
-                  "VIP Priority Tech & Design Support",
-                  "All Future Software Upgrades Included",
-                  "Dedicated Account Manager Assistance",
-                ].map((f, i) => (
-                  <li key={f} className="flex items-start gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[#15803D] shrink-0 mt-0.5" />
-                    <span className={i < 2 ? "font-black text-black" : "font-semibold text-slate-800"}>{f}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="space-y-2 pt-4">
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Link
-                  href="/signup?plan=48m"
-                  className="w-full py-3.5 bg-black hover:bg-neutral-800 text-white rounded-full font-black text-xs sm:text-sm flex items-center justify-center gap-2 border-2 border-black shadow-[3px_3px_0px_#000000] transition-shadow text-center cursor-pointer"
-                >
-                  Get At 3,499 for 48 months <ArrowRight className="w-4 h-4" />
-                </Link>
-              </motion.div>
-              <p className="text-center text-[10px] text-slate-400 font-semibold">Maximum peace of mind for 4 full years</p>
-            </div>
-          </motion.div>
-
-        </div>
-
-        {/* Mobile Carousel Controls & Interactive Dot Indicators (md:hidden) */}
-        <div className="flex md:hidden flex-col items-center justify-center gap-2.5 pt-1">
-          <div className="flex items-center justify-center gap-2">
-            <button
-              type="button"
-              onClick={() => scrollToPricingSlide((activePricingSlide - 1 + 3) % 3)}
-              className="p-1.5 rounded-full border-2 border-black bg-white hover:bg-slate-100 shadow-[1px_1px_0px_#000000] active:translate-x-[1px] active:translate-y-[1px]"
-              aria-label="Previous plan"
-            >
-              <ChevronLeft className="w-3.5 h-3.5 text-black" />
-            </button>
-
-            {[
-              { label: "18M", price: "₹1,999" },
-              { label: "24M", price: "₹2,499", popular: true },
-              { label: "48M", price: "₹3,499" },
-            ].map((p, idx) => (
-              <button
-                key={idx}
-                type="button"
-                onClick={() => scrollToPricingSlide(idx)}
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black transition-all border-2 border-black ${
-                  activePricingSlide === idx
-                    ? "bg-[#15803D] text-white shadow-[2px_2px_0px_#000000] scale-105"
-                    : "bg-white text-slate-700 hover:bg-slate-100 shadow-[1px_1px_0px_#000000]"
-                }`}
-                aria-label={`View ${p.label} plan`}
-              >
-                <span>{p.label}</span>
-                <span className="text-[10px] opacity-80">{p.price}</span>
-              </button>
-            ))}
-
-            <button
-              type="button"
-              onClick={() => scrollToPricingSlide((activePricingSlide + 1) % 3)}
-              className="p-1.5 rounded-full border-2 border-black bg-white hover:bg-slate-100 shadow-[1px_1px_0px_#000000] active:translate-x-[1px] active:translate-y-[1px]"
-              aria-label="Next plan"
-            >
-              <ChevronRight className="w-3.5 h-3.5 text-black" />
-            </button>
+            <h3 className="text-base font-bold text-slate-900">1. Instant QR Scan</h3>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Customers scan your tabletop QR standee or tap the NFC token at billing counters using any smartphone camera without app installation.
+            </p>
           </div>
 
-          <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-500">
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#15803D] animate-pulse" />
-            <span>Auto-scrolling • Swipe to explore ({activePricingSlide + 1} of 3)</span>
+          {/* Step 2 */}
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-subtle space-y-3 relative">
+            <div className="w-10 h-10 rounded-xl bg-[#3478C8] text-white flex items-center justify-center font-black text-sm">
+              02
+            </div>
+            <h3 className="text-base font-bold text-slate-900">2. Smart Sentiment Routing</h3>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Satisfied patrons (4–5 stars) unlock the AI review generator. Critical patrons (1–3 stars) are routed to a private feedback inbox to resolve issues directly.
+            </p>
+          </div>
+
+          {/* Step 3 */}
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-subtle space-y-3 relative">
+            <div className="w-10 h-10 rounded-xl bg-[#173B67] text-white flex items-center justify-center font-black text-sm">
+              03
+            </div>
+            <h3 className="text-base font-bold text-slate-900">3. 1-Click Google Publish</h3>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Google Gemini constructs an articulate review based on customer-selected tags. The customer copies it with one tap and pastes it straight to Google Reviews.
+            </p>
           </div>
         </div>
-      </motion.section>
+      </section>
 
       {/* 
         ========================================================================
-        FAQ ACCORDION with Motion.dev Expand/Collapse Animation
+        SYSTEM ARCHITECTURE & ACADEMIC HIGHLIGHTS
         ========================================================================
       */}
-      <section id="faq" className="py-14 sm:py-20 px-4 sm:px-8 max-w-3xl mx-auto space-y-8 border-t-2 border-black/10">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.5 }}
-          className="text-center space-y-2"
-        >
-          <span className="text-xs font-black text-slate-500 uppercase tracking-widest">
-            got questions?
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-black text-black tracking-tight">
-            Frequently Asked Questions
-          </h2>
-        </motion.div>
+      <section id="architecture" className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-16 border-t border-slate-200/70">
+        <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
+          <span className="text-xs font-extrabold uppercase tracking-wider text-[#3478C8]">Technical Implementation</span>
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-900">System Architecture & Tech Stack</h2>
+          <p className="text-sm text-slate-600">
+            Engineered with modern full-stack web technologies and cloud best practices.
+          </p>
+        </div>
 
-        <div className="space-y-3.5">
-          {faqs.map((faq, i) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-subtle space-y-2.5">
+            <div className="w-9 h-9 rounded-lg bg-blue-50 text-[#173B67] flex items-center justify-center">
+              <Layers className="w-5 h-5" />
+            </div>
+            <h4 className="text-sm font-bold text-slate-900">Next.js 14 & TypeScript</h4>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              App Router architecture with Server Components, optimized API endpoints, and end-to-end type safety.
+            </p>
+          </div>
+
+          <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-subtle space-y-2.5">
+            <div className="w-9 h-9 rounded-lg bg-indigo-50 text-[#3478C8] flex items-center justify-center">
+              <Cpu className="w-5 h-5" />
+            </div>
+            <h4 className="text-sm font-bold text-slate-900">Google Gemini AI Engine</h4>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Integrated `@google/generative-ai` with hybrid zero-cost local NLP fallback for fast response times.
+            </p>
+          </div>
+
+          <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-subtle space-y-2.5">
+            <div className="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
+              <Database className="w-5 h-5" />
+            </div>
+            <h4 className="text-sm font-bold text-slate-900">Prisma ORM & SQLite</h4>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Relational data modeling supporting businesses, review sessions, customer feedback, and analytics metrics.
+            </p>
+          </div>
+
+          <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-subtle space-y-2.5">
+            <div className="w-9 h-9 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center">
+              <Lock className="w-5 h-5" />
+            </div>
+            <h4 className="text-sm font-bold text-slate-900">Security & Rate Limiting</h4>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              JWT session cookies, bcrypt password hashing, and token bucket API rate-limiting against automated abuse.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 
+        ========================================================================
+        FEATURES GRID
+        ========================================================================
+      */}
+      <section id="features" className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-16 border-t border-slate-200/70">
+        <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
+          <span className="text-xs font-extrabold uppercase tracking-wider text-[#3478C8]">Platform Capabilities</span>
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-900">Core Features Built for Real Impact</h2>
+          <p className="text-sm text-slate-600">
+            A comprehensive suite of tools designed to elevate local business reputation management.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-subtle space-y-3">
+            <div className="w-10 h-10 rounded-xl bg-[#F0F4F9] text-[#173B67] flex items-center justify-center">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <h3 className="text-base font-bold text-slate-900">AI Contextual Generator</h3>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Automatically embeds specific service keywords into authentic paragraphs, signaling relevance to Google&apos;s local search ranking algorithms.
+            </p>
+          </div>
+
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-subtle space-y-3">
+            <div className="w-10 h-10 rounded-xl bg-[#F0F4F9] text-[#173B67] flex items-center justify-center">
+              <Printer className="w-5 h-5" />
+            </div>
+            <h3 className="text-base font-bold text-slate-900">QR Studio & PDF Generation</h3>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Create and export print-ready 4&quot; x 6&quot; acrylic standees, table tents, and flyers formatted for commercial print shops directly from your browser.
+            </p>
+          </div>
+
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-subtle space-y-3">
+            <div className="w-10 h-10 rounded-xl bg-[#F0F4F9] text-[#173B67] flex items-center justify-center">
+              <BarChart3 className="w-5 h-5" />
+            </div>
+            <h3 className="text-base font-bold text-slate-900">Analytics & Conversion Tracking</h3>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Real-time dashboards monitor scans, generated reviews, Google click-through rates, and frequent keyword topics.
+            </p>
+          </div>
+
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-subtle space-y-3">
+            <div className="w-10 h-10 rounded-xl bg-[#F0F4F9] text-[#173B67] flex items-center justify-center">
+              <MessageSquare className="w-5 h-5" />
+            </div>
+            <h3 className="text-base font-bold text-slate-900">Private Feedback Inbox</h3>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Manage unhappy customer submissions with status tracking (Unread / Resolved) and direct customer contact details.
+            </p>
+          </div>
+
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-subtle space-y-3">
+            <div className="w-10 h-10 rounded-xl bg-[#F0F4F9] text-[#173B67] flex items-center justify-center">
+              <ShieldCheck className="w-5 h-5" />
+            </div>
+            <h3 className="text-base font-bold text-slate-900">Policy-Compliant Gatekeeper</h3>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              100% compliant with Google Review guidelines. All users retain direct access to public review submission if desired.
+            </p>
+          </div>
+
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-subtle space-y-3">
+            <div className="w-10 h-10 rounded-xl bg-[#F0F4F9] text-[#173B67] flex items-center justify-center">
+              <TrendingUp className="w-5 h-5" />
+            </div>
+            <h3 className="text-base font-bold text-slate-900">Multi-Category Support</h3>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Pre-configured topic profiles for Cafes, Restaurants, Salons, Clinics, Gyms, Auto Services, and Sweet Shops.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 
+        ========================================================================
+        PRICING & SUBSCRIPTION SECTION
+        ========================================================================
+      */}
+      <section id="pricing" className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-16 border-t border-slate-200/70">
+        <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
+          <span className="text-xs font-extrabold uppercase tracking-wider text-[#3478C8]">Transparent Pricing</span>
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-900">Simple, Upfront Project Plans</h2>
+          <p className="text-sm text-slate-600">
+            Zero hidden fees or recurring subscriptions. Integrated with Razorpay test gateway for grading demonstrations.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          {/* Plan 1 */}
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-subtle flex flex-col justify-between space-y-6">
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-base font-bold text-slate-900">Standard License</h3>
+                <p className="text-xs text-slate-500">Ideal for single table or counter</p>
+              </div>
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl font-black text-slate-900">₹1,999</span>
+                <span className="text-xs text-slate-500">/ 18 months</span>
+              </div>
+              <ul className="text-xs text-slate-600 space-y-2.5 pt-2">
+                <li className="flex items-center gap-2">✓ 18 Months Full Access</li>
+                <li className="flex items-center gap-2">✓ AI Review Generation</li>
+                <li className="flex items-center gap-2">✓ Digital QR Code</li>
+                <li className="flex items-center gap-2">✓ Analytics Dashboard</li>
+                <li className="flex items-center gap-2">✓ Private Feedback Inbox</li>
+              </ul>
+            </div>
+            <Link
+              href="/signup?plan=18m"
+              className="w-full py-3 text-center text-xs font-bold text-[#173B67] bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors"
+            >
+              Select Standard
+            </Link>
+          </div>
+
+          {/* Plan 2: Highlighted */}
+          <div className="bg-white border-2 border-[#173B67] rounded-2xl p-6 shadow-card flex flex-col justify-between space-y-6 relative">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#173B67] text-white text-[10px] font-bold uppercase tracking-wider px-3 py-0.5 rounded-full">
+              Most Popular
+            </div>
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-base font-bold text-[#173B67]">Pro License</h3>
+                <p className="text-xs text-slate-500">Best for active retail & cafes</p>
+              </div>
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl font-black text-slate-900">₹2,499</span>
+                <span className="text-xs text-slate-500">/ 24 months</span>
+              </div>
+              <ul className="text-xs text-slate-600 space-y-2.5 pt-2">
+                <li className="flex items-center gap-2 font-semibold text-slate-800">✓ 2 Full Years License</li>
+                <li className="flex items-center gap-2">✓ High-Quota AI Engine</li>
+                <li className="flex items-center gap-2">✓ Unlimited Printable Standees</li>
+                <li className="flex items-center gap-2">✓ Advanced Sentiment Routing</li>
+                <li className="flex items-center gap-2">✓ Priority Email Notifications</li>
+              </ul>
+            </div>
+            <Link
+              href="/signup?plan=24m"
+              className="w-full py-3 text-center text-xs font-bold text-white bg-[#173B67] hover:bg-[#1C4982] rounded-xl shadow-subtle transition-all"
+            >
+              Get Started with Pro
+            </Link>
+          </div>
+
+          {/* Plan 3 */}
+          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-subtle flex flex-col justify-between space-y-6">
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-base font-bold text-slate-900">Enterprise License</h3>
+                <p className="text-xs text-slate-500">Multi-table & chain locations</p>
+              </div>
+              <div className="flex items-baseline gap-1">
+                <span className="text-3xl font-black text-slate-900">₹3,499</span>
+                <span className="text-xs text-slate-500">/ 48 months</span>
+              </div>
+              <ul className="text-xs text-slate-600 space-y-2.5 pt-2">
+                <li className="flex items-center gap-2">✓ 4 Full Years License</li>
+                <li className="flex items-center gap-2">✓ Maximum AI Quota</li>
+                <li className="flex items-center gap-2">✓ Multi-Counter QR Generation</li>
+                <li className="flex items-center gap-2">✓ Custom Keyword Management</li>
+                <li className="flex items-center gap-2">✓ Dedicated Support Channel</li>
+              </ul>
+            </div>
+            <Link
+              href="/signup?plan=48m"
+              className="w-full py-3 text-center text-xs font-bold text-[#173B67] bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors"
+            >
+              Select Enterprise
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* 
+        ========================================================================
+        FAQ SECTION
+        ========================================================================
+      */}
+      <section id="faq" className="w-full max-w-4xl mx-auto px-4 sm:px-6 py-16 border-t border-slate-200/70">
+        <div className="text-center mb-10 space-y-2">
+          <span className="text-xs font-extrabold uppercase tracking-wider text-[#3478C8]">Questions & Answers</span>
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-900">Frequently Asked Questions</h2>
+        </div>
+
+        <div className="space-y-3">
+          {faqs.map((faq, index) => (
             <div
-              key={i}
-              className="bg-white rounded-2xl border-2 border-black overflow-hidden transition-shadow shadow-[3px_3px_0px_#000000] hover:shadow-[4px_4px_0px_#000000]"
+              key={index}
+              className="bg-white border border-slate-200 rounded-2xl overflow-hidden transition-all shadow-subtle"
             >
               <button
                 type="button"
-                onClick={() => toggleFaq(i)}
-                className="w-full p-4 sm:p-5 text-left flex items-center justify-between text-xs sm:text-sm font-black text-black hover:text-slate-700 cursor-pointer"
+                onClick={() => toggleFaq(index)}
+                className="w-full px-5 py-4 text-left flex items-center justify-between gap-4 font-bold text-sm text-slate-900 hover:text-[#173B67] transition-colors"
               >
                 <span>{faq.q}</span>
-                <motion.div
-                  animate={{ rotate: openFaq === i ? 180 : 0 }}
-                  transition={{ duration: 0.25, ease: "easeInOut" }}
-                  className="shrink-0 ml-2"
-                >
-                  <ChevronDown className="w-4 h-4 text-black" />
-                </motion.div>
+                <ChevronDown
+                  className={`w-4 h-4 text-slate-500 transition-transform shrink-0 ${
+                    openFaq === index ? "rotate-180 text-[#173B67]" : ""
+                  }`}
+                />
               </button>
-
-              <AnimatePresence initial={false}>
-                {openFaq === i && (
-                  <motion.div
-                    key="content"
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.25, ease: "easeInOut" }}
-                    className="overflow-hidden"
-                  >
-                    <div className="px-4 sm:px-5 pb-4 sm:pb-5 text-xs text-slate-700 leading-relaxed font-medium border-t-2 border-black/10 pt-3">
-                      {faq.a}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              {openFaq === index && (
+                <div className="px-5 pb-4 text-xs sm:text-sm text-slate-600 leading-relaxed border-t border-slate-100 pt-3">
+                  {faq.a}
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -1211,89 +766,34 @@ export default function LandingPage() {
 
       {/* 
         ========================================================================
-        FINAL CTA BANNER
+        FOOTER
         ========================================================================
       */}
-      <section className="py-12 sm:py-16 px-4 sm:px-8 max-w-4xl mx-auto text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
-          transition={{ duration: 0.5 }}
-          className="bg-white border-[3px] border-black rounded-[32px] sm:rounded-[36px] p-7 sm:p-14 space-y-5 shadow-[6px_6px_0px_#000000] sm:shadow-[8px_8px_0px_#000000] relative overflow-hidden"
-        >
-          <h2 className="text-2xl sm:text-4xl lg:text-[42px] font-black text-black tracking-tight leading-[1.15] relative z-10">
-            Start Collecting 5-Star Reviews Today
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-600 max-w-lg mx-auto font-medium leading-relaxed relative z-10">
-            Outsmart your competitors with Welurik Review and grow your business with our 30-second review assistant.
-          </p>
-          <div className="pt-2 flex items-center justify-center relative z-10">
-            <motion.div whileHover={{ scale: 1.04, y: -2 }} whileTap={{ scale: 0.97, y: 1 }}>
-              <Link
-                href="/#pricing"
-                className="w-full sm:w-auto px-8 py-4 bg-[#15803D] hover:bg-[#166534] text-white font-black rounded-full text-sm sm:text-base border-2 border-black shadow-[4px_4px_0px_#000000] transition-shadow text-center inline-flex items-center justify-center gap-2"
-              >
-                Choose Your Plan (From ₹1,999) <ArrowRight className="w-4 h-4" />
-              </Link>
-            </motion.div>
+      <footer className="w-full border-t border-slate-200 bg-white py-12 px-4 sm:px-6 mt-10">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-xs text-slate-500">
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <Logo height={30} />
+            <span className="hidden sm:inline text-slate-300">|</span>
+            <p>
+              SmartReview &copy; 2026 • College Minor Project by <strong>Hardik</strong>
+            </p>
           </div>
-        </motion.div>
-      </section>
 
-      {/* 
-        ========================================================================
-        MINIMAL FOOTER
-        ========================================================================
-      */}
-      <footer className="w-full max-w-[1080px] mx-auto px-4 sm:px-8 py-6 pb-24 md:pb-6 border-t-2 border-black/10 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 font-medium gap-4 z-10 text-center sm:text-left">
-        <p>© 2026 Welurik Review. Built for local businesses to collect authentic 5-star Google reviews.</p>
-        <div className="flex flex-wrap items-center justify-center gap-4 font-semibold text-slate-700 text-xs">
-          <Link href="/privacy" className="hover:text-black transition-colors">Privacy Policy</Link>
-          <Link href="/terms" className="hover:text-black transition-colors">Terms</Link>
-          <Link href="/refund" className="hover:text-black transition-colors">Refunds</Link>
-          <Link href="/login" className="hover:text-black transition-colors">Sign In</Link>
-          <Link href="/r/the-coffee-house" className="hover:text-black transition-colors">Customer Demo</Link>
+          <div className="flex flex-wrap items-center justify-center gap-6 font-semibold">
+            <Link href="/privacy" className="hover:text-[#173B67] transition-colors">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-[#173B67] transition-colors">Terms of Service</Link>
+            <Link href="/refund" className="hover:text-[#173B67] transition-colors">Refund Policy</Link>
+            <a
+              href="https://github.com/Hardik637/smartreview"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1 hover:text-[#173B67] transition-colors"
+            >
+              <Github className="w-3.5 h-3.5" /> GitHub
+            </a>
+          </div>
         </div>
       </footer>
-
-      {/* 
-        ========================================================================
-        MOBILE STICKY BOTTOM ACTION BAR (High-Converting Mobile UX)
-        ========================================================================
-      */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 px-4 py-2.5 pb-[max(0.6rem,env(safe-area-inset-bottom))] bg-white/95 backdrop-blur-md border-t-2 border-black z-50 flex items-center justify-between gap-3 shadow-[0_-4px_20px_rgba(0,0,0,0.12)]">
-        <div className="flex flex-col min-w-0">
-          <div className="flex items-center gap-1.5 flex-wrap">
-            <span className="text-[11px] line-through text-slate-400 font-bold">₹3,999</span>
-            <span className="text-sm font-black text-black">From ₹1,999</span>
-          </div>
-          <span className="text-[10px] font-bold text-slate-500 truncate">
-            18, 24 or 48 Months Plans
-          </span>
-        </div>
-
-        <motion.div
-          animate={{
-            scale: [1, 1.05, 0.98, 1.03, 1],
-          }}
-          transition={{
-            duration: 0.7,
-            repeat: Infinity,
-            repeatDelay: 2,
-            ease: "easeInOut",
-          }}
-          whileTap={{ scale: 0.94 }}
-          className="shrink-0"
-        >
-          <Link
-            href="/#pricing"
-            className="px-6 py-3 bg-[#15803D] hover:bg-[#166534] text-white text-sm font-black rounded-full border-2 border-black shadow-[2px_2px_0px_#000000] flex items-center gap-1.5 text-center transition-all whitespace-nowrap"
-          >
-            View Plans <ArrowRight className="w-4 h-4 shrink-0" />
-          </Link>
-        </motion.div>
-      </div>
     </div>
   );
 }

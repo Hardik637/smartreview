@@ -102,7 +102,7 @@ export function CheckoutButton({
         key: orderData.keyId,
         amount: orderData.amount,
         currency: orderData.currency,
-        name: "Welurik Review",
+        name: "SmartReview",
         description: orderData.planLabel || "Lifetime License Access",
         image: "/favicon.png",
         order_id: orderData.orderId,
@@ -123,7 +123,7 @@ export function CheckoutButton({
             const verifyData = await verifyRes.json();
             if (verifyRes.ok && verifyData.success) {
               if (typeof window !== "undefined") {
-                sessionStorage.removeItem("welurik_dashboard_cache");
+                sessionStorage.removeItem("smartreview_dashboard_cache");
               }
               router.push(`/checkout/success?order_id=${verifyData.orderId || orderData.orderId}&payment_id=${response.razorpay_payment_id || "demo"}`);
             } else {
@@ -143,7 +143,7 @@ export function CheckoutButton({
           plan: planType,
         },
         theme: {
-          color: "#16A34A", // Brand Green
+          color: "#173B67",
         },
         modal: {
           ondismiss: function () {
@@ -172,7 +172,7 @@ export function CheckoutButton({
         disabled={loading}
         className={
           className ||
-          "w-full py-4 px-8 bg-[#16A34A] hover:bg-[#15803D] text-white font-bold text-lg rounded-2xl shadow-xl shadow-green-600/25 border-2 border-green-500/50 hover:shadow-green-600/40 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center justify-center gap-2 group cursor-pointer"
+          "w-full py-4 px-8 bg-[#173B67] hover:bg-[#0F2643] text-white font-bold text-lg rounded-2xl shadow-card transition-all flex items-center justify-center gap-2 group cursor-pointer"
         }
       >
         {loading ? (
@@ -182,18 +182,18 @@ export function CheckoutButton({
           </>
         ) : (
           <>
-            {showIcon && <Zap className="w-5 h-5 fill-current text-white group-hover:scale-110 transition-transform" />}
+            {showIcon && <Zap className="w-5 h-5 fill-current text-[#3478C8] group-hover:scale-110 transition-transform" />}
             <span>{buttonText}</span>
           </>
         )}
       </button>
 
       {errorMessage && (
-        <p className="mt-2 text-xs text-red-500 font-medium">{errorMessage}</p>
+        <p className="mt-2 text-xs text-rose-500 font-medium">{errorMessage}</p>
       )}
 
-      <div className="flex items-center gap-1.5 mt-2 text-[11px] text-zinc-500">
-        <ShieldCheck className="w-3.5 h-3.5 text-green-600" />
+      <div className="flex items-center gap-1.5 mt-2 text-[11px] text-slate-500">
+        <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
         <span>256-Bit SSL Encrypted • Instant UPI & Card Activation</span>
       </div>
     </div>

@@ -63,7 +63,7 @@ export async function sendFirebasePasswordReset(
 ): Promise<{ success: boolean; error?: string }> {
   try {
     const normalizedEmail = email.trim().toLowerCase();
-    const targetUrl = redirectUrl || (typeof window !== "undefined" ? `${window.location.origin}/reset-password` : "https://review.welurik.com/reset-password");
+    const targetUrl = redirectUrl || (typeof window !== "undefined" ? `${window.location.origin}/reset-password` : `${process.env.NEXT_PUBLIC_APP_URL || "https://smartreview.vercel.app"}/reset-password`);
 
     // 1. Notify backend to generate and persist reset token
     fetch("/api/auth/forgot-password", {

@@ -26,7 +26,7 @@ export function CustomerCareModal({
 
   // Pre-filled WhatsApp message
   const whatsappText = encodeURIComponent(
-    `Hi Welurik Support, I am reaching out from ${businessName ? `"${businessName}"` : "my business account"}. I need assistance with my review app.`
+    `Hi SmartReview Support, I am reaching out from ${businessName ? `"${businessName}"` : "my business account"}. I need assistance with my review management app.`
   );
   const whatsappUrl = `https://wa.me/${phoneDigits}?text=${whatsappText}`;
   const callUrl = `tel:${rawPhone.startsWith("+") ? rawPhone : `+${phoneDigits}`}`;
@@ -50,7 +50,7 @@ export function CustomerCareModal({
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-[28px] max-w-md w-full p-6 sm:p-7 shadow-2xl border border-slate-200/80 relative space-y-5 animate-in zoom-in-95 duration-200"
+        className="bg-white rounded-[24px] max-w-md w-full p-6 sm:p-7 shadow-2xl border border-slate-200/80 relative space-y-5 animate-in zoom-in-95 duration-200"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
@@ -64,24 +64,24 @@ export function CustomerCareModal({
 
         {/* Header */}
         <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shadow-inner">
-              <Headphones className="w-5 h-5 text-emerald-600" />
+          <div className="flex items-center gap-2.5">
+            <div className="w-10 h-10 rounded-2xl bg-blue-50 text-[#173B67] flex items-center justify-center shadow-inner">
+              <Headphones className="w-5 h-5 text-[#173B67]" />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider">
+                <span className="text-[10px] font-bold text-[#173B67] uppercase tracking-wider">
                   Direct Support Available
                 </span>
               </div>
-              <h3 className="text-xl font-black text-slate-950 tracking-tight">
+              <h3 className="text-xl font-bold text-[#173B67] tracking-tight">
                 Customer Care
               </h3>
             </div>
           </div>
           <p className="text-xs text-slate-500 leading-relaxed">
-            Facing any problem with your account, QR standee, or Google reviews? Connect with us directly:
+            Facing any problem with your account, QR standee, or Google reviews? Connect with our project team directly:
           </p>
         </div>
 

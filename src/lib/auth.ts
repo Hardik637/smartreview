@@ -130,7 +130,7 @@ export function verifyPassword(password: string, storedHash: string): boolean {
 
 export { SESSION_COOKIE_NAME };
 
-export const IMPERSONATE_COOKIE_NAME = "welurik_impersonate_slug";
+export const IMPERSONATE_COOKIE_NAME = "smartreview_impersonate_slug";
 
 /**
  * Super Admin Authorization Checker

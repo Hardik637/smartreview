@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://review.welurik.com";
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://smartreview.vercel.app";
 
   return [
     {

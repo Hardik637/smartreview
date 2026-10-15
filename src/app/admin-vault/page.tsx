@@ -17,13 +17,10 @@ import {
   Download,
   Lock,
   ArrowRight,
-  Sparkles,
-  Zap,
   Eye,
-  LayoutDashboard,
 } from "lucide-react";
 
-import WelurikLogo from "@/components/Logo";
+import Logo from "@/components/Logo";
 
 interface BusinessData {
   name: string;
@@ -89,7 +86,7 @@ export default function AdminVaultPage() {
       setError(null);
       const res = await fetch("/api/admin/users", { cache: "no-store" });
       if (res.status === 401 || res.status === 403) {
-        setError("Unauthorized: This private vault is restricted to the platform owner.");
+        setError("Unauthorized: This private vault is restricted to project administrators.");
         setLoading(false);
         return;
       }
@@ -129,7 +126,7 @@ export default function AdminVaultPage() {
       if (res.ok && json.success) {
         if (typeof window !== "undefined") {
           try {
-            sessionStorage.removeItem("welurik_dashboard_cache");
+            sessionStorage.removeItem("smartreview_dashboard_cache");
           } catch {}
         }
         setActionMessage(`✓ Opening dashboard for ${json.businessName || user.business?.name || user.email}...`);
@@ -145,7 +142,6 @@ export default function AdminVaultPage() {
   };
 
   const handleTogglePro = async (user: UserItem) => {
-
     try {
       setActionLoading(user.email);
       setActionMessage(null);
@@ -202,6 +198,7 @@ export default function AdminVaultPage() {
 
   const handleExportCSV = () => {
     if (!data || !data.users.length) return;
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
     const headers = [
       "Email",
       "Registered Date",
@@ -227,7 +224,7 @@ export default function AdminVaultPage() {
       `"${u.business?.name || ""}"`,
       `"${u.business?.category || ""}"`,
       `"${u.business?.location || ""}"`,
-      `"https://review.welurik.com/r/${u.business?.slug || ""}"`,
+      `"${origin}/r/${u.business?.slug || ""}"`,
     ]);
 
     const csvContent = [headers.join(","), ...rows.map((r) => r.join(","))].join("\n");
@@ -235,7 +232,7 @@ export default function AdminVaultPage() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.setAttribute("href", url);
-    link.setAttribute("download", `welurik_users_${new Date().toISOString().slice(0, 10)}.csv`);
+    link.setAttribute("download", `smartreview_users_${new Date().toISOString().slice(0, 10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -281,25 +278,25 @@ export default function AdminVaultPage() {
   // Access Denied Screen
   if (error) {
     return (
-      <div className="min-h-screen bg-[#ECFDF5] flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white border-2 border-black rounded-3xl p-8 text-center shadow-[6px_6px_0px_#000000] space-y-4">
-          <div className="w-14 h-14 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center mx-auto border-2 border-black shadow-[2px_2px_0px_#000000]">
+      <div className="min-h-screen bg-[#F4F6F9] flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white border border-slate-200/80 rounded-3xl p-8 text-center shadow-card space-y-4">
+          <div className="w-14 h-14 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center mx-auto border border-rose-100">
             <Lock className="w-7 h-7" />
           </div>
-          <h1 className="text-2xl font-black text-black">Private Vault</h1>
+          <h1 className="text-2xl font-bold text-[#173B67]">Admin Vault Restricted</h1>
           <p className="text-xs text-slate-600 leading-relaxed font-medium">
             {error}
           </p>
           <div className="pt-2 flex flex-col gap-2">
             <Link
               href="/login"
-              className="w-full py-3 bg-[#15803D] hover:bg-[#166534] text-white text-xs font-black rounded-xl border-2 border-black shadow-[2px_2px_0px_#000000]"
+              className="w-full py-3 bg-[#173B67] hover:bg-[#0F2643] text-white text-xs font-bold rounded-xl transition-all shadow-sm"
             >
-              Sign In as Super Admin
+              Sign In as Administrator
             </Link>
             <Link
               href="/"
-              className="w-full py-3 bg-slate-100 hover:bg-slate-200 text-black text-xs font-bold rounded-xl border border-slate-300"
+              className="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold rounded-xl border border-slate-200 transition-all"
             >
               Return to Homepage
             </Link>
@@ -310,36 +307,36 @@ export default function AdminVaultPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#ECFDF5] text-slate-900 pb-16">
+    <div className="min-h-screen bg-[#F4F6F9] text-slate-900 pb-16 font-sans">
       {/* Top Admin Navbar */}
-      <header className="bg-white border-b-2 border-black sticky top-0 z-40 shadow-[0_2px_0px_#000000]">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-            <Link href="/admin-vault" className="flex items-center shrink-0">
-              <WelurikLogo className="h-6 sm:h-8" />
+      <header className="bg-white border-b border-slate-200/80 sticky top-0 z-40 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <Link href="/" className="flex items-center shrink-0">
+              <Logo className="h-7 sm:h-8" />
             </Link>
-            <div className="hidden sm:inline-flex items-center gap-1.5 bg-black text-white text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider shadow-sm shrink-0">
-              <ShieldCheck className="w-3 h-3 text-emerald-400" />
+            <div className="hidden sm:inline-flex items-center gap-1.5 bg-[#173B67] text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider shadow-xs shrink-0">
+              <ShieldCheck className="w-3 h-3 text-[#3478C8]" />
               Super Admin Vault
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             <button
               type="button"
               onClick={fetchAdminData}
               disabled={loading}
-              className="px-2.5 sm:px-3 py-1.5 bg-white hover:bg-slate-50 text-black border-2 border-black rounded-xl text-xs font-bold shadow-[2px_2px_0px_#000000] flex items-center gap-1.5 cursor-pointer active:translate-y-0.5"
+              className="px-3 py-1.5 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-xl text-xs font-semibold shadow-xs flex items-center gap-1.5 cursor-pointer transition-colors"
               title="Refresh User Data"
             >
-              <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
+              <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin text-[#173B67]" : ""}`} />
               <span className="hidden sm:inline">Refresh</span>
             </button>
 
             <button
               type="button"
               onClick={handleExportCSV}
-              className="px-2.5 sm:px-3 py-1.5 bg-[#15803D] hover:bg-[#166534] text-white border-2 border-black rounded-xl text-xs font-black shadow-[2px_2px_0px_#000000] flex items-center gap-1.5 cursor-pointer active:translate-y-0.5"
+              className="px-3 py-1.5 bg-[#173B67] hover:bg-[#0F2643] text-white rounded-xl text-xs font-semibold shadow-xs flex items-center gap-1.5 cursor-pointer transition-colors"
               title="Export All Users to CSV"
             >
               <Download className="w-3.5 h-3.5" />
@@ -348,7 +345,7 @@ export default function AdminVaultPage() {
 
             <Link
               href="/dashboard"
-              className="px-2.5 sm:px-3 py-1.5 bg-white hover:bg-slate-50 text-black border-2 border-black rounded-xl text-xs font-bold shadow-[2px_2px_0px_#000000] flex items-center gap-1"
+              className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-semibold flex items-center gap-1 transition-colors"
               title="Back to Business Dashboard"
             >
               <span className="text-xs">Dashboard</span>
@@ -358,124 +355,124 @@ export default function AdminVaultPage() {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-3 sm:px-6 pt-5 sm:pt-6 space-y-5 sm:space-y-6">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 pt-6 space-y-6">
         {/* Banner */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b-2 border-black/10 pb-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200/80 pb-4">
           <div>
-            <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-black tracking-tight flex items-center gap-2">
+            <h1 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[#173B67] tracking-tight flex items-center gap-2">
               <span>Platform Intelligence</span>
-              <span className="text-[11px] sm:text-xs bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold px-2 py-0.5 rounded-full">
+              <span className="text-[11px] sm:text-xs bg-blue-50 text-[#173B67] border border-blue-200 font-bold px-2.5 py-0.5 rounded-full">
                 Live
               </span>
             </h1>
-            <p className="text-xs text-slate-600 font-medium">
+            <p className="text-xs text-slate-500 font-normal">
               Monitor registered businesses, track user signups, inspect logins, and grant Pro licenses.
             </p>
           </div>
 
           {actionMessage && (
-            <div className="bg-emerald-100 border-2 border-black text-emerald-950 px-3.5 py-1.5 rounded-xl text-xs font-bold shadow-[2px_2px_0px_#000000] flex items-center gap-1.5 animate-in fade-in self-start sm:self-auto">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700 shrink-0" />
+            <div className="bg-blue-50 border border-blue-200 text-[#173B67] px-3.5 py-1.5 rounded-xl text-xs font-semibold shadow-xs flex items-center gap-1.5 animate-in fade-in self-start sm:self-auto">
+              <CheckCircle2 className="w-3.5 h-3.5 text-[#3478C8] shrink-0" />
               <span>{actionMessage}</span>
             </div>
           )}
         </div>
 
         {/* 4 Telemetry Metrics Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {/* Total Registered Users */}
-          <div className="bg-white border-2 border-black rounded-2xl p-3 sm:p-5 shadow-[3px_3px_0px_#000000] space-y-1.5">
+          <div className="bg-white border border-slate-200/80 rounded-2xl p-4 sm:p-5 shadow-card space-y-1.5">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] sm:text-[11px] font-bold text-slate-500 uppercase tracking-wider truncate">
+              <span className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider truncate">
                 Total Users
               </span>
-              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-blue-50 text-blue-600 rounded-xl border border-black/20 flex items-center justify-center shrink-0">
-                <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <div className="w-8 h-8 bg-blue-50 text-[#3478C8] rounded-xl flex items-center justify-center shrink-0">
+                <Users className="w-4 h-4" />
               </div>
             </div>
-            <div className="text-xl sm:text-2xl md:text-3xl font-black text-black">
+            <div className="text-xl sm:text-2xl md:text-3xl font-black text-[#173B67]">
               {loading ? "..." : data?.stats.totalUsers || 0}
             </div>
-            <p className="text-[10px] text-slate-500 font-medium truncate">Registered accounts</p>
+            <p className="text-[10px] text-slate-500 font-normal truncate">Registered accounts</p>
           </div>
 
           {/* Total Active Businesses */}
-          <div className="bg-white border-2 border-black rounded-2xl p-3 sm:p-5 shadow-[3px_3px_0px_#000000] space-y-1.5">
+          <div className="bg-white border border-slate-200/80 rounded-2xl p-4 sm:p-5 shadow-card space-y-1.5">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] sm:text-[11px] font-bold text-slate-500 uppercase tracking-wider truncate">
+              <span className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider truncate">
                 Businesses
               </span>
-              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-emerald-50 text-emerald-600 rounded-xl border border-black/20 flex items-center justify-center shrink-0">
-                <Building2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <div className="w-8 h-8 bg-blue-50 text-[#173B67] rounded-xl flex items-center justify-center shrink-0">
+                <Building2 className="w-4 h-4" />
               </div>
             </div>
-            <div className="text-xl sm:text-2xl md:text-3xl font-black text-black">
+            <div className="text-xl sm:text-2xl md:text-3xl font-black text-[#173B67]">
               {loading ? "..." : data?.stats.totalBusinesses || 0}
             </div>
-            <p className="text-[10px] text-slate-500 font-medium truncate">Active storefronts</p>
+            <p className="text-[10px] text-slate-500 font-normal truncate">Active storefronts</p>
           </div>
 
           {/* Paid Pro Licenses */}
-          <div className="bg-white border-2 border-black rounded-2xl p-3 sm:p-5 shadow-[3px_3px_0px_#000000] space-y-1.5">
+          <div className="bg-white border border-slate-200/80 rounded-2xl p-4 sm:p-5 shadow-card space-y-1.5">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] sm:text-[11px] font-bold text-slate-500 uppercase tracking-wider truncate">
+              <span className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider truncate">
                 Pro Licenses
               </span>
-              <div className="w-8 h-8 bg-amber-50 text-amber-600 rounded-xl border border-black/20 flex items-center justify-center">
+              <div className="w-8 h-8 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center">
                 <CreditCard className="w-4 h-4" />
               </div>
             </div>
-            <div className="text-2xl sm:text-3xl font-black text-[#15803D]">
+            <div className="text-2xl sm:text-3xl font-black text-emerald-700">
               {loading ? "..." : data?.stats.proUsers || 0}
             </div>
-            <p className="text-[10px] text-slate-600 font-bold">
-              ₹{((data?.stats.estimatedRevenue || 0)).toLocaleString("en-IN")} total revenue
+            <p className="text-[10px] text-slate-600 font-semibold">
+              ₹{((data?.stats.estimatedRevenue || 0)).toLocaleString("en-IN")} total volume
             </p>
           </div>
 
           {/* Today's Logins */}
-          <div className="bg-white border-2 border-black rounded-2xl p-4 sm:p-5 shadow-[3px_3px_0px_#000000] space-y-2">
+          <div className="bg-white border border-slate-200/80 rounded-2xl p-4 sm:p-5 shadow-card space-y-1.5">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
                 Logins Today
               </span>
-              <div className="w-8 h-8 bg-purple-50 text-purple-600 rounded-xl border border-black/20 flex items-center justify-center">
+              <div className="w-8 h-8 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center">
                 <Activity className="w-4 h-4" />
               </div>
             </div>
-            <div className="text-2xl sm:text-3xl font-black text-black">
+            <div className="text-2xl sm:text-3xl font-black text-[#173B67]">
               {loading ? "..." : data?.stats.loginsToday || 0}
             </div>
-            <p className="text-[10px] text-slate-500 font-medium">Active sessions in 24h</p>
+            <p className="text-[10px] text-slate-500 font-normal">Active sessions in 24h</p>
           </div>
         </div>
 
         {/* Tab Selection */}
-        <div className="flex items-center gap-2 border-b-2 border-black/10 pt-2 pb-1">
+        <div className="flex items-center gap-2 border-b border-slate-200/80 pt-2 pb-1">
           <button
             type="button"
             onClick={() => setActiveTab("users")}
-            className={`px-4 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-2 border-2 ${
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 border ${
               activeTab === "users"
-                ? "bg-black text-white border-black shadow-[2px_2px_0px_#000000]"
-                : "bg-white text-slate-700 border-transparent hover:border-black/20"
+                ? "bg-[#173B67] text-white border-[#173B67] shadow-sm"
+                : "bg-white text-slate-600 border-slate-200 hover:text-[#173B67]"
             }`}
           >
             <Users className="w-3.5 h-3.5" />
-            <span>Who Registered ({data?.users.length || 0})</span>
+            <span>Registered Accounts ({data?.users.length || 0})</span>
           </button>
 
           <button
             type="button"
             onClick={() => setActiveTab("logins")}
-            className={`px-4 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-2 border-2 ${
+            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 border ${
               activeTab === "logins"
-                ? "bg-black text-white border-black shadow-[2px_2px_0px_#000000]"
-                : "bg-white text-slate-700 border-transparent hover:border-black/20"
+                ? "bg-[#173B67] text-white border-[#173B67] shadow-sm"
+                : "bg-white text-slate-600 border-slate-200 hover:text-[#173B67]"
             }`}
           >
-            <Activity className="w-3.5 h-3.5 text-emerald-500" />
-            <span>Who Logged In ({data?.recentLogins.length || 0})</span>
+            <Activity className="w-3.5 h-3.5 text-[#3478C8]" />
+            <span>Login Audit ({data?.recentLogins.length || 0})</span>
           </button>
         </div>
 
@@ -483,7 +480,7 @@ export default function AdminVaultPage() {
         {activeTab === "users" && (
           <div className="space-y-4">
             {/* Search & Filter Pill Bar */}
-            <div className="bg-white border-2 border-black rounded-2xl p-3 sm:p-4 shadow-[3px_3px_0px_#000000] flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            <div className="bg-white border border-slate-200/80 rounded-2xl p-3 sm:p-4 shadow-card flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
               <div className="relative flex-1">
                 <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
@@ -491,7 +488,7 @@ export default function AdminVaultPage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search by email, business name, or location..."
-                  className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs font-medium text-black focus:outline-none focus:ring-2 focus:ring-black"
+                  className="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#173B67]"
                 />
               </div>
 
@@ -501,9 +498,9 @@ export default function AdminVaultPage() {
                     key={filter}
                     type="button"
                     onClick={() => setPlanFilter(filter)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold capitalize transition-all cursor-pointer shrink-0 ${
+                    className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all cursor-pointer shrink-0 ${
                       planFilter === filter
-                        ? "bg-[#15803D] text-white border border-black shadow-xs"
+                        ? "bg-[#173B67] text-white shadow-xs"
                         : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                     }`}
                   >
@@ -513,32 +510,11 @@ export default function AdminVaultPage() {
               </div>
             </div>
 
-            {/* Super Admin Client Inspection Callout */}
-            <div className="bg-amber-100 border-2 border-black text-amber-950 p-3 sm:p-3.5 rounded-2xl text-xs font-black shadow-[3px_3px_0px_#000000] flex items-center justify-between gap-3">
-              <div className="flex items-center gap-2.5 min-w-0">
-                <div className="w-8 h-8 rounded-xl bg-black text-amber-300 flex items-center justify-center shrink-0 shadow-xs">
-                  <Eye className="w-4 h-4" />
-                </div>
-                <div className="min-w-0">
-                  <span className="font-extrabold uppercase text-[10px] tracking-wider bg-black text-amber-300 px-2 py-0.5 rounded mr-1.5">
-                    SUPER ADMIN FEATURE
-                  </span>
-                  <span className="font-medium text-slate-900">
-                    Click <strong>"Check Dashboard"</strong> or any client account/business name to inspect their live dashboard, analytics, standees, and customer feedback!
-                  </span>
-                </div>
-              </div>
-            </div>
-
             {/* Users Directory Table */}
-            <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_#000000] overflow-hidden">
-              <div className="sm:hidden text-[10px] text-slate-500 font-bold px-3.5 py-1.5 bg-amber-50/80 border-b border-black/10 flex items-center justify-between">
-                <span>👉 Swipe horizontally for all columns</span>
-                <span className="text-amber-800 font-bold">Check Dashboards →</span>
-              </div>
+            <div className="bg-white border border-slate-200/80 rounded-2xl shadow-card overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 border-b-2 border-black text-slate-700 font-bold uppercase tracking-wider text-[10px]">
+                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-[10px]">
                     <tr>
                       <th className="py-3 px-4">Client / Account</th>
                       <th className="py-3 px-4">Registered Date</th>
@@ -552,13 +528,13 @@ export default function AdminVaultPage() {
                   <tbody className="divide-y divide-slate-100 font-medium">
                     {loading ? (
                       <tr>
-                        <td colSpan={7} className="text-center py-12 text-slate-500 font-bold">
+                        <td colSpan={7} className="text-center py-12 text-slate-400 font-medium">
                           Loading user directory...
                         </td>
                       </tr>
                     ) : filteredUsers.length === 0 ? (
                       <tr>
-                        <td colSpan={7} className="text-center py-12 text-slate-500 font-medium">
+                        <td colSpan={7} className="text-center py-12 text-slate-400 font-medium">
                           No users found matching your search.
                         </td>
                       </tr>
@@ -567,33 +543,31 @@ export default function AdminVaultPage() {
                         const isSuperAdmin =
                           user.email.toLowerCase() === "nitin.sharmaji0512@gmail.com" ||
                           user.email.toLowerCase() === "nitin.sharmaji2405@gmail.com" ||
-                          user.email.toLowerCase() === "hardic122@gmail.com" ||
-                          user.email.toLowerCase() === "agrawalmayank397@gmail.com" ||
-                          user.email.toLowerCase() === "mehtayash780@gmail.com";
+                          user.email.toLowerCase() === "hardic122@gmail.com";
                         return (
                           <tr key={user.id} className="hover:bg-slate-50/80 transition-colors">
-                            {/* User Info - Clickable to check dashboard */}
+                            {/* User Info */}
                             <td className="py-3.5 px-4">
                               <div
                                 onClick={() => handleInspectDashboard(user)}
-                                className="flex items-center gap-2.5 cursor-pointer group/user hover:bg-emerald-50/70 p-1.5 -m-1.5 rounded-xl transition-all"
-                                title="Click to check this client's dashboard"
+                                className="flex items-center gap-2.5 cursor-pointer group/user p-1 -m-1 rounded-xl transition-all"
+                                title="Click to inspect this client's dashboard"
                               >
-                                <div className="w-8 h-8 rounded-full bg-slate-900 group-hover/user:bg-[#15803D] text-white font-bold flex items-center justify-center text-xs shrink-0 transition-colors shadow-xs">
+                                <div className="w-8 h-8 rounded-full bg-[#173B67] text-white font-bold flex items-center justify-center text-xs shrink-0 shadow-xs">
                                   {user.email.charAt(0).toUpperCase()}
                                 </div>
                                 <div className="min-w-0">
-                                  <div className="font-bold text-black group-hover/user:text-[#15803D] flex items-center gap-1.5 transition-colors">
-                                    <span className="truncate max-w-[170px] sm:max-w-[210px] underline decoration-dotted group-hover/user:decoration-solid">
+                                  <div className="font-bold text-slate-900 group-hover/user:text-[#3478C8] flex items-center gap-1.5 transition-colors">
+                                    <span className="truncate max-w-[170px] sm:max-w-[210px]">
                                       {user.email}
                                     </span>
                                     {isSuperAdmin && (
-                                      <span className="text-[9px] bg-amber-100 text-amber-800 border border-amber-300 font-black px-1.5 py-0.2 rounded">
+                                      <span className="text-[9px] bg-amber-100 text-amber-800 border border-amber-300 font-bold px-1.5 py-0.2 rounded">
                                         ADMIN
                                       </span>
                                     )}
                                   </div>
-                                  <div className="text-[10px] text-slate-500 flex items-center gap-1.5">
+                                  <div className="text-[10px] text-slate-400 flex items-center gap-1.5">
                                     <span>{user.lastLoginProvider || "credentials"}</span>
                                     <span>•</span>
                                     <span>{user.loginCount || 1} logins</span>
@@ -616,31 +590,28 @@ export default function AdminVaultPage() {
 
                             {/* Last Login */}
                             <td className="py-3.5 px-4 whitespace-nowrap">
-                              <div className="font-bold text-slate-800">
+                              <div className="font-semibold text-slate-700">
                                 {formatTimestamp(user.lastLoginAt)}
                               </div>
                             </td>
 
-                            {/* Business Storefront - Clickable to check dashboard */}
+                            {/* Business Storefront */}
                             <td className="py-3.5 px-4">
                               {user.business ? (
                                 <div
                                   onClick={() => handleInspectDashboard(user)}
-                                  className="space-y-0.5 cursor-pointer group/biz hover:bg-emerald-50/80 p-1.5 -m-1.5 rounded-xl transition-all border border-transparent hover:border-emerald-300"
+                                  className="space-y-0.5 cursor-pointer group/biz p-1 -m-1 rounded-xl transition-all"
                                   title="Click to check this client's dashboard"
                                 >
-                                  <div className="font-bold text-black group-hover/biz:text-emerald-900 flex items-center gap-1.5">
-                                    <span className="underline decoration-dotted decoration-emerald-500/70 group-hover/biz:decoration-solid">
-                                      {user.business.name}
-                                    </span>
-                                    <span className="text-[9px] bg-slate-100 text-slate-600 px-1.5 py-0.2 rounded font-semibold capitalize">
+                                  <div className="font-semibold text-slate-900 group-hover/biz:text-[#3478C8] flex items-center gap-1.5">
+                                    <span>{user.business.name}</span>
+                                    <span className="text-[9px] bg-slate-100 text-slate-600 px-1.5 py-0.2 rounded font-medium capitalize">
                                       {user.business.category}
                                     </span>
-                                    <Eye className="w-3 h-3 text-emerald-600 opacity-0 group-hover/biz:opacity-100 transition-opacity shrink-0" />
                                   </div>
                                   <div className="flex items-center gap-2 text-[10px]">
                                     {user.business.location && (
-                                      <span className="text-slate-500 truncate max-w-[120px]">
+                                      <span className="text-slate-400 truncate max-w-[120px]">
                                         📍 {user.business.location}
                                       </span>
                                     )}
@@ -650,10 +621,10 @@ export default function AdminVaultPage() {
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         onClick={(e) => e.stopPropagation()}
-                                        className="text-[#15803D] hover:underline flex items-center gap-0.5 font-bold shrink-0"
+                                        className="text-[#3478C8] hover:underline flex items-center gap-0.5 font-semibold shrink-0"
                                         title="Preview Customer Review Funnel"
                                       >
-                                        <span>Public Funnel</span>
+                                        <span>Funnel</span>
                                         <ExternalLink className="w-2.5 h-2.5" />
                                       </a>
                                     )}
@@ -663,10 +634,10 @@ export default function AdminVaultPage() {
                                 <button
                                   type="button"
                                   onClick={() => handleInspectDashboard(user)}
-                                  className="text-[11px] text-slate-400 hover:text-black italic hover:underline flex items-center gap-1 cursor-pointer"
+                                  className="text-[11px] text-slate-400 hover:text-slate-700 italic flex items-center gap-1 cursor-pointer"
                                   title="View client onboarding workspace"
                                 >
-                                  <span>Onboarding pending (Inspect)</span>
+                                  <span>Onboarding pending</span>
                                   <ArrowRight className="w-2.5 h-2.5" />
                                 </button>
                               )}
@@ -675,34 +646,33 @@ export default function AdminVaultPage() {
                             {/* Plan Status Badge */}
                             <td className="py-3.5 px-4 whitespace-nowrap">
                               {user.isPro ? (
-                                <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded-full text-[10px] font-black">
+                                <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-0.5 rounded-full text-[10px] font-bold">
                                   <CheckCircle2 className="w-3 h-3 text-emerald-600" />
                                   {user.planName || "LIFETIME PRO"}
                                 </span>
                               ) : (
-                                <span className="inline-flex items-center gap-1 bg-slate-100 text-slate-600 border border-slate-300 px-2 py-0.5 rounded-full text-[10px] font-bold">
+                                <span className="inline-flex items-center gap-1 bg-slate-100 text-slate-600 border border-slate-200 px-2.5 py-0.5 rounded-full text-[10px] font-semibold">
                                   <XCircle className="w-3 h-3 text-slate-400" />
                                   UNPAID
                                 </span>
                               )}
                             </td>
 
-                            {/* Dedicated Check Dashboard Action */}
+                            {/* Check Dashboard Action */}
                             <td className="py-3.5 px-4 text-center whitespace-nowrap">
                               <button
                                 type="button"
                                 disabled={actionLoading === `inspect_${user.id}`}
                                 onClick={() => handleInspectDashboard(user)}
-                                className="px-3 py-1.5 bg-black hover:bg-slate-800 text-amber-300 hover:text-white border-2 border-black rounded-xl text-xs font-black shadow-[2px_2px_0px_#000000] flex items-center justify-center gap-1.5 cursor-pointer active:translate-y-0.5 transition-all mx-auto group"
+                                className="px-3 py-1.5 bg-[#173B67] hover:bg-[#0F2643] text-white rounded-xl text-xs font-semibold shadow-xs flex items-center justify-center gap-1.5 cursor-pointer transition-all mx-auto"
                                 title={`Inspect dashboard for ${user.business?.name || user.email}`}
                               >
                                 {actionLoading === `inspect_${user.id}` ? (
                                   <RefreshCw className="w-3.5 h-3.5 animate-spin text-white" />
                                 ) : (
-                                  <Eye className="w-3.5 h-3.5 text-amber-300 group-hover:scale-110 transition-transform" />
+                                  <Eye className="w-3.5 h-3.5 text-[#3478C8]" />
                                 )}
-                                <span>Check Dashboard</span>
-                                <ArrowRight className="w-3 h-3 text-slate-300 group-hover:translate-x-0.5 transition-transform" />
+                                <span>Inspect</span>
                               </button>
                             </td>
 
@@ -712,10 +682,10 @@ export default function AdminVaultPage() {
                                 type="button"
                                 disabled={actionLoading === user.email}
                                 onClick={() => handleTogglePro(user)}
-                                className={`px-3 py-1.5 rounded-xl text-xs font-black border-2 border-black shadow-[2px_2px_0px_#000000] cursor-pointer active:translate-y-0.5 transition-all ${
+                                className={`px-3 py-1.5 rounded-xl text-xs font-semibold shadow-xs cursor-pointer transition-all ${
                                   user.isPro
-                                    ? "bg-rose-50 text-rose-700 hover:bg-rose-100"
-                                    : "bg-[#15803D] text-white hover:bg-[#166534]"
+                                    ? "bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200"
+                                    : "bg-emerald-600 hover:bg-emerald-700 text-white"
                                 }`}
                               >
                                 {actionLoading === user.email ? (
@@ -735,36 +705,30 @@ export default function AdminVaultPage() {
                       })
                     )}
                   </tbody>
-
                 </table>
               </div>
             </div>
           </div>
         )}
 
-        {/* TAB 2: WHO LOGGED IN (LIVE AUDIT FEED) */}
+        {/* TAB 2: WHO LOGGED IN */}
         {activeTab === "logins" && (
-          <div className="bg-white border-2 border-black rounded-2xl shadow-[4px_4px_0px_#000000] overflow-hidden">
-            <div className="p-4 border-b-2 border-black bg-slate-50 flex items-center justify-between">
+          <div className="bg-white border border-slate-200/80 rounded-2xl shadow-card overflow-hidden">
+            <div className="p-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-black text-black">Chronological Login Events</h3>
-                <p className="text-[11px] text-slate-500 font-medium">
-                  Real-time security log of user authentications across Google OAuth & Email
+                <h3 className="text-sm font-bold text-[#173B67]">Chronological Login Events</h3>
+                <p className="text-[11px] text-slate-500 font-normal">
+                  Real-time security audit log of user authentications
                 </p>
               </div>
-              <span className="text-[10px] font-bold bg-black text-white px-2 py-0.5 rounded-md shrink-0">
+              <span className="text-[10px] font-bold bg-[#173B67] text-white px-2.5 py-0.5 rounded-full shrink-0">
                 {data?.recentLogins.length || 0} Events Recorded
               </span>
             </div>
 
-            <div className="sm:hidden text-[10px] text-slate-500 font-bold px-3.5 py-1.5 bg-amber-50/80 border-b border-black/10 flex items-center justify-between">
-              <span>👉 Swipe horizontally to view full client info</span>
-              <span className="text-slate-700">Audit details →</span>
-            </div>
-
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 border-b-2 border-black text-slate-700 font-bold uppercase tracking-wider text-[10px]">
+                <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-[10px]">
                   <tr>
                     <th className="py-3 px-4">User Account</th>
                     <th className="py-3 px-4">Timestamp</th>
@@ -775,27 +739,27 @@ export default function AdminVaultPage() {
                 <tbody className="divide-y divide-slate-100 font-medium">
                   {loading ? (
                     <tr>
-                      <td colSpan={4} className="text-center py-12 text-slate-500 font-bold">
+                      <td colSpan={4} className="text-center py-12 text-slate-400 font-medium">
                         Loading login telemetry...
                       </td>
                     </tr>
                   ) : !data?.recentLogins.length ? (
                     <tr>
-                      <td colSpan={4} className="text-center py-12 text-slate-500 font-medium">
-                        No login events recorded yet. New logins will automatically show up here.
+                      <td colSpan={4} className="text-center py-12 text-slate-400 font-medium">
+                        No login events recorded yet.
                       </td>
                     </tr>
                   ) : (
                     data.recentLogins.map((log) => (
                       <tr key={log.id} className="hover:bg-slate-50/80 transition-colors">
                         <td className="py-3 px-4">
-                          <div className="font-bold text-black flex items-center gap-1.5">
+                          <div className="font-semibold text-slate-900 flex items-center gap-1.5">
                             <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
                             <span>{log.email}</span>
                           </div>
                         </td>
                         <td className="py-3 px-4 whitespace-nowrap text-slate-600">
-                          <div className="font-bold text-black">{formatTimestamp(log.timestamp)}</div>
+                          <div className="font-semibold text-slate-800">{formatTimestamp(log.timestamp)}</div>
                           <div className="text-[10px] text-slate-400">
                             {new Date(log.timestamp).toLocaleTimeString("en-IN", {
                               hour: "2-digit",
@@ -806,7 +770,7 @@ export default function AdminVaultPage() {
                         </td>
                         <td className="py-3 px-4 whitespace-nowrap">
                           <span
-                            className={`inline-block px-2 py-0.5 rounded-md text-[10px] font-bold border ${
+                            className={`inline-block px-2 py-0.5 rounded-md text-[10px] font-semibold border ${
                               log.provider.includes("Google")
                                 ? "bg-blue-50 text-blue-800 border-blue-200"
                                 : log.provider.includes("Registration")
