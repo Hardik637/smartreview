@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -33,20 +33,7 @@ import Logo from "@/components/Logo";
 export default function LandingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [pricingDropdownOpen, setPricingDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
   const [copiedSample, setCopiedSample] = useState(false);
-
-  // Close pricing dropdown when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setPricingDropdownOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   const toggleFaq = (index: number) => {
     setOpenFaq(openFaq === index ? null : index);
@@ -125,7 +112,6 @@ export default function LandingPage() {
             <a href="#how-it-works" className="hover:text-[#173B67] transition-colors">How It Works</a>
             <a href="#features" className="hover:text-[#173B67] transition-colors">Features</a>
             <a href="#architecture" className="hover:text-[#173B67] transition-colors">Architecture</a>
-            <a href="#pricing" className="hover:text-[#173B67] transition-colors">Pricing</a>
             <a href="#faq" className="hover:text-[#173B67] transition-colors">FAQ</a>
             <Link
               href="/r/the-coffee-house"
@@ -198,13 +184,6 @@ export default function LandingPage() {
                 className="block text-sm font-semibold text-slate-800"
               >
                 System Architecture
-              </a>
-              <a
-                href="#pricing"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block text-sm font-semibold text-slate-800"
-              >
-                Pricing Plans
               </a>
               <a
                 href="#faq"
@@ -287,57 +266,13 @@ export default function LandingPage() {
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center lg:justify-start gap-3.5 pt-3">
-              {/* Primary Call to Action */}
-              <div className="relative" ref={dropdownRef}>
-                <button
-                  type="button"
-                  onClick={() => setPricingDropdownOpen(!pricingDropdownOpen)}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-[#173B67] hover:bg-[#1C4982] text-white rounded-xl text-sm font-bold shadow-subtle hover:shadow transition-all"
-                >
-                  <span>Explore Subscription Plans</span>
-                  <ChevronDown className={`w-4 h-4 transition-transform ${pricingDropdownOpen ? "rotate-180" : ""}`} />
-                </button>
-
-                {/* Popover Options */}
-                <AnimatePresence>
-                  {pricingDropdownOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 8 }}
-                      className="absolute left-0 right-0 sm:right-auto sm:w-72 mt-2 bg-white border border-slate-200 rounded-xl p-2.5 shadow-elevated z-50 space-y-1.5 text-left"
-                    >
-                      <Link
-                        href="/signup?plan=18m"
-                        onClick={() => setPricingDropdownOpen(false)}
-                        className="block p-2.5 rounded-lg hover:bg-slate-50 transition-colors"
-                      >
-                        <p className="text-xs font-bold text-slate-900">Standard Plan • ₹1,999</p>
-                        <p className="text-[11px] text-slate-500">18 Months License • QR & AI</p>
-                      </Link>
-                      <Link
-                        href="/signup?plan=24m"
-                        onClick={() => setPricingDropdownOpen(false)}
-                        className="block p-2.5 rounded-lg bg-blue-50/60 hover:bg-blue-50 transition-colors border border-blue-100"
-                      >
-                        <div className="flex items-center justify-between">
-                          <p className="text-xs font-bold text-[#173B67]">Pro Plan • ₹2,499</p>
-                          <span className="text-[9px] font-bold uppercase tracking-wider bg-[#3478C8] text-white px-1.5 py-0.5 rounded">Popular</span>
-                        </div>
-                        <p className="text-[11px] text-slate-600">24 Months License • Unlimited Standees</p>
-                      </Link>
-                      <Link
-                        href="/signup?plan=48m"
-                        onClick={() => setPricingDropdownOpen(false)}
-                        className="block p-2.5 rounded-lg hover:bg-slate-50 transition-colors"
-                      >
-                        <p className="text-xs font-bold text-slate-900">Enterprise Plan • ₹3,499</p>
-                        <p className="text-[11px] text-slate-500">48 Months License • Multi-Counter</p>
-                      </Link>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+              <Link
+                href="/signup"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-[#173B67] hover:bg-[#1C4982] text-white rounded-xl text-sm font-bold shadow-subtle hover:shadow transition-all"
+              >
+                <span>Launch Project Workspace</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
 
               {/* Demo button */}
               <Link
@@ -624,106 +559,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 
-        ========================================================================
-        PRICING & SUBSCRIPTION SECTION
-        ========================================================================
-      */}
-      <section id="pricing" className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-16 border-t border-slate-200/70">
-        <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
-          <span className="text-xs font-extrabold uppercase tracking-wider text-[#3478C8]">Transparent Pricing</span>
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-900">Simple, Upfront Project Plans</h2>
-          <p className="text-sm text-slate-600">
-            Zero hidden fees or recurring subscriptions. Integrated with Razorpay test gateway for grading demonstrations.
-          </p>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          {/* Plan 1 */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-subtle flex flex-col justify-between space-y-6">
-            <div className="space-y-4">
-              <div>
-                <h3 className="text-base font-bold text-slate-900">Standard License</h3>
-                <p className="text-xs text-slate-500">Ideal for single table or counter</p>
-              </div>
-              <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-black text-slate-900">₹1,999</span>
-                <span className="text-xs text-slate-500">/ 18 months</span>
-              </div>
-              <ul className="text-xs text-slate-600 space-y-2.5 pt-2">
-                <li className="flex items-center gap-2">✓ 18 Months Full Access</li>
-                <li className="flex items-center gap-2">✓ AI Review Generation</li>
-                <li className="flex items-center gap-2">✓ Digital QR Code</li>
-                <li className="flex items-center gap-2">✓ Analytics Dashboard</li>
-                <li className="flex items-center gap-2">✓ Private Feedback Inbox</li>
-              </ul>
-            </div>
-            <Link
-              href="/signup?plan=18m"
-              className="w-full py-3 text-center text-xs font-bold text-[#173B67] bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors"
-            >
-              Select Standard
-            </Link>
-          </div>
-
-          {/* Plan 2: Highlighted */}
-          <div className="bg-white border-2 border-[#173B67] rounded-2xl p-6 shadow-card flex flex-col justify-between space-y-6 relative">
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#173B67] text-white text-[10px] font-bold uppercase tracking-wider px-3 py-0.5 rounded-full">
-              Most Popular
-            </div>
-            <div className="space-y-4">
-              <div>
-                <h3 className="text-base font-bold text-[#173B67]">Pro License</h3>
-                <p className="text-xs text-slate-500">Best for active retail & cafes</p>
-              </div>
-              <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-black text-slate-900">₹2,499</span>
-                <span className="text-xs text-slate-500">/ 24 months</span>
-              </div>
-              <ul className="text-xs text-slate-600 space-y-2.5 pt-2">
-                <li className="flex items-center gap-2 font-semibold text-slate-800">✓ 2 Full Years License</li>
-                <li className="flex items-center gap-2">✓ High-Quota AI Engine</li>
-                <li className="flex items-center gap-2">✓ Unlimited Printable Standees</li>
-                <li className="flex items-center gap-2">✓ Advanced Sentiment Routing</li>
-                <li className="flex items-center gap-2">✓ Priority Email Notifications</li>
-              </ul>
-            </div>
-            <Link
-              href="/signup?plan=24m"
-              className="w-full py-3 text-center text-xs font-bold text-white bg-[#173B67] hover:bg-[#1C4982] rounded-xl shadow-subtle transition-all"
-            >
-              Get Started with Pro
-            </Link>
-          </div>
-
-          {/* Plan 3 */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-subtle flex flex-col justify-between space-y-6">
-            <div className="space-y-4">
-              <div>
-                <h3 className="text-base font-bold text-slate-900">Enterprise License</h3>
-                <p className="text-xs text-slate-500">Multi-table & chain locations</p>
-              </div>
-              <div className="flex items-baseline gap-1">
-                <span className="text-3xl font-black text-slate-900">₹3,499</span>
-                <span className="text-xs text-slate-500">/ 48 months</span>
-              </div>
-              <ul className="text-xs text-slate-600 space-y-2.5 pt-2">
-                <li className="flex items-center gap-2">✓ 4 Full Years License</li>
-                <li className="flex items-center gap-2">✓ Maximum AI Quota</li>
-                <li className="flex items-center gap-2">✓ Multi-Counter QR Generation</li>
-                <li className="flex items-center gap-2">✓ Custom Keyword Management</li>
-                <li className="flex items-center gap-2">✓ Dedicated Support Channel</li>
-              </ul>
-            </div>
-            <Link
-              href="/signup?plan=48m"
-              className="w-full py-3 text-center text-xs font-bold text-[#173B67] bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors"
-            >
-              Select Enterprise
-            </Link>
-          </div>
-        </div>
-      </section>
 
       {/* 
         ========================================================================
