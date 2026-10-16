@@ -16,10 +16,7 @@ import {
   Menu,
   X,
   Play,
-  Layers,
   Cpu,
-  Database,
-  Lock,
   GraduationCap,
   Github,
 } from "lucide-react";
@@ -97,7 +94,6 @@ export default function LandingPage() {
           <nav className="hidden md:flex items-center gap-7 text-[13.5px] font-semibold text-slate-600">
             <a href="#how-it-works" className="hover:text-[#173B67] transition-colors">How It Works</a>
             <a href="#features" className="hover:text-[#173B67] transition-colors">Features</a>
-            <a href="#architecture" className="hover:text-[#173B67] transition-colors">Architecture</a>
             <a href="#faq" className="hover:text-[#173B67] transition-colors">FAQ</a>
             <Link
               href="/r/the-coffee-house"
@@ -163,13 +159,6 @@ export default function LandingPage() {
                 className="block text-sm font-semibold text-slate-800"
               >
                 Features
-              </a>
-              <a
-                href="#architecture"
-                onClick={() => setMobileMenuOpen(false)}
-                className="block text-sm font-semibold text-slate-800"
-              >
-                System Architecture
               </a>
               <a
                 href="#faq"
@@ -393,62 +382,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* 
-        ========================================================================
-        SYSTEM ARCHITECTURE & ACADEMIC HIGHLIGHTS
-        ========================================================================
-      */}
-      <section id="architecture" className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-16 border-t border-slate-200/70">
-        <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
-          <span className="text-xs font-extrabold uppercase tracking-wider text-[#3478C8]">Technical Implementation</span>
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-900">System Architecture & Tech Stack</h2>
-          <p className="text-sm text-slate-600">
-            Engineered with modern full-stack web technologies and cloud best practices.
-          </p>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-          <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-subtle space-y-2.5">
-            <div className="w-9 h-9 rounded-lg bg-blue-50 text-[#173B67] flex items-center justify-center">
-              <Layers className="w-5 h-5" />
-            </div>
-            <h4 className="text-sm font-bold text-slate-900">Next.js 14 & TypeScript</h4>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              App Router architecture with Server Components, optimized API endpoints, and end-to-end type safety.
-            </p>
-          </div>
-
-          <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-subtle space-y-2.5">
-            <div className="w-9 h-9 rounded-lg bg-indigo-50 text-[#3478C8] flex items-center justify-center">
-              <Cpu className="w-5 h-5" />
-            </div>
-            <h4 className="text-sm font-bold text-slate-900">Google Gemini AI Engine</h4>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Integrated `@google/generative-ai` with hybrid zero-cost local NLP fallback for fast response times.
-            </p>
-          </div>
-
-          <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-subtle space-y-2.5">
-            <div className="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
-              <Database className="w-5 h-5" />
-            </div>
-            <h4 className="text-sm font-bold text-slate-900">Prisma ORM & SQLite</h4>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              Relational data modeling supporting businesses, review sessions, customer feedback, and analytics metrics.
-            </p>
-          </div>
-
-          <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-subtle space-y-2.5">
-            <div className="w-9 h-9 rounded-lg bg-amber-50 text-amber-700 flex items-center justify-center">
-              <Lock className="w-5 h-5" />
-            </div>
-            <h4 className="text-sm font-bold text-slate-900">Security & Rate Limiting</h4>
-            <p className="text-xs text-slate-600 leading-relaxed">
-              JWT session cookies, bcrypt password hashing, and token bucket API rate-limiting against automated abuse.
-            </p>
-          </div>
-        </div>
-      </section>
 
       {/* 
         ========================================================================
