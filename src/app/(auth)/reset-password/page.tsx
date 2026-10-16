@@ -252,9 +252,8 @@ export default function ResetPasswordPage() {
         </Suspense>
       </main>
 
-      {/* Footer */}
       <footer className="max-w-6xl w-full mx-auto px-6 py-6 text-center text-xs text-slate-400 font-medium z-10 border-t border-slate-200">
-        SmartReview System &copy; 2026 • College Minor Project by Hardik
+        SmartReview &copy; 2026. All rights reserved.
       </footer>
     </div>
   );

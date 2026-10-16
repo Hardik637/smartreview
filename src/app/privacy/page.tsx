@@ -5,7 +5,7 @@ import { Shield, ArrowLeft } from "lucide-react";
 
 export const metadata = {
   title: "Privacy Policy | SmartReview — AI Review Management System",
-  description: "Privacy policy and data protection practices for SmartReview College Minor Project.",
+  description: "Privacy policy and data protection practices for SmartReview.",
 };
 
 export default function PrivacyPolicyPage() {
@@ -64,9 +64,9 @@ export default function PrivacyPolicyPage() {
           </section>
 
           <section className="space-y-2">
-            <h2 className="text-base sm:text-lg font-bold text-[#173B67]">5. Academic Project Notice</h2>
+            <h2 className="text-base sm:text-lg font-bold text-[#173B67]">5. Policy Updates</h2>
             <p>
-              SmartReview is developed as an academic minor project demonstrating full-stack engineering, generative AI routing, and local business reputation management.
+              SmartReview may update this privacy policy periodically to reflect operational improvements or regulatory compliance. Continued use of our platform constitutes agreement with any revised terms.
             </p>
           </section>
         </div>

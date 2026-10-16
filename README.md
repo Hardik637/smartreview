@@ -1,7 +1,6 @@
 # SmartReview — AI-Powered Customer Review Management System
 
-> **College Minor Project**  
-> **Student / Author:** Hardik ([@Hardik637](https://github.com/Hardik637))  
+> **AI-Powered Customer Feedback & Reputation Platform**  
 > **Repository:** [https://github.com/Hardik637/smartreview](https://github.com/Hardik637/smartreview)  
 > **Deployment:** Hosted on Vercel  
 
@@ -31,7 +30,7 @@ In modern commerce, prospective customers rely heavily on Google Reviews and rat
 - 🏢 **Multi-Category Business Profiling**: Tailored review topics and prompts for cafes, restaurants, clinics, salons, auto shops, retail, and corporate services.
 - 💳 **Subscription & Plan Management**: Razorpay payment gateway integration with built-in sandbox mock fallback for development and grading evaluation.
 - 🔒 **Security & Authentication**: Secure JWT session authentication, bcrypt password hashing, reset token expiry, and strict API rate limiting.
-- 📱 **Fully Responsive Academic Design**: Optimized layout across mobile phones (360px+), tablets (768px+), and desktop displays (1440px+).
+- 📱 **Fully Responsive Modern Design**: Optimized layout across mobile phones (360px+), tablets (768px+), and desktop displays (1440px+).
 
 ---
 
@@ -151,12 +150,6 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
    - `DATABASE_URL`: Your cloud database connection string (e.g., Neon Postgres / Supabase)
    - `GEMINI_API_KEY`: Google Gemini API key
 6. Click **Deploy**. Vercel will automatically build the Next.js application and deploy it to a global edge CDN.
-
----
-
-## 📜 Academic Declaration
-
-This project was developed by **Hardik** as a **College Minor Project**. It demonstrates the practical application of full-stack engineering, RESTful API design, database modeling, generative AI integration, and production cloud deployment.
 
 ---
 

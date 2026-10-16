@@ -247,7 +247,7 @@ export default function DashboardLayout({
     },
   ];
 
-  const origin = typeof window !== "undefined" ? window.location.origin : "https://smartreview-hardik.vercel.app";
+  const origin = typeof window !== "undefined" ? window.location.origin : (process.env.NEXT_PUBLIC_APP_URL || "https://smartreview-flame.vercel.app");
   const publicReviewUrl = business?.slug ? `${origin}/r/${business.slug}` : "#";
 
   if (pathname === "/onboarding") {

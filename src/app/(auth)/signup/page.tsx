@@ -79,7 +79,7 @@ export default function SignupPage() {
         {/* Title Header */}
         <div className="space-y-1.5">
           <span className="text-[11px] font-bold uppercase tracking-wider bg-blue-50 text-[#173B67] border border-blue-200 px-3 py-1 rounded-full shadow-subtle inline-block">
-            College Minor Project • Hardik
+            Business Registration
           </span>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
             Register Business Profile
@@ -255,7 +255,7 @@ export default function SignupPage() {
 
       {/* Footer */}
       <footer className="max-w-6xl w-full mx-auto px-6 py-4 text-center text-xs text-slate-400 font-medium z-10 flex flex-wrap items-center justify-center gap-4">
-        <span>SmartReview &copy; 2026 • College Minor Project by Hardik</span>
+        <span>SmartReview &copy; 2026. All rights reserved.</span>
         <div className="flex items-center gap-3">
           <Link href="/privacy" className="hover:text-slate-600">Privacy Policy</Link>
           <span>•</span>

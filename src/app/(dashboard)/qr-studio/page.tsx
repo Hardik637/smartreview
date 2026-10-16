@@ -57,7 +57,7 @@ export default function QRStudioPage() {
             setTemplate(savedTpl as any);
           }
 
-          const origin = typeof window !== "undefined" ? window.location.origin : "https://smartreview-hardik.vercel.app";
+          const origin = typeof window !== "undefined" ? window.location.origin : (process.env.NEXT_PUBLIC_APP_URL || "https://smartreview-flame.vercel.app");
           const reviewUrl = `${origin}/r/${data.business.slug}`;
 
           // High-density QR code for optical scan precision
@@ -111,7 +111,7 @@ export default function QRStudioPage() {
 
   const handleCopyLink = () => {
     if (!business?.slug) return;
-    const origin = typeof window !== "undefined" ? window.location.origin : "https://smartreview-hardik.vercel.app";
+    const origin = typeof window !== "undefined" ? window.location.origin : (process.env.NEXT_PUBLIC_APP_URL || "https://smartreview-flame.vercel.app");
     const reviewUrl = `${origin}/r/${business.slug}`;
     navigator.clipboard.writeText(reviewUrl);
     setCopiedLink(true);
@@ -213,7 +213,7 @@ export default function QRStudioPage() {
     }
 
     // 6. Vector QR Code in 100% Process Black
-    const origin = typeof window !== "undefined" ? window.location.origin : "https://smartreview-hardik.vercel.app";
+    const origin = typeof window !== "undefined" ? window.location.origin : (process.env.NEXT_PUBLIC_APP_URL || "https://smartreview-flame.vercel.app");
     const reviewTargetUrl = `${origin}/r/${business?.slug || "business"}`;
     const qr = QRCode.create(reviewTargetUrl, { errorCorrectionLevel: "H" });
     const size = qr.modules.size;

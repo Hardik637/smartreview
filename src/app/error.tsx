@@ -58,9 +58,8 @@ export default function GlobalError({
         </div>
       </main>
 
-      {/* Footer */}
       <footer className="max-w-5xl w-full mx-auto text-center text-xs text-slate-500 font-medium py-4 z-10">
-        SmartReview — AI-Powered Customer Review Management System • College Minor Project
+        SmartReview — AI-Powered Customer Review Management System • All rights reserved.
       </footer>
     </div>
   );

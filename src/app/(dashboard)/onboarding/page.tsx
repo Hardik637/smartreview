@@ -675,7 +675,7 @@ export default function OnboardingPage() {
       </div>
 
       <footer className="text-center text-xs text-slate-400 z-10">
-        SmartReview System &copy; 2026 • College Minor Project by Hardik
+        SmartReview &copy; 2026. All rights reserved.
       </footer>
     </div>
   );

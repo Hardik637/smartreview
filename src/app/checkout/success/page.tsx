@@ -176,9 +176,8 @@ export default function CheckoutSuccessPage() {
         </Suspense>
       </main>
 
-      {/* Footer */}
       <footer className="py-6 text-center text-xs text-slate-500">
-        SmartReview — AI-Powered Customer Review Management System • College Minor Project
+        SmartReview — AI-Powered Customer Review Management System • All rights reserved.
       </footer>
     </div>
   );

@@ -746,7 +746,6 @@ const DEFAULT_MIXED_TOPICS = [
           className="text-[11px] text-slate-500 hover:text-[#173B67] font-semibold transition-colors inline-flex items-center gap-1"
         >
           <span>Powered by SmartReview</span>
-          <span className="text-[10px] text-slate-400">• Minor Project</span>
         </Link>
       </div>
     </div>

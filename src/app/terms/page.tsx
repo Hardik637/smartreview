@@ -5,7 +5,7 @@ import { FileText, ArrowLeft } from "lucide-react";
 
 export const metadata = {
   title: "Terms of Service | SmartReview — AI Review Management System",
-  description: "Terms and conditions governing the use of SmartReview College Minor Project.",
+  description: "Terms and conditions governing the use of SmartReview.",
 };
 
 export default function TermsOfServicePage() {
@@ -28,17 +28,17 @@ export default function TermsOfServicePage() {
       <main className="max-w-3xl w-full mx-auto px-6 py-12 space-y-8 flex-1">
         <div className="space-y-2">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-[#173B67] border border-blue-200 text-xs font-semibold">
-            <FileText className="w-3.5 h-3.5 text-[#3478C8]" /> Academic Project Terms
+            <FileText className="w-3.5 h-3.5 text-[#3478C8]" /> Service Agreement
           </div>
           <h1 className="text-3xl sm:text-4xl font-black text-[#173B67] tracking-tight">Terms of Service</h1>
-          <p className="text-xs text-slate-500">Last updated: Academic Year 2026</p>
+          <p className="text-xs text-slate-500">Last updated: 2026</p>
         </div>
 
         <div className="bg-white rounded-2xl p-8 border border-slate-200/80 shadow-card text-xs sm:text-sm text-slate-700 space-y-6 leading-relaxed">
           <section className="space-y-2">
             <h2 className="text-base sm:text-lg font-bold text-[#173B67]">1. Acceptance of Terms</h2>
             <p>
-              By accessing or using SmartReview, you agree to comply with these terms. SmartReview is an academic engineering minor project designed to demonstrate AI-assisted review generation and customer sentiment analysis.
+              By accessing or using SmartReview, you agree to comply with these terms. SmartReview provides an AI-assisted customer review and feedback management platform for businesses.
             </p>
           </section>
 

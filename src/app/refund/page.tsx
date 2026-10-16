@@ -5,7 +5,7 @@ import { RefreshCcw, ArrowLeft } from "lucide-react";
 
 export const metadata = {
   title: "Refund Policy | SmartReview — AI Review Management System",
-  description: "Refund and cancellation policy for SmartReview College Minor Project.",
+  description: "Refund and cancellation policy for SmartReview.",
 };
 
 export default function RefundPolicyPage() {
@@ -31,7 +31,7 @@ export default function RefundPolicyPage() {
             <RefreshCcw className="w-3.5 h-3.5 text-[#3478C8]" /> Transparent Guarantee
           </div>
           <h1 className="text-3xl sm:text-4xl font-black text-[#173B67] tracking-tight">Refund & Cancellation Policy</h1>
-          <p className="text-xs text-slate-500">Last updated: Academic Year 2026</p>
+          <p className="text-xs text-slate-500">Last updated: 2026</p>
         </div>
 
         <div className="bg-white rounded-2xl p-8 border border-slate-200/80 shadow-card text-xs sm:text-sm text-slate-700 space-y-6 leading-relaxed">

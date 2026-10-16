@@ -16,26 +16,24 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://smartreview-hardik.vercel.app"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://smartreview-flame.vercel.app"),
   title: {
     default: "SmartReview — AI-Powered Customer Review Management System",
     template: "%s | SmartReview",
   },
   description:
-    "College Minor Project: An AI-powered customer feedback and Google Review acceleration system designed to eliminate review friction and intelligently manage customer sentiment.",
+    "An AI-powered customer feedback and Google Review management system designed to make leaving reviews effortless and resolve customer feedback privately.",
   keywords: [
     "SmartReview",
     "AI review management",
     "Customer feedback system",
     "Google reviews booster",
-    "College Minor Project",
     "QR code review standee",
     "Sentiment analysis",
     "Google Gemini AI",
-    "Hardik637",
   ],
-  authors: [{ name: "Hardik", url: "https://github.com/Hardik637" }],
-  creator: "Hardik",
+  authors: [{ name: "SmartReview" }],
+  creator: "SmartReview",
   publisher: "SmartReview",
   formatDetection: {
     email: false,
@@ -48,13 +46,13 @@ export const metadata: Metadata = {
     siteName: "SmartReview",
     title: "SmartReview — AI-Powered Customer Review Management System",
     description:
-      "College Minor Project: An AI-powered customer feedback and Google Review acceleration system designed to eliminate review friction and intelligently manage customer sentiment.",
+      "An AI-powered customer feedback and Google Review management system designed to make leaving reviews effortless and resolve customer feedback privately.",
   },
   twitter: {
     card: "summary_large_image",
     title: "SmartReview — AI-Powered Customer Review Management System",
     description:
-      "College Minor Project: AI-powered review generator and sentiment routing platform.",
+      "Intelligent review generation and private customer feedback management platform.",
   },
   robots: {
     index: true,

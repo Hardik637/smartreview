@@ -228,9 +228,8 @@ export default function LoginPage() {
         </div>
       </main>
 
-      {/* Subtle Academic Footer */}
       <footer className="py-4 text-center text-xs text-slate-400 z-10">
-        SmartReview System &copy; 2026 • College Minor Project by Hardik
+        SmartReview &copy; 2026. All rights reserved.
       </footer>
     </div>
   );

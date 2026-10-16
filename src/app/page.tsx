@@ -31,24 +31,24 @@ export default function LandingPage() {
 
   const faqs = [
     {
-      q: "What is SmartReview and what problem does it address?",
-      a: "SmartReview is an AI-powered customer review acceleration and reputation management platform developed as a college minor project. It eliminates customer 'writer's block' by providing contextual keyword-driven AI review generation for satisfied patrons, while deflecting critical complaints into private feedback channels before they harm public business ratings.",
+      q: "What is SmartReview and how does it help my business?",
+      a: "SmartReview helps local businesses collect more 5-star Google reviews while keeping negative feedback private. Happy customers get quick review drafting assistance to post their thoughts in seconds, while unhappy customers are guided to a private feedback form so you can resolve complaints directly.",
     },
     {
-      q: "How does the AI Review Generator work?",
-      a: "When a customer rates an experience 4 or 5 stars, the system displays quick category-specific tags (e.g., 'Fresh Pastries', 'Friendly Staff', 'Fast Service'). Google Gemini AI (with a zero-cost local NLP fallback) instantaneously constructs an authentic, natural paragraph weaving in those key phrases, ready for 1-click copy to Google Reviews.",
+      q: "How does the AI review assistant work?",
+      a: "When a customer rates their experience 4 or 5 stars, they select a few quick highlights describing what they liked (such as great service, quality, or atmosphere). Google Gemini AI drafts a genuine, well-worded review that the customer can tweak and copy straight to your Google Business Profile with one tap.",
     },
     {
-      q: "How does private feedback deflection work?",
-      a: "If a customer indicates an issue by selecting 1, 2, or 3 stars, SmartReview gracefully routes them to an internal customer satisfaction form. The complaint is stored securely in the business feedback database and alerts the business owner immediately, preventing public 1-star reviews.",
+      q: "What happens if a customer has a complaint?",
+      a: "If a customer rates 1 to 3 stars, SmartReview routes them to a private message form instead of Google. Their comments go straight to your private dashboard inbox, giving you the chance to address their concerns before they turn into a damaging public review.",
     },
     {
-      q: "Does SmartReview comply with Google Review policies?",
-      a: "Yes. SmartReview is fully policy compliant. Customers always retain access to post directly to Google Reviews if they choose, and the system never offers prohibited monetary incentives or gifts in exchange for ratings.",
+      q: "Is SmartReview compliant with Google Review policies?",
+      a: "Yes. SmartReview is fully compliant with Google guidelines. Customers always have the option to visit your Google profile directly, and the system never offers paid incentives or rewards for reviews.",
     },
     {
-      q: "What technologies were used to engineer this project?",
-      a: "The project is engineered with Next.js 14 (App Router & Server Actions), TypeScript, Tailwind CSS, Prisma ORM (SQLite / PostgreSQL), Google Gemini AI API, Razorpay payment gateway integration, Lucide React icons, and deployed on Vercel.",
+      q: "How long does setup take?",
+      a: "Less than 5 minutes. You can register your account, connect your Google Review link, and download your customized QR standee printables immediately.",
     },
   ];
 
@@ -190,37 +190,37 @@ export default function LandingPage() {
           
           {/* LEFT COLUMN: Title & Value Proposition */}
           <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-            {/* Academic Badge */}
+            {/* Badge */}
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 shadow-subtle text-xs font-semibold text-slate-700">
-              <span className="w-2 h-2 rounded-full bg-[#3478C8] animate-pulse" />
-              <span>College Minor Project • AI & Cloud Architecture</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-500" />
+              <span>Smart Customer Review & Reputation System</span>
             </div>
 
             {/* Main Headline */}
             <h1 className="text-3xl sm:text-5xl lg:text-[54px] font-black text-slate-900 tracking-tight leading-[1.12]">
-              AI-Powered Customer <br />
-              <span className="text-[#173B67]">Review Acceleration</span> & <br />
-              <span className="text-[#3478C8]">Feedback Deflection</span>
+              Get More 5-Star Reviews. <br />
+              <span className="text-[#173B67]">Catch Negative Feedback</span> <br />
+              <span className="text-[#3478C8]">Before It Goes Public.</span>
             </h1>
 
             {/* Description */}
             <p className="text-base sm:text-lg text-slate-600 font-medium leading-relaxed max-w-xl mx-auto lg:mx-0">
-              Turn satisfied visitors into articulate 5-star Google Reviews with generative AI assistance, while deflecting critical feedback into a private resolution channel.
+              Make it effortless for happy customers to leave detailed Google reviews in seconds, while routing complaints straight to your private inbox to resolve.
             </p>
 
             {/* Key Value Badges */}
             <div className="flex flex-wrap items-center justify-center lg:justify-start gap-4 text-xs font-semibold text-slate-600 pt-1">
               <div className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-[#3478C8]" />
-                <span>Zero Review Writer’s Block</span>
+                <span>1-Tap Google Reviews</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-[#3478C8]" />
-                <span>Private Feedback Gatekeeping</span>
+                <span>Private Feedback Inbox</span>
               </div>
               <div className="flex items-center gap-1.5">
                 <CheckCircle2 className="w-4 h-4 text-[#3478C8]" />
-                <span>Printable QR Standees</span>
+                <span>Print-Ready QR Standees</span>
               </div>
             </div>
 
@@ -230,7 +230,7 @@ export default function LandingPage() {
                 href="/signup"
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-[#173B67] hover:bg-[#1C4982] text-white rounded-xl text-sm font-bold shadow-subtle hover:shadow transition-all"
               >
-                <span>Launch Project Workspace</span>
+                <span>Get Started Free</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
 
@@ -240,7 +240,7 @@ export default function LandingPage() {
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-white hover:bg-slate-50 text-slate-800 rounded-xl text-sm font-bold border border-slate-300 shadow-subtle transition-all"
               >
                 <Play className="w-3.5 h-3.5 fill-current text-[#3478C8]" />
-                <span>Test Live Customer Funnel</span>
+                <span>Test Live Customer Demo</span>
               </Link>
             </div>
           </div>
@@ -258,27 +258,27 @@ export default function LandingPage() {
                     <h3 className="text-sm font-black uppercase tracking-wide text-[#173B67]">
                       Google Gemini AI
                     </h3>
-                    <p className="text-xs text-slate-500 font-medium">Review Generation Engine</p>
+                    <p className="text-xs text-slate-500 font-medium">Review Writing Assistant</p>
                   </div>
                 </div>
                 <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-blue-50 text-[#173B67] border border-blue-200">
-                  AI-Powered
+                  Smart Assistant
                 </span>
               </div>
 
               {/* Engine Description */}
               <div className="space-y-3.5 text-xs text-slate-600 leading-relaxed">
                 <p>
-                  SmartReview integrates <strong>Google Gemini AI</strong> to automatically generate authentic, keyword-optimized reviews for satisfied customers in seconds.
+                  Most customers want to leave a good review, but don&apos;t know what to write. SmartReview uses <strong>Google Gemini AI</strong> to turn simple customer tags into genuine, complete reviews in seconds.
                 </p>
 
                 <div className="bg-[#F0F4F9] border border-[#C3D3E7]/70 rounded-xl p-4 space-y-2.5">
                   <div className="flex items-start gap-2.5">
                     <Cpu className="w-4 h-4 text-[#3478C8] shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="font-bold text-[#173B67]">How Reviews Are Generated</h4>
+                      <h4 className="font-bold text-[#173B67]">How It Works for Customers</h4>
                       <p className="text-[11.5px] text-slate-600 mt-0.5">
-                        Customers select quick positive tags (e.g., service, quality, atmosphere). Gemini AI processes these signals and drafts a natural, articulate paragraph ready for Google Reviews.
+                        Customers tap a few tags highlighting what they loved (e.g. friendly staff, fast service, cozy atmosphere). Gemini writes a warm, personalized review draft they can review and copy straight to Google.
                       </p>
                     </div>
                   </div>
@@ -287,27 +287,27 @@ export default function LandingPage() {
                 <div className="space-y-2 pt-1">
                   <div className="flex items-center gap-2 text-slate-700 font-semibold text-[11.5px]">
                     <CheckCircle2 className="w-3.5 h-3.5 text-[#3478C8]" />
-                    <span>Eliminates customer review writer&apos;s block</span>
+                    <span>Helps customers write genuine, detailed reviews</span>
                   </div>
                   <div className="flex items-center gap-2 text-slate-700 font-semibold text-[11.5px]">
                     <CheckCircle2 className="w-3.5 h-3.5 text-[#3478C8]" />
-                    <span>Boosts relevant local SEO keywords organically</span>
+                    <span>Highlights specific services and products naturally</span>
                   </div>
                   <div className="flex items-center gap-2 text-slate-700 font-semibold text-[11.5px]">
                     <CheckCircle2 className="w-3.5 h-3.5 text-[#3478C8]" />
-                    <span>1-click copy & paste directly into Google</span>
+                    <span>1-tap copy & post directly to Google</span>
                   </div>
                 </div>
               </div>
 
               {/* Action Link */}
               <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
-                <span className="text-[11px] text-slate-400 font-medium">Live System Demo</span>
+                <span className="text-[11px] text-slate-400 font-medium">Customer Experience</span>
                 <Link
                   href="/r/the-coffee-house"
                   className="inline-flex items-center gap-1.5 text-xs font-bold text-[#173B67] hover:text-[#3478C8] transition-colors"
                 >
-                  <span>Test AI Review Generator</span>
+                  <span>See How Customers Experience It</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
@@ -324,10 +324,10 @@ export default function LandingPage() {
       */}
       <section id="how-it-works" className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-16 border-t border-slate-200/70">
         <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
-          <span className="text-xs font-extrabold uppercase tracking-wider text-[#3478C8]">Workflow Architecture</span>
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-900">How the Review Funnel Operates</h2>
+          <span className="text-xs font-extrabold uppercase tracking-wider text-[#3478C8]">Simple Process</span>
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-900">How It Works</h2>
           <p className="text-sm text-slate-600">
-            A frictionless customer experience engineered to maximize Google Reviews while protecting private brand reputation.
+            A seamless experience that turns happy customers into reviews and gives unhappy ones a direct way to be heard.
           </p>
         </div>
 
@@ -337,9 +337,9 @@ export default function LandingPage() {
             <div className="w-10 h-10 rounded-xl bg-[#173B67] text-white flex items-center justify-center font-black text-sm">
               01
             </div>
-            <h3 className="text-base font-bold text-slate-900">1. Instant QR Scan</h3>
+            <h3 className="text-base font-bold text-slate-900">1. Customer Scans QR</h3>
             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              Customers scan your tabletop QR standee or tap the NFC token at billing counters using any smartphone camera without app installation.
+              Place custom QR standees on tables or checkout counters. Customers simply scan with their phone camera—no app download required.
             </p>
           </div>
 
@@ -348,9 +348,9 @@ export default function LandingPage() {
             <div className="w-10 h-10 rounded-xl bg-[#3478C8] text-white flex items-center justify-center font-black text-sm">
               02
             </div>
-            <h3 className="text-base font-bold text-slate-900">2. Smart Sentiment Routing</h3>
+            <h3 className="text-base font-bold text-slate-900">2. Star Rating & Routing</h3>
             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              Satisfied patrons (4–5 stars) unlock the AI review generator. Critical patrons (1–3 stars) are routed to a private feedback inbox to resolve issues directly.
+              Ratings of 4–5 stars unlock the review writing assistant. Ratings of 1–3 stars route to your private feedback inbox so you can resolve issues quickly.
             </p>
           </div>
 
@@ -359,15 +359,13 @@ export default function LandingPage() {
             <div className="w-10 h-10 rounded-xl bg-[#173B67] text-white flex items-center justify-center font-black text-sm">
               03
             </div>
-            <h3 className="text-base font-bold text-slate-900">3. 1-Click Google Publish</h3>
+            <h3 className="text-base font-bold text-slate-900">3. 1-Tap Post to Google</h3>
             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              Google Gemini constructs an articulate review based on customer-selected tags. The customer copies it with one tap and pastes it straight to Google Reviews.
+              Happy customers tap a few highlights, get a well-written review draft, and paste it straight to your Google Business Profile with one tap.
             </p>
           </div>
         </div>
       </section>
-
-
 
       {/* 
         ========================================================================
@@ -376,10 +374,10 @@ export default function LandingPage() {
       */}
       <section id="features" className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-16 border-t border-slate-200/70">
         <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
-          <span className="text-xs font-extrabold uppercase tracking-wider text-[#3478C8]">Platform Capabilities</span>
-          <h2 className="text-2xl sm:text-3xl font-black text-slate-900">Core Features Built for Real Impact</h2>
+          <span className="text-xs font-extrabold uppercase tracking-wider text-[#3478C8]">Platform Features</span>
+          <h2 className="text-2xl sm:text-3xl font-black text-slate-900">Built for Local Businesses</h2>
           <p className="text-sm text-slate-600">
-            A comprehensive suite of tools designed to elevate local business reputation management.
+            Everything you need to gather genuine reviews, handle complaints privately, and protect your reputation.
           </p>
         </div>
 
@@ -388,9 +386,9 @@ export default function LandingPage() {
             <div className="w-10 h-10 rounded-xl bg-[#F0F4F9] text-[#173B67] flex items-center justify-center">
               <Sparkles className="w-5 h-5" />
             </div>
-            <h3 className="text-base font-bold text-slate-900">AI Contextual Generator</h3>
+            <h3 className="text-base font-bold text-slate-900">Review Writing Assistant</h3>
             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              Automatically embeds specific service keywords into authentic paragraphs, signaling relevance to Google&apos;s local search ranking algorithms.
+              Helps customers write genuine, detailed reviews highlighting what makes your business unique and worth visiting.
             </p>
           </div>
 
@@ -398,9 +396,9 @@ export default function LandingPage() {
             <div className="w-10 h-10 rounded-xl bg-[#F0F4F9] text-[#173B67] flex items-center justify-center">
               <Printer className="w-5 h-5" />
             </div>
-            <h3 className="text-base font-bold text-slate-900">QR Studio & PDF Generation</h3>
+            <h3 className="text-base font-bold text-slate-900">Print-Ready Standees</h3>
             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              Create and export print-ready 4&quot; x 6&quot; acrylic standees, table tents, and flyers formatted for commercial print shops directly from your browser.
+              Download and print clean, professional acrylic standees and counter cards ready for display directly from your browser.
             </p>
           </div>
 
@@ -408,9 +406,9 @@ export default function LandingPage() {
             <div className="w-10 h-10 rounded-xl bg-[#F0F4F9] text-[#173B67] flex items-center justify-center">
               <BarChart3 className="w-5 h-5" />
             </div>
-            <h3 className="text-base font-bold text-slate-900">Analytics & Conversion Tracking</h3>
+            <h3 className="text-base font-bold text-slate-900">Real-Time Analytics</h3>
             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              Real-time dashboards monitor scans, generated reviews, Google click-through rates, and frequent keyword topics.
+              Track customer scans, review clicks, rating averages, and popular feedback topics in one simple dashboard.
             </p>
           </div>
 
@@ -420,7 +418,7 @@ export default function LandingPage() {
             </div>
             <h3 className="text-base font-bold text-slate-900">Private Feedback Inbox</h3>
             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              Manage unhappy customer submissions with status tracking (Unread / Resolved) and direct customer contact details.
+              Receive customer complaints directly so you can resolve them privately before they turn into public 1-star reviews.
             </p>
           </div>
 
@@ -428,9 +426,9 @@ export default function LandingPage() {
             <div className="w-10 h-10 rounded-xl bg-[#F0F4F9] text-[#173B67] flex items-center justify-center">
               <ShieldCheck className="w-5 h-5" />
             </div>
-            <h3 className="text-base font-bold text-slate-900">Policy-Compliant Gatekeeper</h3>
+            <h3 className="text-base font-bold text-slate-900">Google Policy Compliant</h3>
             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              100% compliant with Google Review guidelines. All users retain direct access to public review submission if desired.
+              Built strictly within Google guidelines. Customers always have the option to visit your public Google profile directly.
             </p>
           </div>
 
@@ -438,15 +436,13 @@ export default function LandingPage() {
             <div className="w-10 h-10 rounded-xl bg-[#F0F4F9] text-[#173B67] flex items-center justify-center">
               <TrendingUp className="w-5 h-5" />
             </div>
-            <h3 className="text-base font-bold text-slate-900">Multi-Category Support</h3>
+            <h3 className="text-base font-bold text-slate-900">Custom Industry Presets</h3>
             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
-              Pre-configured topic profiles for Cafes, Restaurants, Salons, Clinics, Gyms, Auto Services, and Sweet Shops.
+              Pre-configured topic presets tailored for cafes, restaurants, salons, clinics, gyms, and retail shops.
             </p>
           </div>
         </div>
       </section>
-
-
 
       {/* 
         ========================================================================
@@ -498,7 +494,7 @@ export default function LandingPage() {
             <Logo height={30} />
             <span className="hidden sm:inline text-slate-300">|</span>
             <p>
-              SmartReview &copy; 2026 • College Minor Project by <strong>Hardik</strong>
+              SmartReview &copy; 2026. All rights reserved.
             </p>
           </div>
 
@@ -506,14 +502,6 @@ export default function LandingPage() {
             <Link href="/privacy" className="hover:text-[#173B67] transition-colors">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-[#173B67] transition-colors">Terms of Service</Link>
             <Link href="/refund" className="hover:text-[#173B67] transition-colors">Refund Policy</Link>
-            <a
-              href="https://github.com/Hardik637/smartreview"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1 hover:text-[#173B67] transition-colors"
-            >
-              <Github className="w-3.5 h-3.5" /> GitHub
-            </a>
           </div>
         </div>
       </footer>
