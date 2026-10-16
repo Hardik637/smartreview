@@ -14,7 +14,7 @@ import {
   SlidersHorizontal,
   CheckCircle2,
   Loader2,
-  RefreshCw,
+  RefreshCw
 } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -116,7 +116,7 @@ export default function DashboardPage() {
 
         setData(dashboardPayload);
         try {
-          sessionStorage.setItem("smartreview_dashboard_cache", JSON.stringify(dashboardPayload));
+          sessionStorage.setItem("welurik_dashboard_cache", JSON.stringify(dashboardPayload));
         } catch {}
       }
     } catch (err) {
@@ -128,8 +128,9 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
+    // Fast hydration from session cache without causing SSR mismatch
     try {
-      const cached = sessionStorage.getItem("smartreview_dashboard_cache") || sessionStorage.getItem("welurik_dashboard_cache");
+      const cached = sessionStorage.getItem("welurik_dashboard_cache");
       if (cached) {
         setData(JSON.parse(cached));
         setLoading(false);
@@ -143,8 +144,8 @@ export default function DashboardPage() {
     return (
       <div className="p-8 flex items-center justify-center min-h-[60vh]">
         <div className="flex flex-col items-center gap-3">
-          <Loader2 className="w-8 h-8 text-[#173B67] animate-spin" />
-          <p className="text-xs font-semibold text-slate-500">Loading your SmartReview workspace...</p>
+          <Loader2 className="w-8 h-8 text-green-600 animate-spin" />
+          <p className="text-xs font-semibold text-slate-500">Loading your live dashboard...</p>
         </div>
       </div>
     );
@@ -153,9 +154,9 @@ export default function DashboardPage() {
   if (!data) {
     return (
       <div className="p-8 flex items-center justify-center min-h-[60vh]">
-        <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-card text-center max-w-md space-y-4">
-          <div className="w-12 h-12 rounded-xl bg-blue-50 text-[#173B67] flex items-center justify-center mx-auto border border-blue-200">
-            <Sparkles className="w-6 h-6 text-[#3478C8]" />
+        <div className="bg-white p-8 rounded-3xl border border-slate-200/80 shadow-xs text-center max-w-md space-y-4">
+          <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto">
+            <Sparkles className="w-6 h-6" />
           </div>
           <div className="space-y-1">
             <h3 className="text-sm font-bold text-slate-900">Setting up your workspace</h3>
@@ -165,7 +166,7 @@ export default function DashboardPage() {
           </div>
           <button
             onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-[#173B67] text-white rounded-xl text-xs font-bold hover:bg-[#1C4982] transition-all cursor-pointer shadow-subtle"
+            className="px-4 py-2 bg-slate-900 text-white rounded-xl text-xs font-bold hover:bg-slate-800 transition-all cursor-pointer"
           >
             Refresh Dashboard
           </button>
@@ -175,7 +176,7 @@ export default function DashboardPage() {
   }
 
   const { business, metrics, topTopics, recentReviews, unreadFeedbackCount } = data;
-  const origin = typeof window !== "undefined" ? window.location.origin : "https://smartreview-hardik.vercel.app";
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://review.welurik.com";
   const publicReviewUrl = `${origin}/r/${business.slug}`;
   const rawGmbUrl = business.googleReviewUrl?.trim() || "";
   const safeGoogleReviewUrl = rawGmbUrl
@@ -183,13 +184,13 @@ export default function DashboardPage() {
     : "#";
 
   return (
-    <div className="p-4 sm:p-6 md:p-8 max-w-6xl mx-auto space-y-6">
+    <div className="p-4 sm:p-6 md:p-10 max-w-6xl mx-auto space-y-6 sm:space-y-8">
       {/* Top Banner */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#173B67] text-white rounded-2xl p-5 sm:p-7 shadow-card">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-900 text-white rounded-[24px] sm:rounded-[28px] p-4 sm:p-6 md:p-8 shadow-xl shadow-slate-900/10">
         <div className="space-y-1.5 min-w-0">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-white/10 text-blue-200 border border-white/10 shrink-0">
-              Active Funnel
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-white/10 text-emerald-300 border border-white/10 shrink-0">
+              Live Funnel Active
             </span>
             <button
               onClick={() => loadDashboard(true)}
@@ -197,26 +198,26 @@ export default function DashboardPage() {
               title="Refresh live metrics"
               className="p-1 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition-all cursor-pointer flex items-center justify-center disabled:opacity-50 shrink-0"
             >
-              <RefreshCw className={`w-3 h-3 ${isRefreshing ? "animate-spin text-blue-300" : ""}`} />
+              <RefreshCw className={`w-3 h-3 ${isRefreshing ? "animate-spin text-emerald-400" : ""}`} />
             </button>
-            <span className="text-xs text-blue-200/50 hidden sm:inline">•</span>
-            <span className="text-xs font-medium text-blue-100 capitalize shrink-0">{business.category}</span>
-            <span className="text-xs text-blue-200/50 hidden sm:inline">•</span>
+            <span className="text-xs text-slate-400 hidden sm:inline">•</span>
+            <span className="text-xs font-medium text-slate-300 capitalize shrink-0">{business.category}</span>
+            <span className="text-xs text-slate-400 hidden sm:inline">•</span>
             <span className="text-xs font-semibold text-amber-300 inline-flex items-center gap-1 bg-amber-400/10 px-2 py-0.5 rounded-full border border-amber-400/20 shrink-0">
-              <Star className="w-3 h-3 fill-amber-300" /> {business.planName || "Pro Active"}
+              <Star className="w-3 h-3 fill-amber-300" /> {business.planName || "Lifetime Pro Active"}
             </span>
           </div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight truncate">{business.name}</h1>
-          <p className="text-xs text-blue-100/80">
+          <p className="text-xs text-slate-400">
             {business.location ? `${business.location} • ` : ""}
-            SmartReview AI review conversion and feedback deflection engine
+            AI-driven QR review conversion engine
           </p>
         </div>
 
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-2.5 shrink-0">
           <Link
             href="/qr-studio"
-            className="w-full sm:w-auto px-4 py-2.5 bg-white text-[#173B67] hover:bg-slate-100 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-subtle"
+            className="w-full sm:w-auto px-4 py-2.5 bg-white text-slate-900 hover:bg-slate-100 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all shadow-xs"
           >
             <Printer className="w-3.5 h-3.5" />
             <span>Print Standees</span>
@@ -225,21 +226,21 @@ export default function DashboardPage() {
             href={publicReviewUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full sm:w-auto px-4 py-2.5 bg-[#1C4982] hover:bg-[#235FA9] text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all border border-[#5D8EC0]/40"
+            className="w-full sm:w-auto px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all border border-slate-700"
           >
-            <ExternalLink className="w-3.5 h-3.5 text-blue-200" />
+            <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
             <span>Open Customer Link</span>
           </a>
         </div>
       </div>
 
       {/* KPI Cards Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
         {/* Total Scans */}
-        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-subtle space-y-1">
+        <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-1">
           <div className="flex items-center justify-between text-slate-400">
-            <span className="text-[11px] sm:text-xs font-semibold text-slate-600 truncate">Total Scans</span>
-            <QrCode className="w-4 h-4 text-[#3478C8] shrink-0" />
+            <span className="text-[11px] sm:text-xs font-semibold text-slate-600 truncate">Total QR Scans</span>
+            <QrCode className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 shrink-0" />
           </div>
           <div className="flex items-baseline gap-2">
             <span className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900">{metrics.totalScans}</span>
@@ -248,46 +249,46 @@ export default function DashboardPage() {
         </div>
 
         {/* AI Reviews Generated */}
-        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-subtle space-y-1">
+        <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-1">
           <div className="flex items-center justify-between text-slate-400">
             <span className="text-[11px] sm:text-xs font-semibold text-slate-600 truncate">AI Generated</span>
-            <Sparkles className="w-4 h-4 text-amber-500 shrink-0" />
+            <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500 shrink-0" />
           </div>
           <div className="flex items-baseline gap-2">
             <span className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900">{metrics.reviewsGenerated}</span>
           </div>
-          <p className="text-[10px] sm:text-[11px] text-slate-400 leading-tight">AI drafts created in 30s</p>
+          <p className="text-[10px] sm:text-[11px] text-slate-400 leading-tight">AI drafted in 30s</p>
         </div>
 
-        {/* Google Handoffs */}
-        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-subtle space-y-1">
+        {/* Real Google Clicks */}
+        <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-1">
           <div className="flex items-center justify-between text-slate-400">
-            <span className="text-[11px] sm:text-xs font-semibold text-slate-600 truncate">Google Clicks</span>
-            <TrendingUp className="w-4 h-4 text-emerald-600 shrink-0" />
+            <span className="text-[11px] sm:text-xs font-semibold text-slate-600 truncate">Google Handoffs</span>
+            <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500 shrink-0" />
           </div>
           <div className="flex items-baseline gap-2">
             <span className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900">{metrics.googleClicks}</span>
           </div>
-          <p className="text-[10px] sm:text-[11px] text-slate-400 leading-tight">Redirects to Google Maps</p>
+          <p className="text-[10px] sm:text-[11px] text-slate-400 leading-tight">Sent to Google Maps</p>
         </div>
 
         {/* Conversion Rate */}
-        <div className="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-subtle space-y-1">
+        <div className="bg-white p-3.5 sm:p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-1">
           <div className="flex items-center justify-between text-slate-400">
-            <span className="text-[11px] sm:text-xs font-semibold text-slate-600 truncate">Conversion Rate</span>
-            <ArrowUpRight className="w-4 h-4 text-[#3478C8] shrink-0" />
+            <span className="text-[11px] sm:text-xs font-semibold text-slate-600 truncate">Scan to Google</span>
+            <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-indigo-500 shrink-0" />
           </div>
           <div className="flex items-baseline gap-2">
             <span className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900">{metrics.conversionRate}</span>
           </div>
-          <p className="text-[10px] sm:text-[11px] text-slate-400 leading-tight">Industry benchmark: 3-5%</p>
+          <p className="text-[10px] sm:text-[11px] text-slate-400 leading-tight">Industry avg: 3-5%</p>
         </div>
       </div>
 
       {/* Main 2-Column Section */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column: Recent Reviews (2 Cols) */}
-        <div className="lg:col-span-2 bg-white rounded-2xl border border-slate-200 p-6 space-y-5 shadow-subtle">
+        {/* Left Column: Recent Reviews Generated (2 Cols) */}
+        <div className="lg:col-span-2 bg-white rounded-[24px] border border-slate-200/80 p-6 space-y-5 shadow-xs">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
               <div className="flex items-center gap-2">
@@ -298,14 +299,14 @@ export default function DashboardPage() {
                   </span>
                 )}
               </div>
-              <p className="text-xs text-slate-500">Live reviews generated by happy customers</p>
+              <p className="text-xs text-slate-400">Recent reviews generated by your happy customers</p>
             </div>
             {safeGoogleReviewUrl !== "#" && (
               <a
                 href={safeGoogleReviewUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-xs font-semibold text-[#3478C8] hover:text-[#173B67] flex items-center gap-1"
+                className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center gap-1"
               >
                 <span>View on Google</span>
                 <ExternalLink className="w-3 h-3" />
@@ -314,19 +315,19 @@ export default function DashboardPage() {
           </div>
 
           {recentReviews.length === 0 ? (
-            <div className="py-12 text-center text-slate-400 space-y-2 border border-dashed border-slate-200 rounded-xl">
+            <div className="py-12 text-center text-slate-400 space-y-2 border border-dashed border-slate-200 rounded-2xl">
               <Sparkles className="w-6 h-6 text-slate-300 mx-auto" />
               <p className="text-xs font-semibold text-slate-600">No reviews generated yet</p>
               <p className="text-[11px] text-slate-400 max-w-xs mx-auto">
-                Generate and print your standees in the Standee Studio and place them near your billing counter!
+                Print your standees in the Standee Studio and place them near your checkout counter!
               </p>
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-3.5">
               {recentReviews.slice(0, visibleReviewCount).map((rev) => (
                 <div
                   key={rev.id}
-                  className="p-4 bg-slate-50 border border-slate-200/80 rounded-xl space-y-2.5 transition-all hover:bg-white hover:shadow-subtle"
+                  className="p-4 bg-slate-50/70 border border-slate-200/60 rounded-2xl space-y-2.5 transition-all hover:bg-slate-50"
                 >
                   <div className="flex items-center justify-between text-xs">
                     <div className="flex items-center gap-1.5">
@@ -335,7 +336,7 @@ export default function DashboardPage() {
                           <Star key={i} className="w-3.5 h-3.5 fill-current" />
                         ))}
                       </div>
-                      <span className="text-[10px] font-bold text-slate-500 ml-1">Verified {rev.rating || 5}-Star</span>
+                      <span className="text-[10px] font-bold text-slate-400 ml-1">Verified {rev.rating || 5}-Star</span>
                     </div>
 
                     <div className="flex items-center gap-2">
@@ -345,8 +346,8 @@ export default function DashboardPage() {
                       <span
                         className={`text-[9px] font-bold px-2 py-0.5 rounded-full ${
                           rev.status === "opened_google"
-                            ? "bg-emerald-50 text-emerald-800 border border-emerald-200"
-                            : "bg-blue-50 text-[#173B67] border border-blue-200"
+                            ? "bg-emerald-100 text-emerald-800 border border-emerald-200"
+                            : "bg-indigo-100 text-indigo-800 border border-indigo-200"
                         }`}
                       >
                         {rev.status === "opened_google" ? "Posted to Google" : "Drafted by AI"}
@@ -354,7 +355,7 @@ export default function DashboardPage() {
                     </div>
                   </div>
 
-                  <p className="text-xs text-slate-700 leading-relaxed font-normal italic">&quot;{rev.generatedReview}&quot;</p>
+                  <p className="text-xs text-slate-700 leading-relaxed font-normal">"{rev.generatedReview}"</p>
 
                   {((rev.selectedTopics && rev.selectedTopics.length > 0) || (rev.selectedServices && rev.selectedServices.length > 0)) && (
                     <div className="flex flex-wrap items-center gap-1.5 pt-1">
@@ -369,7 +370,7 @@ export default function DashboardPage() {
                       {(rev.selectedServices || []).map((svc) => (
                         <span
                           key={svc}
-                          className="text-[10px] bg-blue-50 border border-blue-200 text-[#173B67] font-medium px-2 py-0.5 rounded-md"
+                          className="text-[10px] bg-indigo-50 border border-indigo-100 text-indigo-700 font-medium px-2 py-0.5 rounded-md"
                         >
                           {svc}
                         </span>
@@ -399,13 +400,13 @@ export default function DashboardPage() {
           )}
         </div>
 
-        {/* Right Column: Praised Aspects & Feedback Inbox (1 Col) */}
+        {/* Right Column: Praised Topics & Feedback Inbox (1 Col) */}
         <div className="space-y-6">
           {/* Most Praised Topics */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-4 shadow-subtle">
+          <div className="bg-white rounded-[24px] border border-slate-200/80 p-6 space-y-4 shadow-xs">
             <div className="space-y-0.5">
               <h3 className="text-sm font-bold text-slate-900">Most Praised Aspects</h3>
-              <p className="text-[11px] text-slate-500">Keywords customers select most often</p>
+              <p className="text-[11px] text-slate-400">Keywords customers select most often</p>
             </div>
 
             <div className="space-y-3">
@@ -417,7 +418,7 @@ export default function DashboardPage() {
                   </div>
                   <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
                     <div
-                      className="h-full bg-[#173B67] rounded-full transition-all duration-500"
+                      className="h-full bg-slate-900 rounded-full transition-all duration-500"
                       style={{ width: `${Math.max(topic.percentage, 5)}%` }}
                     />
                   </div>
@@ -428,11 +429,11 @@ export default function DashboardPage() {
             <div className="pt-2">
               <Link
                 href="/settings"
-                className="text-xs font-semibold text-[#173B67] hover:text-[#3478C8] flex items-center justify-between p-2.5 rounded-xl bg-blue-50/60 hover:bg-blue-50 border border-blue-100 transition-all"
+                className="text-xs font-semibold text-indigo-600 hover:text-indigo-800 flex items-center justify-between p-2.5 rounded-xl bg-indigo-50/50 hover:bg-indigo-50 transition-all"
               >
                 <div className="flex items-center gap-2">
-                  <SlidersHorizontal className="w-3.5 h-3.5 text-[#3478C8]" />
-                  <span>Configure Keywords & Topics</span>
+                  <SlidersHorizontal className="w-3.5 h-3.5" />
+                  <span>Edit Custom Keywords</span>
                 </div>
                 <ChevronRight className="w-3.5 h-3.5" />
               </Link>
@@ -440,7 +441,7 @@ export default function DashboardPage() {
           </div>
 
           {/* Feedback Inbox Preview Card */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-3 shadow-subtle">
+          <div className="bg-white rounded-[24px] border border-slate-200/80 p-6 space-y-3 shadow-xs">
             <div className="flex items-center justify-between">
               <span className="text-xs font-bold text-slate-900">Private Grievance Inbox</span>
               {unreadFeedbackCount > 0 ? (
@@ -454,11 +455,11 @@ export default function DashboardPage() {
               )}
             </div>
             <p className="text-xs text-slate-500 leading-relaxed">
-              Customers who select 1-3 stars are gracefully deflected here to resolve complaints privately before posting publicly.
+              Customers who choose to message management privately submit their notes directly to your private inbox.
             </p>
             <Link
               href="/feedback"
-              className="w-full py-2.5 px-3 bg-[#173B67] hover:bg-[#1C4982] text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all block text-center shadow-subtle"
+              className="w-full py-2.5 px-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-all block text-center shadow-xs"
             >
               View Private Feedback ({unreadFeedbackCount})
             </Link>

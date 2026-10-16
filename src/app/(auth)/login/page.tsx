@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Lock, Mail, ArrowRight, Eye, EyeOff, ShieldCheck, AlertCircle } from "lucide-react";
-import Logo from "@/components/Logo";
+import WelurikLogo from "@/components/Logo";
 import GoogleAuthButton from "@/components/GoogleAuthButton";
 
 export default function LoginPage() {
@@ -19,7 +19,7 @@ export default function LoginPage() {
   useEffect(() => {
     // 1. Auto-fill remembered email from localStorage
     try {
-      const savedEmail = localStorage.getItem("smartreview_remembered_email") || localStorage.getItem("welurik_remembered_email");
+      const savedEmail = localStorage.getItem("welurik_remembered_email");
       if (savedEmail) {
         setEmail(savedEmail);
         setRememberMe(true);
@@ -47,12 +47,13 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
+    // Persist or clear remembered email in localStorage based on Remember Me choice
     if (typeof window !== "undefined") {
       try {
         if (rememberMe && email.trim()) {
-          localStorage.setItem("smartreview_remembered_email", email.trim());
+          localStorage.setItem("welurik_remembered_email", email.trim());
         } else {
-          localStorage.removeItem("smartreview_remembered_email");
+          localStorage.removeItem("welurik_remembered_email");
         }
       } catch {}
     }
@@ -68,7 +69,6 @@ export default function LoginPage() {
       if (data.success) {
         if (typeof window !== "undefined") {
           try {
-            sessionStorage.removeItem("smartreview_dashboard_cache");
             sessionStorage.removeItem("welurik_dashboard_cache");
           } catch {}
         }
@@ -86,91 +86,107 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F6F9] academic-bg text-slate-900 font-sans selection:bg-[#173B67] selection:text-white flex flex-col justify-between relative overflow-hidden">
+    <div className="min-h-screen bg-[#ECFDF5] neo-canvas-bg text-black font-sans selection:bg-black selection:text-white flex flex-col justify-between relative overflow-hidden">
       {/* Top Brand Header */}
       <header className="max-w-6xl w-full mx-auto px-6 sm:px-8 py-6 flex items-center justify-between z-10">
-        <Link href="/" className="group hover:opacity-90 transition-opacity flex items-center">
-          <Logo height={36} />
+        <Link href="/" className="group hover:opacity-80 transition-opacity flex items-center">
+          <WelurikLogo className="h-9 sm:h-[48px]" />
         </Link>
         <div className="flex items-center gap-3">
-          <span className="text-xs text-slate-500 font-medium hidden sm:inline">New to SmartReview?</span>
+          <span className="text-xs text-slate-500 font-medium hidden sm:inline">New to Welurik?</span>
           <Link
             href="/signup"
-            className="text-xs font-bold text-[#173B67] px-4 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 shadow-subtle transition-all"
+            className="text-xs font-black text-black px-4 py-2 rounded-full border-2 border-black bg-white hover:bg-slate-50 shadow-[2px_2px_0px_#000000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#000000] transition-all"
           >
             Create Account
           </Link>
         </div>
       </header>
 
-      {/* Main Centered Auth Card */}
-      <main className="flex-1 flex items-center justify-center p-4 sm:p-6 z-10">
-        <div className="w-full max-w-[420px] bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-card space-y-6">
-          <div className="space-y-1.5 text-center">
-            <h1 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-              Sign In to SmartReview
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-500 font-medium">
-              Access your business dashboard, QR standees, & analytics
-            </p>
-          </div>
+      {/* Centered Login Card */}
+      <main className="max-w-[440px] w-full mx-auto px-4 sm:px-6 py-6 my-auto z-10 space-y-5 text-center">
+        {/* Title Header */}
+        <div className="space-y-1.5">
+          <h1 className="text-2xl sm:text-3xl font-black text-black tracking-tight">
+            Sign In to Welurik
+          </h1>
+          <p className="text-xs sm:text-[13px] text-slate-600 font-medium">
+            Manage your QR standees, AI review prompts & analytics
+          </p>
+        </div>
 
+        {/* Neo-brutalist Main Card */}
+        <div className="bg-white border-2 border-black rounded-[28px] p-6 sm:p-8 space-y-5 text-left shadow-[5px_5px_0px_#000000]">
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
+            <div className="p-3.5 bg-rose-50 border-2 border-rose-400 text-rose-800 text-xs font-bold rounded-2xl flex items-start gap-2 animate-in fade-in">
+              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
               <span>{error}</span>
             </div>
           )}
 
+          {/* 1-Click Google Sign-In */}
+          <div className="space-y-3">
+            <GoogleAuthButton
+              text="Continue with Google"
+              onError={(err) => setError(err)}
+              onSuccess={() => setError("")}
+            />
+
+            {/* Clean Divider */}
+            <div className="relative flex items-center justify-center py-1">
+              <div className="border-t-2 border-black/10 w-full" />
+              <span className="bg-white px-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider shrink-0">
+                or sign in with email
+              </span>
+              <div className="border-t-2 border-black/10 w-full" />
+            </div>
+          </div>
+
+          {/* Email / Password Form */}
           <form onSubmit={handleLogin} className="space-y-4">
-            {/* Email Field */}
-            <div className="space-y-1.5 text-left">
-              <label className="text-xs font-bold text-slate-700" htmlFor="email">
-                Email Address
+            <div>
+              <label className="block text-xs font-black text-black mb-1.5">
+                Business Email
               </label>
               <div className="relative">
-                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5 pointer-events-none" />
                 <input
-                  id="email"
                   type="email"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="owner@yourbusiness.com"
-                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3478C8] focus:bg-white transition-all"
+                  className="w-full text-xs sm:text-sm pl-10 pr-4 py-3 bg-slate-50 border-2 border-black rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#15803D] font-bold text-black shadow-[2px_2px_0px_#000000] transition-all"
                 />
               </div>
             </div>
 
-            {/* Password Field */}
-            <div className="space-y-1.5 text-left">
-              <div className="flex items-center justify-between">
-                <label className="text-xs font-bold text-slate-700" htmlFor="password">
+            <div>
+              <div className="flex items-center justify-between mb-1.5">
+                <label className="text-xs font-black text-black">
                   Password
                 </label>
                 <Link
                   href="/forgot-password"
-                  className="text-[11px] font-semibold text-[#3478C8] hover:text-[#173B67] transition-colors"
+                  className="text-[11px] font-bold text-slate-600 hover:text-black transition-colors"
                 >
                   Forgot password?
                 </Link>
               </div>
               <div className="relative">
-                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5 pointer-events-none" />
                 <input
-                  id="password"
                   type={showPassword ? "text" : "password"}
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  className="w-full pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#3478C8] focus:bg-white transition-all"
+                  placeholder="••••••••"
+                  className="w-full text-xs sm:text-sm pl-10 pr-10 py-3 bg-slate-50 border-2 border-black rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#15803D] font-bold text-black shadow-[2px_2px_0px_#000000] transition-all"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5"
-                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  className="absolute right-3.5 top-3.5 text-slate-400 hover:text-black"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -178,59 +194,59 @@ export default function LoginPage() {
             </div>
 
             {/* Remember Me Checkbox */}
-            <div className="flex items-center justify-between text-xs pt-1">
-              <label className="flex items-center gap-2 cursor-pointer select-none text-slate-600 font-medium">
+            <div className="flex items-center justify-between pt-0.5 pb-1">
+              <label className="flex items-center gap-2 cursor-pointer select-none group">
                 <input
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="w-4 h-4 text-[#173B67] rounded border-slate-300 focus:ring-[#3478C8]"
+                  className="w-4 h-4 rounded border-2 border-black text-[#15803D] focus:ring-0 focus:ring-offset-0 cursor-pointer accent-[#15803D]"
                 />
-                <span>Remember my email</span>
+                <span className="text-xs font-bold text-slate-700 group-hover:text-black transition-colors">
+                  Remember me on this device
+                </span>
               </label>
+              <span className="text-[10px] font-bold text-[#15803D] bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                90-day access
+              </span>
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 bg-[#173B67] hover:bg-[#1C4982] text-white rounded-xl text-xs sm:text-sm font-bold flex items-center justify-center gap-2 shadow-subtle hover:shadow transition-all disabled:opacity-50 cursor-pointer"
+              className="w-full py-3.5 sm:py-4 bg-[#15803D] hover:bg-[#166534] disabled:bg-slate-300 text-white rounded-full text-xs sm:text-sm font-black border-2 border-black shadow-[3px_3px_0px_#000000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               {loading ? (
-                <span>Signing in...</span>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
-                  <span>Sign In</span>
+                  <span>Sign In to Dashboard</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
             </button>
           </form>
-
-          {/* Social Sign-in & Academic Assurance */}
-          <div className="space-y-3 pt-2">
-            <div className="relative flex items-center justify-center">
-              <div className="border-t border-slate-200 w-full" />
-              <span className="bg-white px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider absolute">
-                Or continue with
-              </span>
-            </div>
-
-            <div className="pt-2">
-              <GoogleAuthButton text="Sign in with Google" />
-            </div>
-
-            <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-400 pt-2 font-medium">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#3478C8]" />
-              <span>256-Bit Encrypted JWT Session Authentication</span>
-            </div>
-          </div>
         </div>
+
+        {/* Bottom Sign-Up Link */}
+        <p className="text-xs text-slate-500 font-medium">
+          Don't have an account yet?{" "}
+          <Link href="/signup" className="font-bold text-black underline decoration-2 hover:text-[#15803D]">
+            Claim ₹1,999 only Lifetime License
+          </Link>
+        </p>
       </main>
 
-      {/* Subtle Academic Footer */}
-      <footer className="py-4 text-center text-xs text-slate-400 z-10">
-        SmartReview System &copy; 2026 • College Minor Project by Hardik
+      {/* Modern Minimal Footer */}
+      <footer className="max-w-6xl w-full mx-auto px-6 py-6 text-center text-xs text-slate-500 font-medium z-10 flex flex-wrap items-center justify-center gap-4 border-t-2 border-black/10">
+        <span>© 2026 Welurik Review. All rights reserved.</span>
+        <div className="flex items-center gap-3">
+          <Link href="/privacy" className="hover:text-black">Privacy Policy</Link>
+          <span>•</span>
+          <Link href="/terms" className="hover:text-black">Terms of Service</Link>
+          <span>•</span>
+          <Link href="/refund" className="hover:text-black">Refund Policy</Link>
+        </div>
       </footer>
     </div>
   );

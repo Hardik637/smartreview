@@ -16,6 +16,6 @@ export default function robots(): MetadataRoute.Robots {
         "/admin/",
       ],
     },
-    sitemap: `${process.env.NEXT_PUBLIC_APP_URL || "https://smartreview.vercel.app"}/sitemap.xml`,
+    sitemap: `${process.env.NEXT_PUBLIC_APP_URL || "https://smartreview-flame.vercel.app"}/sitemap.xml`,
   };
 }

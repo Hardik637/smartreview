@@ -3,40 +3,36 @@
 @tailwind utilities;
 
 :root {
-  --background: #F4F6F9;
-  --foreground: #0F172A;
-  --navy: #173B67;
-  --accent: #3478C8;
+  --background: #ECFDF5;
+  --foreground: #090D14;
 }
 
 body {
   color: var(--foreground);
-  background-color: #F4F6F9;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: #ECFDF5;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
-/* SmartReview Academic Subtle Canvas */
-.academic-bg,
+/* Base mint-emerald canvas */
 .neo-canvas-bg {
-  background-color: #F4F6F9;
+  background-color: #ECFDF5;
   background-image: 
-    radial-gradient(circle at 15% 15%, rgba(52, 120, 200, 0.05) 0%, transparent 40%),
-    radial-gradient(circle at 85% 65%, rgba(23, 59, 103, 0.06) 0%, transparent 45%);
+    radial-gradient(circle at 15% 15%, rgba(187, 247, 208, 0.45) 0%, transparent 45%),
+    radial-gradient(circle at 85% 65%, rgba(167, 243, 208, 0.35) 0%, transparent 45%);
 }
 
-/* Subtle architectural blueprint grid with restrained navy lines */
-.academic-grid,
+/* Active architectural blueprint grid with subtle emerald lines */
 .neo-grid-overlay {
-  background-size: 32px 32px;
+  background-size: 36px 36px;
   background-image: 
-    linear-gradient(to right, rgba(23, 59, 103, 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(23, 59, 103, 0.035) 1px, transparent 1px);
-  mask-image: radial-gradient(ellipse 95% 90% at 50% 30%, #000 70%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 95% 90% at 50% 30%, #000 70%, transparent 100%);
+    linear-gradient(to right, rgba(21, 128, 61, 0.065) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(21, 128, 61, 0.065) 1px, transparent 1px);
+  mask-image: radial-gradient(ellipse 95% 90% at 50% 30%, #000 65%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 95% 90% at 50% 30%, #000 65%, transparent 100%);
 }
 
-/* Custom subtle academic scrollbars */
+/* Custom subtle scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

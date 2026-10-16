@@ -54,8 +54,8 @@ export default function GoogleAuthButton({
           onSuccess?.();
           if (typeof window !== "undefined") {
             try {
-              sessionStorage.removeItem("smartreview_dashboard_cache");
-              sessionStorage.removeItem("smartreview_google_redirect_pending");
+              sessionStorage.removeItem("welurik_dashboard_cache");
+              sessionStorage.removeItem("welurik_google_redirect_pending");
             } catch {}
           }
           const params = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
@@ -84,7 +84,7 @@ export default function GoogleAuthButton({
 
     // B. Mobile redirect fallback (iOS Safari / Android Chrome)
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      const wasPending = typeof window !== "undefined" ? sessionStorage.getItem("smartreview_google_redirect_pending") : null;
+      const wasPending = typeof window !== "undefined" ? sessionStorage.getItem("welurik_google_redirect_pending") : null;
       if (user && wasPending) {
         syncUserWithBackend(user);
       }
@@ -130,7 +130,7 @@ export default function GoogleAuthButton({
             onSuccess?.();
             if (typeof window !== "undefined") {
               try {
-                sessionStorage.removeItem("smartreview_dashboard_cache");
+                sessionStorage.removeItem("welurik_dashboard_cache");
               } catch {}
             }
             const params = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : null;
@@ -159,7 +159,7 @@ export default function GoogleAuthButton({
         // If popup was blocked by browser, try redirect
         if (typeof window !== "undefined") {
           try {
-            sessionStorage.setItem("smartreview_google_redirect_pending", "true");
+            sessionStorage.setItem("welurik_google_redirect_pending", "true");
           } catch {}
         }
         await signInWithRedirect(auth, provider);

@@ -12,31 +12,30 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
-  themeColor: "#173B67",
+  themeColor: "#15803D",
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://smartreview-hardik.vercel.app"),
+  metadataBase: new URL("https://review.welurik.com"),
   title: {
-    default: "SmartReview — AI-Powered Customer Review Management System",
-    template: "%s | SmartReview",
+    default: "Welurik Review — Turn Happy Customers into 5-Star Google Reviews",
+    template: "%s | Welurik Review",
   },
   description:
-    "College Minor Project: An AI-powered customer feedback and Google Review acceleration system designed to eliminate review friction and intelligently manage customer sentiment.",
+    "AI-powered QR standees that eliminate customer writer's block and multiply your Google Maps reviews in 30 seconds. 100% Google policy compliant.",
   keywords: [
-    "SmartReview",
-    "AI review management",
-    "Customer feedback system",
-    "Google reviews booster",
-    "College Minor Project",
+    "Google reviews",
+    "GMB ranking booster",
+    "Google Maps SEO",
     "QR code review standee",
-    "Sentiment analysis",
-    "Google Gemini AI",
-    "Hardik637",
+    "AI review assistant",
+    "local business reviews",
+    "customer feedback system",
+    "Welurik Review",
   ],
-  authors: [{ name: "Hardik", url: "https://github.com/Hardik637" }],
-  creator: "Hardik",
-  publisher: "SmartReview",
+  authors: [{ name: "Welurik Review Team" }],
+  creator: "Welurik Review",
+  publisher: "Welurik Review",
   formatDetection: {
     email: false,
     address: false,
@@ -45,20 +44,37 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    siteName: "SmartReview",
-    title: "SmartReview — AI-Powered Customer Review Management System",
+    url: "https://review.welurik.com",
+    siteName: "Welurik Review",
+    title: "Welurik Review — Turn Happy Customers into 5-Star Google Reviews",
     description:
-      "College Minor Project: An AI-powered customer feedback and Google Review acceleration system designed to eliminate review friction and intelligently manage customer sentiment.",
+      "AI-powered QR standees and 30-second review assistant to multiply your Google Maps 5-star reviews and dominate local search rankings.",
+    images: [
+      {
+        url: "/welurik-review-light.png",
+        width: 800,
+        height: 600,
+        alt: "Welurik Review",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "SmartReview — AI-Powered Customer Review Management System",
+    title: "Welurik Review — Turn Happy Customers into 5-Star Google Reviews",
     description:
-      "College Minor Project: AI-powered review generator and sentiment routing platform.",
+      "AI-powered QR standees and 30-second review assistant to multiply your Google Maps reviews in 30 seconds.",
+    images: ["/welurik-review-light.png"],
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
   icons: {
     icon: [
@@ -78,7 +94,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className="min-h-screen bg-[#F4F6F9] text-slate-900 font-sans antialiased selection:bg-[#173B67] selection:text-white">
+      <body className="min-h-screen bg-[#ECFDF5] text-slate-900 font-sans antialiased selection:bg-[#15803D] selection:text-white">
         {children}
       </body>
     </html>
