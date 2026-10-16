@@ -92,25 +92,25 @@ export default function PrivateFeedbackPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#ECFDF5] neo-canvas-bg text-slate-900 flex flex-col justify-between items-center py-8 px-4 font-sans selection:bg-slate-900 selection:text-white">
+    <div className="min-h-screen bg-[#F4F6F9] text-slate-900 flex flex-col justify-between items-center py-8 px-4 font-sans selection:bg-[#173B67] selection:text-white">
       <div className="w-full max-w-sm mx-auto">
         <div className="mb-4">
           <Link
             href={`/r/${slug}`}
-            className="inline-flex items-center gap-1 text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-[#173B67] transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" /> Back to review page
           </Link>
         </div>
 
-        <div className="bg-white rounded-[28px] p-6 shadow-sm border border-slate-200/80 space-y-5">
+        <div className="bg-white rounded-[24px] p-6 shadow-card border border-slate-200/80 space-y-5">
           {!submitted ? (
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="text-center space-y-1">
                 <div className="w-10 h-10 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mx-auto shadow-inner mb-2">
                   <MessageSquare className="w-5 h-5" />
                 </div>
-                <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+                <h1 className="text-xl font-bold text-[#173B67] tracking-tight">
                   Direct Note to Management
                 </h1>
                 <p className="text-xs text-slate-500">
@@ -133,7 +133,7 @@ export default function PrivateFeedbackPage() {
                           onClick={() => toggleIssue(topic)}
                           className={`text-xs px-2.5 py-1.5 rounded-xl border font-medium transition-all cursor-pointer ${
                             isSelected
-                              ? "bg-slate-900 text-white border-slate-900 shadow-xs"
+                              ? "bg-[#173B67] text-white border-[#173B67] shadow-xs"
                               : "bg-slate-50 border-slate-200/80 text-slate-700 hover:bg-slate-100"
                           }`}
                         >
@@ -155,7 +155,7 @@ export default function PrivateFeedbackPage() {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   placeholder="Tell us what happened so management can address it..."
-                  className="w-full text-xs p-3 bg-slate-50 border border-slate-200/80 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 placeholder-slate-400 resize-none font-normal"
+                  className="w-full text-xs p-3 bg-slate-50 border border-slate-200/80 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#173B67] text-slate-900 placeholder-slate-400 resize-none font-normal"
                 />
               </div>
 
@@ -167,7 +167,7 @@ export default function PrivateFeedbackPage() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="e.g. Rahul Sharma"
-                    className="w-full text-xs px-3 py-2 bg-slate-50 border border-slate-200/80 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900"
+                    className="w-full text-xs px-3 py-2 bg-slate-50 border border-slate-200/80 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#173B67] text-slate-900"
                   />
                 </div>
                 <div>
@@ -177,7 +177,7 @@ export default function PrivateFeedbackPage() {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="+91 98765 43210"
-                    className="w-full text-xs px-3 py-2 bg-slate-50 border border-slate-200/80 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900"
+                    className="w-full text-xs px-3 py-2 bg-slate-50 border border-slate-200/80 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#173B67] text-slate-900"
                   />
                 </div>
               </div>
@@ -192,7 +192,7 @@ export default function PrivateFeedbackPage() {
               <button
                 type="submit"
                 disabled={submitting || !message.trim()}
-                className="w-full py-3.5 px-4 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-xs transition-all cursor-pointer active:scale-[0.98]"
+                className="w-full py-3.5 px-4 bg-[#173B67] hover:bg-[#0F2643] disabled:bg-slate-300 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-card transition-all cursor-pointer active:scale-[0.98]"
               >
                 {submitting ? "Sending note..." : (
                   <>
@@ -211,7 +211,7 @@ export default function PrivateFeedbackPage() {
                       href={googleReviewUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-emerald-700 font-bold hover:underline inline-flex items-center gap-0.5"
+                      className="text-[#3478C8] font-bold hover:underline inline-flex items-center gap-0.5"
                     >
                       Post on Google <ExternalLink className="w-2.5 h-2.5" />
                     </a>
@@ -221,11 +221,11 @@ export default function PrivateFeedbackPage() {
             </form>
           ) : (
             <div className="text-center py-6 space-y-4">
-              <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto shadow-inner">
-                <CheckCircle2 className="w-6 h-6" />
+              <div className="w-12 h-12 bg-blue-50 text-[#173B67] rounded-2xl flex items-center justify-center mx-auto shadow-inner">
+                <CheckCircle2 className="w-6 h-6 text-emerald-600" />
               </div>
               <div className="space-y-1">
-                <h2 className="text-base font-bold text-slate-900">Thank You for Letting Us Know</h2>
+                <h2 className="text-base font-bold text-[#173B67]">Thank You for Letting Us Know</h2>
                 <p className="text-xs text-slate-500 max-w-xs mx-auto leading-relaxed">
                   We've received your note and will review it with our team to address it promptly.
                 </p>
@@ -238,7 +238,7 @@ export default function PrivateFeedbackPage() {
                     href={googleReviewUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs font-bold text-emerald-700 hover:underline"
+                    className="inline-flex items-center gap-1 text-xs font-bold text-[#173B67] hover:underline"
                   >
                     Open Google Review <ExternalLink className="w-3 h-3" />
                   </a>
@@ -248,7 +248,7 @@ export default function PrivateFeedbackPage() {
               <div className="pt-2">
                 <Link
                   href={`/r/${slug}`}
-                  className="inline-block text-xs font-bold text-slate-900 bg-slate-100 hover:bg-slate-200 px-4 py-2.5 rounded-xl transition-colors"
+                  className="inline-block text-xs font-bold text-[#173B67] bg-slate-100 hover:bg-slate-200 px-4 py-2.5 rounded-xl transition-colors"
                 >
                   Return to Main Page
                 </Link>

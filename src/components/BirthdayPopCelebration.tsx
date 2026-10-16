@@ -19,7 +19,7 @@ export interface BirthdayPopOptions {
 export function triggerBirthdayPop(options?: BirthdayPopOptions) {
   if (typeof window === "undefined") return;
   window.dispatchEvent(
-    new CustomEvent("welurik_birthday_pop", {
+    new CustomEvent("smartreview_birthday_pop", {
       detail: {
         title: options?.title || "Changes Saved Successfully!",
         message:
@@ -160,9 +160,9 @@ export default function BirthdayPopCelebration() {
       setActivePop(details);
     };
 
-    window.addEventListener("welurik_birthday_pop", handleEvent);
+    window.addEventListener("smartreview_birthday_pop", handleEvent);
     return () => {
-      window.removeEventListener("welurik_birthday_pop", handleEvent);
+      window.removeEventListener("smartreview_birthday_pop", handleEvent);
     };
   }, []);
 

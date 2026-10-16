@@ -33,7 +33,7 @@ export default function SettingsPage() {
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
   const [googleReviewUrl, setGoogleReviewUrl] = useState("");
-  const [brandColor, setBrandColor] = useState("#0f172a");
+  const [brandColor, setBrandColor] = useState("#173B67");
   const [phone, setPhone] = useState("");
 
   // Lists
@@ -77,19 +77,17 @@ export default function SettingsPage() {
           setLocation(b.location || "");
           setDescription(b.description || "");
           setGoogleReviewUrl(b.googleReviewUrl || "");
-          setBrandColor(b.brandColor || "#0f172a");
+          setBrandColor(b.brandColor || "#173B67");
           setPhone(b.phone || "");
 
-          // Parse Services safely whether strings, JSON strings, or objects
           const loadedServices: string[] = Array.isArray(b.services)
             ? b.services
                 .map((s: any) => parseServiceItem(s)?.name)
-                .filter((name: any): name is string => Boolean(name && !name.startsWith("{")))
+                .filter((n: any): n is string => Boolean(n && !n.startsWith("{")))
             : [];
 
           setServices(loadedServices.length > 0 ? loadedServices : [...catConfig.defaultServices]);
 
-          // Parse Topics safely
           const loadedPositive: string[] = [];
           const loadedIssues: string[] = [];
 
@@ -113,68 +111,66 @@ export default function SettingsPage() {
           );
         }
       } catch (err) {
-        console.error("Failed to load settings data:", err);
+        console.error("Error loading settings:", err);
       } finally {
         setLoading(false);
       }
     }
+
     loadData();
   }, []);
 
-  const handleCategoryChange = (newCatId: string) => {
-    setCategory(newCatId);
-    const cat = getCategoryById(newCatId);
-    if (confirm(`Load default services & topics for "${cat.name}"?`)) {
-      setServices([...cat.defaultServices]);
-      setPositiveTopics([...cat.positiveTopics]);
-      setIssueTopics([...cat.issueTopics]);
-    }
+  const handleCategoryChange = (newCat: string) => {
+    setCategory(newCat);
+    const catConfig = getCategoryById(newCat);
+    setServices([...catConfig.defaultServices]);
+    setPositiveTopics([...catConfig.positiveTopics]);
+    setIssueTopics([...catConfig.issueTopics]);
   };
 
   const handleResetDefaults = () => {
-    const cat = getCategoryById(category);
-    setServices([...cat.defaultServices]);
-    setPositiveTopics([...cat.positiveTopics]);
-    setIssueTopics([...cat.issueTopics]);
+    const catConfig = getCategoryById(category);
+    setServices([...catConfig.defaultServices]);
+    setPositiveTopics([...catConfig.positiveTopics]);
+    setIssueTopics([...catConfig.issueTopics]);
+    triggerBirthdayPop({
+      title: "Defaults Reloaded! 🔄",
+      message: `Loaded standard keywords for ${catConfig.name}. Remember to click Save below!`,
+      emoji: "📋",
+    });
   };
 
-  const handleAddService = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleAddService = () => {
     const trimmed = newService.trim();
-    if (trimmed && !services.some((s) => (typeof s === "string" ? s : (s as any)?.name)?.toLowerCase() === trimmed.toLowerCase())) {
-      setServices([...services, trimmed]);
-      setNewService("");
-    }
+    if (!trimmed || services.includes(trimmed)) return;
+    setServices((prev) => [...prev, trimmed]);
+    setNewService("");
   };
 
   const handleRemoveService = (index: number) => {
-    setServices(services.filter((_, i) => i !== index));
+    setServices((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleAddPositiveTopic = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleAddPositiveTopic = () => {
     const trimmed = newPositiveTopic.trim();
-    if (trimmed && !positiveTopics.some((t) => (typeof t === "string" ? t : (t as any)?.name)?.toLowerCase() === trimmed.toLowerCase())) {
-      setPositiveTopics([...positiveTopics, trimmed]);
-      setNewPositiveTopic("");
-    }
+    if (!trimmed || positiveTopics.includes(trimmed)) return;
+    setPositiveTopics((prev) => [...prev, trimmed]);
+    setNewPositiveTopic("");
   };
 
   const handleRemovePositiveTopic = (index: number) => {
-    setPositiveTopics(positiveTopics.filter((_, i) => i !== index));
+    setPositiveTopics((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleAddIssueTopic = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleAddIssueTopic = () => {
     const trimmed = newIssueTopic.trim();
-    if (trimmed && !issueTopics.some((t) => (typeof t === "string" ? t : (t as any)?.name)?.toLowerCase() === trimmed.toLowerCase())) {
-      setIssueTopics([...issueTopics, trimmed]);
-      setNewIssueTopic("");
-    }
+    if (!trimmed || issueTopics.includes(trimmed)) return;
+    setIssueTopics((prev) => [...prev, trimmed]);
+    setNewIssueTopic("");
   };
 
   const handleRemoveIssueTopic = (index: number) => {
-    setIssueTopics(issueTopics.filter((_, i) => i !== index));
+    setIssueTopics((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -184,19 +180,10 @@ export default function SettingsPage() {
     setSaveError("");
 
     try {
-      const cleanServices = services
-        .map((s) => parseServiceItem(s)?.name)
-        .filter((name): name is string => Boolean(name && !name.startsWith("{")));
-
+      const cleanServices = services.map((s) => ({ name: s }));
       const allTopics = [
-        ...positiveTopics
-          .map((t) => parseTopicItem(t, "positive")?.name)
-          .filter((name): name is string => Boolean(name && !name.startsWith("{")))
-          .map((name) => ({ name, type: "positive" })),
-        ...issueTopics
-          .map((t) => parseTopicItem(t, "issue")?.name)
-          .filter((name): name is string => Boolean(name && !name.startsWith("{")))
-          .map((name) => ({ name, type: "issue" })),
+        ...positiveTopics.map((t) => ({ name: t, type: "positive" })),
+        ...issueTopics.map((t) => ({ name: t, type: "issue" })),
       ];
 
       const res = await fetch("/api/business/me", {
@@ -226,6 +213,7 @@ export default function SettingsPage() {
         });
         if (typeof window !== "undefined") {
           try {
+            sessionStorage.removeItem("smartreview_dashboard_cache");
             sessionStorage.removeItem("welurik_dashboard_cache");
             window.dispatchEvent(new Event("refresh_business"));
           } catch {}
@@ -244,29 +232,29 @@ export default function SettingsPage() {
   if (loading) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center">
-        <div className="w-7 h-7 border-2 border-slate-900 border-t-transparent rounded-full animate-spin" />
+        <div className="w-7 h-7 border-2 border-[#173B67] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="p-4 sm:p-6 md:p-10 max-w-5xl mx-auto space-y-6 sm:space-y-8">
+    <div className="p-4 sm:p-6 md:p-8 max-w-5xl mx-auto space-y-6">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">Keywords & Settings</h1>
           <p className="text-xs text-slate-500 mt-0.5">
-            Configure your target search keywords, experience tags, and Google Business review URL.
+            Configure target search keywords, experience tags, and your Google Business review link.
           </p>
         </div>
       </div>
 
       <form onSubmit={handleSave} className="space-y-6">
         {/* Main Profile Info */}
-        <div className="bg-white p-6 rounded-[28px] border border-slate-200/80 shadow-xs space-y-5">
+        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-subtle space-y-5">
           <div>
             <h2 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-              <Store className="w-4 h-4 text-slate-700" /> Business Profile
+              <Store className="w-4 h-4 text-[#173B67]" /> Business Profile
             </h2>
             <p className="text-xs text-slate-400 mt-0.5">Your public identity displayed to customers.</p>
           </div>
@@ -279,7 +267,7 @@ export default function SettingsPage() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200/80 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 font-medium"
+                className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3478C8] text-slate-900 font-medium"
               />
             </div>
 
@@ -288,7 +276,7 @@ export default function SettingsPage() {
               <select
                 value={category}
                 onChange={(e) => handleCategoryChange(e.target.value)}
-                className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200/80 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 font-medium capitalize"
+                className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3478C8] text-slate-900 font-medium capitalize"
               >
                 {CATEGORIES.map((c) => (
                   <option key={c.id} value={c.id}>
@@ -305,7 +293,7 @@ export default function SettingsPage() {
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 placeholder="e.g. 4th Cross, Indiranagar, Bengaluru"
-                className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200/80 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 font-medium"
+                className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3478C8] text-slate-900 font-medium"
               />
             </div>
 
@@ -316,7 +304,7 @@ export default function SettingsPage() {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="+91 98765 43210"
-                className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200/80 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900 font-medium"
+                className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3478C8] text-slate-900 font-medium"
               />
             </div>
           </div>
@@ -325,14 +313,14 @@ export default function SettingsPage() {
           <div className="pt-2">
             <div className="flex items-center justify-between mb-1">
               <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-                <LinkIcon className="w-3.5 h-3.5 text-slate-600" /> Google Business Profile Review URL
+                <LinkIcon className="w-3.5 h-3.5 text-[#173B67]" /> Google Business Profile Review URL
               </label>
               {googleReviewUrl && (
                 <a
                   href={googleReviewUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs font-semibold text-slate-900 hover:underline inline-flex items-center gap-1"
+                  className="text-xs font-semibold text-[#3478C8] hover:text-[#173B67] inline-flex items-center gap-1"
                 >
                   Test Link <ExternalLink className="w-3 h-3" />
                 </a>
@@ -343,33 +331,33 @@ export default function SettingsPage() {
               required
               value={googleReviewUrl}
               onChange={(e) => setGoogleReviewUrl(e.target.value)}
-              placeholder="https://g.page/r/your-id/review or https://search.google.com/local/writereview?placeid=..."
+              placeholder="https://g.page/r/your-id/review or https://maps.app.goo.gl/..."
               className={`w-full text-xs px-3.5 py-2.5 bg-slate-50 border rounded-xl focus:bg-white focus:outline-none focus:ring-2 font-mono text-slate-900 ${
                 googleReviewUrl && !isValidGoogleUrl(googleReviewUrl)
                   ? "border-rose-300 focus:ring-rose-500"
-                  : "border-slate-200/80 focus:ring-slate-900"
+                  : "border-slate-200 focus:ring-[#3478C8]"
               }`}
             />
             {googleReviewUrl && googleReviewUrl.trim().length > 0 && (
               <>
                 {isValidGoogleUrl(googleReviewUrl) ? (
-                  <div className="mt-2 flex flex-wrap items-center justify-between gap-2 bg-emerald-50 border border-emerald-200/80 px-3 py-2 rounded-xl text-xs">
-                    <div className="flex items-center gap-1.5 text-emerald-800 font-medium text-[11.5px]">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                      <span>Valid Google Business format</span>
+                  <div className="mt-2 flex flex-wrap items-center justify-between gap-2 bg-blue-50 border border-blue-200 px-3 py-2 rounded-xl text-xs">
+                    <div className="flex items-center gap-1.5 text-[#173B67] font-medium text-[11.5px]">
+                      <span className="w-2 h-2 rounded-full bg-[#3478C8] animate-pulse" />
+                      <span>Valid Google Business link format</span>
                     </div>
                     <a
                       href={googleReviewUrl.startsWith("http") ? googleReviewUrl : `https://${googleReviewUrl}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-[11px] flex items-center gap-1 shadow-2xs cursor-pointer transition-all"
+                      className="px-2.5 py-1 bg-[#173B67] hover:bg-[#1C4982] text-white rounded-lg font-bold text-[11px] flex items-center gap-1 cursor-pointer transition-all"
                     >
-                      <span>🧪 Test GMB Link</span>
+                      <span>Test Link</span>
                       <ExternalLink className="w-3 h-3" />
                     </a>
                   </div>
                 ) : (
-                  <div className="mt-2 flex items-center gap-2 bg-rose-50 border border-rose-200/80 px-3 py-2 rounded-xl text-xs text-rose-700">
+                  <div className="mt-2 flex items-center gap-2 bg-rose-50 border border-rose-200 px-3 py-2 rounded-xl text-xs text-rose-700">
                     <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
                     <span className="text-[11.5px]">
                       <strong>Invalid format:</strong> Please enter a real Google Review link (e.g. <code>g.page/r/...</code> or <code>maps.app.goo.gl/...</code>).
@@ -385,12 +373,12 @@ export default function SettingsPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
           <div>
             <h2 className="text-sm font-bold text-slate-900">Keywords & Experience Topics Manager</h2>
-            <p className="text-xs text-slate-400">Manage industry praise tags, services, and private feedback concern tags.</p>
+            <p className="text-xs text-slate-400">Manage praise tags, services, and private feedback concern tags.</p>
           </div>
           <button
             type="button"
             onClick={handleResetDefaults}
-            className="text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-200/80 px-3 py-1.5 rounded-xl transition-all inline-flex items-center gap-1.5 cursor-pointer self-start sm:self-auto"
+            className="text-xs font-semibold text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 border border-slate-200 px-3 py-1.5 rounded-xl transition-all inline-flex items-center gap-1.5 cursor-pointer self-start sm:self-auto"
           >
             <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
             Reload Category Defaults
@@ -399,7 +387,7 @@ export default function SettingsPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Positive Experience Topics */}
-          <div className="bg-white p-6 rounded-[28px] border border-slate-200/80 shadow-xs space-y-4">
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-subtle space-y-4">
             <div>
               <h3 className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
                 <Sparkles className="w-3.5 h-3.5 text-amber-500" /> Experience Praise Topics
@@ -407,7 +395,7 @@ export default function SettingsPage() {
               <p className="text-[11px] text-slate-400">Tags customers can select when writing reviews.</p>
             </div>
 
-            <div className="flex flex-wrap gap-1.5 min-h-[80px] p-3 bg-slate-50/70 border border-slate-200/60 rounded-2xl">
+            <div className="flex flex-wrap gap-1.5 min-h-[80px] p-3 bg-slate-50 border border-slate-200 rounded-xl">
               {positiveTopics.length === 0 ? (
                 <span className="text-xs text-slate-400 italic">No praise tags added yet. Click &quot;Reload Category Defaults&quot; or add below.</span>
               ) : (
@@ -417,7 +405,7 @@ export default function SettingsPage() {
                   return (
                     <span
                       key={`${label}-${idx}`}
-                      className="text-xs bg-white text-slate-900 font-medium px-2.5 py-1 rounded-lg border border-slate-200 shadow-xs flex items-center gap-1.5"
+                      className="text-xs bg-white text-slate-900 font-medium px-2.5 py-1 rounded-lg border border-slate-200 shadow-subtle flex items-center gap-1.5"
                     >
                       {label}
                       <button
@@ -438,13 +426,13 @@ export default function SettingsPage() {
                 type="text"
                 value={newPositiveTopic}
                 onChange={(e) => setNewPositiveTopic(e.target.value)}
-                placeholder="e.g. Friendly Baristas"
-                className="flex-1 text-xs px-3 py-2 bg-slate-50 border border-slate-200/80 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900"
+                placeholder="e.g. Friendly Staff"
+                className="flex-1 text-xs px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3478C8]"
               />
               <button
                 type="button"
                 onClick={handleAddPositiveTopic}
-                className="px-3 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                className="px-3.5 py-2 bg-[#173B67] hover:bg-[#1C4982] text-white rounded-xl text-xs font-semibold flex items-center gap-1 cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5" /> Add
               </button>
@@ -452,15 +440,15 @@ export default function SettingsPage() {
           </div>
 
           {/* Services / Menu Items */}
-          <div className="bg-white p-6 rounded-[28px] border border-slate-200/80 shadow-xs space-y-4">
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-subtle space-y-4">
             <div>
               <h3 className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-                <Store className="w-3.5 h-3.5 text-emerald-600" /> Target Keyword Services
+                <Store className="w-3.5 h-3.5 text-[#3478C8]" /> Target Keyword Services
               </h3>
               <p className="text-[11px] text-slate-400">Products & items to boost Google Search rankings.</p>
             </div>
 
-            <div className="flex flex-wrap gap-1.5 min-h-[80px] p-3 bg-slate-50/70 border border-slate-200/60 rounded-2xl">
+            <div className="flex flex-wrap gap-1.5 min-h-[80px] p-3 bg-slate-50 border border-slate-200 rounded-xl">
               {services.length === 0 ? (
                 <span className="text-xs text-slate-400 italic">No services added yet. Click &quot;Reload Category Defaults&quot; or add below.</span>
               ) : (
@@ -470,7 +458,7 @@ export default function SettingsPage() {
                   return (
                     <span
                       key={`${label}-${idx}`}
-                      className="text-xs bg-white text-slate-900 font-medium px-2.5 py-1 rounded-lg border border-slate-200 shadow-xs flex items-center gap-1.5"
+                      className="text-xs bg-white text-slate-900 font-medium px-2.5 py-1 rounded-lg border border-slate-200 shadow-subtle flex items-center gap-1.5"
                     >
                       {label}
                       <button
@@ -491,21 +479,21 @@ export default function SettingsPage() {
                 type="text"
                 value={newService}
                 onChange={(e) => setNewService(e.target.value)}
-                placeholder="e.g. Sourdough Toast"
-                className="flex-1 text-xs px-3 py-2 bg-slate-50 border border-slate-200/80 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900"
+                placeholder="e.g. Specialty Brew"
+                className="flex-1 text-xs px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3478C8]"
               />
               <button
                 type="button"
                 onClick={handleAddService}
-                className="px-3 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                className="px-3.5 py-2 bg-[#173B67] hover:bg-[#1C4982] text-white rounded-xl text-xs font-semibold flex items-center gap-1 cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5" /> Add
               </button>
             </div>
           </div>
 
-          {/* Private Feedback Concern Tags (Optional Grievances) */}
-          <div className="bg-white p-6 rounded-[28px] border border-slate-200/80 shadow-xs space-y-4 md:col-span-2">
+          {/* Private Feedback Concern Tags */}
+          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-subtle space-y-4 md:col-span-2">
             <div>
               <h3 className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
                 <MessageSquare className="w-3.5 h-3.5 text-amber-600" /> Private Feedback Concern Tags
@@ -515,7 +503,7 @@ export default function SettingsPage() {
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-1.5 min-h-[60px] p-3 bg-slate-50/70 border border-slate-200/60 rounded-2xl">
+            <div className="flex flex-wrap gap-1.5 min-h-[60px] p-3 bg-slate-50 border border-slate-200 rounded-xl">
               {issueTopics.length === 0 ? (
                 <span className="text-xs text-slate-400 italic">No issue tags added yet. Customers can still type freeform messages.</span>
               ) : (
@@ -525,7 +513,7 @@ export default function SettingsPage() {
                   return (
                     <span
                       key={`${label}-${idx}`}
-                      className="text-xs bg-white text-slate-900 font-medium px-2.5 py-1 rounded-lg border border-slate-200 shadow-xs flex items-center gap-1.5"
+                      className="text-xs bg-white text-slate-900 font-medium px-2.5 py-1 rounded-lg border border-slate-200 shadow-subtle flex items-center gap-1.5"
                     >
                       {label}
                       <button
@@ -546,13 +534,13 @@ export default function SettingsPage() {
                 type="text"
                 value={newIssueTopic}
                 onChange={(e) => setNewIssueTopic(e.target.value)}
-                placeholder="e.g. Seating Wait Time"
-                className="flex-1 text-xs px-3 py-2 bg-slate-50 border border-slate-200/80 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900"
+                placeholder="e.g. Wait Time"
+                className="flex-1 text-xs px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3478C8]"
               />
               <button
                 type="button"
                 onClick={handleAddIssueTopic}
-                className="px-3 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                className="px-3.5 py-2 bg-[#173B67] hover:bg-[#1C4982] text-white rounded-xl text-xs font-semibold flex items-center gap-1 cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5" /> Add Tag
               </button>
@@ -561,15 +549,15 @@ export default function SettingsPage() {
         </div>
 
         {/* Submit Action Bar */}
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-slate-200/80">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-4 border-t border-slate-200">
           <div>
             {saveSuccess && (
-              <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 flex items-center gap-1.5 animate-in fade-in">
+              <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-xl border border-emerald-200 flex items-center gap-1.5">
                 <Check className="w-3.5 h-3.5" /> Settings saved!
               </span>
             )}
             {saveError && (
-              <span className="text-xs font-bold text-rose-700 bg-rose-50 px-3 py-1.5 rounded-xl border border-rose-200 flex items-center gap-1.5 animate-in fade-in">
+              <span className="text-xs font-bold text-rose-700 bg-rose-50 px-3 py-1.5 rounded-xl border border-rose-200 flex items-center gap-1.5">
                 <AlertCircle className="w-3.5 h-3.5 text-rose-500" /> {saveError}
               </span>
             )}
@@ -578,7 +566,7 @@ export default function SettingsPage() {
           <button
             type="submit"
             disabled={saving}
-            className="w-full sm:w-auto py-3 px-6 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl text-xs font-bold flex items-center justify-center gap-2 shadow-xs transition-all active:scale-[0.98] cursor-pointer"
+            className="w-full sm:w-auto py-3 px-6 bg-[#173B67] hover:bg-[#1C4982] text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-subtle transition-all active:scale-[0.98] cursor-pointer"
           >
             {saving ? "Saving..." : (
               <>
@@ -588,43 +576,6 @@ export default function SettingsPage() {
           </button>
         </div>
       </form>
-
-      {/* Customer Care Direct Support Card */}
-      <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-start sm:items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 shadow-inner">
-            <Headphones className="w-5 h-5 text-emerald-600" />
-          </div>
-          <div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider">Direct Customer Care</span>
-            </div>
-            <h4 className="text-sm font-bold text-slate-900">Need Help or Facing Any Problem?</h4>
-            <p className="text-xs text-slate-500">Contact our support team directly via WhatsApp or Voice Call (+91 84217 06305).</p>
-          </div>
-        </div>
-        <div className="flex items-center gap-2 shrink-0">
-          <a
-            href={`https://wa.me/918421706305?text=${encodeURIComponent(
-              name ? `Hi Welurik Support, I need help with "${name}" review account.` : "Hi Welurik Support, I need help with my review account."
-            )}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="px-3.5 py-2.5 rounded-xl bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
-          >
-            <MessageCircle className="w-3.5 h-3.5" />
-            <span>WhatsApp Us</span>
-          </a>
-          <a
-            href="tel:+918421706305"
-            className="px-3.5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
-          >
-            <PhoneCall className="w-3.5 h-3.5 text-emerald-400" />
-            <span>Call Support</span>
-          </a>
-        </div>
-      </div>
     </div>
   );
 }

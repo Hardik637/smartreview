@@ -323,7 +323,7 @@ const DEFAULT_MIXED_TOPICS = [
     .filter(Boolean) as { id: string; name: string }[];
 
   return (
-    <div className="min-h-screen bg-[#ECFDF5] neo-canvas-bg text-slate-900 flex flex-col justify-between items-center py-8 px-4 font-sans selection:bg-slate-900 selection:text-white">
+    <div className="min-h-screen bg-[#F4F6F9] text-slate-900 flex flex-col justify-between items-center py-8 px-4 font-sans selection:bg-[#173B67] selection:text-white">
       <div className="w-full max-w-sm mx-auto">
         {/* Brand Identity */}
         <motion.div
@@ -332,20 +332,20 @@ const DEFAULT_MIXED_TOPICS = [
           transition={{ duration: 0.4 }}
           className="text-center mb-5 space-y-1"
         >
-          <span className="text-[11px] font-semibold tracking-widest text-slate-400 uppercase">
-            Google Review
+          <span className="text-[11px] font-semibold tracking-widest text-[#3478C8] uppercase">
+            Google Review Assistant
           </span>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-2xl font-bold text-[#173B67] tracking-tight">
             {business.name}
           </h1>
           {business.location && (
-            <p className="text-xs text-slate-400 font-normal">{business.location}</p>
+            <p className="text-xs text-slate-500 font-normal">{business.location}</p>
           )}
 
           {/* Mobile Step Progress Indicator */}
           <div className="flex items-center justify-center gap-1.5 pt-2">
-            <div className={`h-1 rounded-full transition-all duration-300 ${step === "select" ? "w-6 bg-slate-900" : "w-2 bg-slate-300"}`} />
-            <div className={`h-1 rounded-full transition-all duration-300 ${step === "review" ? "w-6 bg-slate-900" : "w-2 bg-slate-300"}`} />
+            <div className={`h-1 rounded-full transition-all duration-300 ${step === "select" ? "w-6 bg-[#173B67]" : "w-2 bg-slate-300"}`} />
+            <div className={`h-1 rounded-full transition-all duration-300 ${step === "review" ? "w-6 bg-[#173B67]" : "w-2 bg-slate-300"}`} />
           </div>
         </motion.div>
 
@@ -358,11 +358,11 @@ const DEFAULT_MIXED_TOPICS = [
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
               transition={{ duration: 0.25 }}
-              className="bg-white rounded-[28px] p-5 sm:p-6 shadow-sm border border-slate-200/70 space-y-5"
+              className="bg-white rounded-[24px] p-5 sm:p-6 shadow-card border border-slate-200/80 space-y-5"
             >
               {/* Star Rating with Confetti on 5 Stars */}
               <div className="text-center">
-                <label className="block text-xs font-semibold text-slate-600 mb-2">
+                <label className="block text-xs font-semibold text-slate-700 mb-2">
                   Rate Your Visit
                 </label>
                 <div className="flex justify-center gap-1 sm:gap-1.5">
@@ -386,7 +386,7 @@ const DEFAULT_MIXED_TOPICS = [
                               particleCount: 35,
                               spread: 55,
                               origin: { y: 0.35 },
-                              colors: ["#16A34A", "#22C55E", "#F59E0B"],
+                              colors: ["#173B67", "#3478C8", "#F59E0B"],
                             });
                           } catch {}
                         }
@@ -425,7 +425,7 @@ const DEFAULT_MIXED_TOPICS = [
                       </span>
                       <Link
                         href={`/r/${slug}/feedback`}
-                        className="text-[10px] font-bold text-emerald-800 bg-emerald-100 hover:bg-emerald-200 px-2 py-0.5 rounded-lg transition-colors inline-flex items-center gap-0.5 shrink-0"
+                        className="text-[10px] font-bold text-[#173B67] bg-blue-100 hover:bg-blue-200 px-2.5 py-1 rounded-lg transition-colors inline-flex items-center gap-0.5 shrink-0"
                       >
                         Message Owner Privately ➔
                       </Link>
@@ -550,7 +550,7 @@ const DEFAULT_MIXED_TOPICS = [
                 className={`w-full py-4 px-4 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 shadow-sm transition-all ${
                   isGenerating
                     ? "bg-slate-100 text-slate-400 cursor-not-allowed border border-slate-200"
-                    : "bg-slate-900 hover:bg-slate-800 text-white shadow-slate-200"
+                    : "bg-[#173B67] hover:bg-[#0F2643] text-white shadow-card"
                 }`}
               >
                 {isGenerating ? (
@@ -560,7 +560,7 @@ const DEFAULT_MIXED_TOPICS = [
                   </>
                 ) : (
                   <>
-                    <Sparkles className="w-4 h-4" />
+                    <Sparkles className="w-4 h-4 text-[#3478C8]" />
                     {rating <= 2
                       ? `Generate ${rating}-Star Review`
                       : rating === 3
@@ -577,13 +577,13 @@ const DEFAULT_MIXED_TOPICS = [
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
               transition={{ duration: 0.25 }}
-              className="bg-white rounded-[28px] p-6 shadow-sm border border-slate-200/70 space-y-5"
+              className="bg-white rounded-[24px] p-6 shadow-card border border-slate-200/80 space-y-5"
             >
               <div className="flex items-center justify-between">
                 <button
                   type="button"
                   onClick={() => setStep("select")}
-                  className="text-xs font-semibold text-slate-400 hover:text-slate-900 flex items-center gap-1 transition-colors cursor-pointer"
+                  className="text-xs font-semibold text-slate-500 hover:text-[#173B67] flex items-center gap-1 transition-colors cursor-pointer"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" /> Adjust
                 </button>
@@ -601,7 +601,7 @@ const DEFAULT_MIXED_TOPICS = [
 
             {/* Tone Variations Switcher */}
             <div>
-              <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-[11px] font-semibold text-slate-500 uppercase tracking-wider mb-1.5">
                 Length & Tone
               </label>
               <div className="grid grid-cols-3 gap-1.5 bg-slate-100 p-1 rounded-xl">
@@ -617,8 +617,8 @@ const DEFAULT_MIXED_TOPICS = [
                     onClick={() => handleGenerate(t.id as any)}
                     className={`py-2 text-xs font-medium rounded-lg transition-all capitalize ${
                       tone === t.id
-                        ? "bg-white text-slate-900 shadow-sm font-bold scale-[1.02]"
-                        : "text-slate-500 hover:text-slate-900"
+                        ? "bg-white text-[#173B67] shadow-sm font-bold scale-[1.02]"
+                        : "text-slate-500 hover:text-[#173B67]"
                     }`}
                   >
                     {t.label}
@@ -650,15 +650,15 @@ const DEFAULT_MIXED_TOPICS = [
                 <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                   Your Review (Tap to edit)
                   {isGenerating && (
-                    <span className="text-[10px] font-medium text-emerald-600 flex items-center gap-1 bg-emerald-50 px-2 py-0.5 rounded-full">
-                      <Sparkles className="w-3 h-3 animate-pulse text-emerald-500" />
+                    <span className="text-[10px] font-medium text-[#173B67] flex items-center gap-1 bg-blue-50 px-2 py-0.5 rounded-full">
+                      <Sparkles className="w-3 h-3 animate-pulse text-[#3478C8]" />
                       AI drafting...
                     </span>
                   )}
                 </label>
                 {isRegenerating && (
                   <span className="text-[10px] text-slate-400 flex items-center gap-1">
-                    <div className="w-2.5 h-2.5 border-2 border-slate-900 border-t-transparent rounded-full animate-spin" />
+                    <div className="w-2.5 h-2.5 border-2 border-[#173B67] border-t-transparent rounded-full animate-spin" />
                     Updating...
                   </span>
                 )}
@@ -676,7 +676,7 @@ const DEFAULT_MIXED_TOPICS = [
                   onChange={(e) => setGeneratedReview(e.target.value)}
                   disabled={isRegenerating}
                   placeholder="Type your review here..."
-                  className={`w-full text-xs leading-relaxed p-3.5 bg-slate-50 border border-slate-200/80 rounded-2xl text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900 resize-none font-normal transition-opacity ${
+                  className={`w-full text-xs leading-relaxed p-3.5 bg-slate-50 border border-slate-200/80 rounded-2xl text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#173B67] resize-none font-normal transition-opacity ${
                     isRegenerating ? "opacity-40" : "opacity-100"
                   }`}
                 />
@@ -691,10 +691,10 @@ const DEFAULT_MIXED_TOPICS = [
                 whileTap={{ scale: isGenerating ? 1 : 0.96, y: isGenerating ? 0 : 1 }}
                 disabled={isGenerating}
                 onClick={handleCopyAndOpenGoogle}
-                className={`w-full py-4 px-5 text-white rounded-2xl font-bold text-xs flex items-center justify-center gap-2 shadow-md transition-all ${
+                className={`w-full py-4 px-5 text-white rounded-2xl font-bold text-xs flex items-center justify-center gap-2 shadow-card transition-all ${
                   isGenerating
-                    ? "bg-emerald-700/60 cursor-not-allowed opacity-80"
-                    : "bg-[#15803D] hover:bg-[#166534] cursor-pointer"
+                    ? "bg-[#173B67]/60 cursor-not-allowed opacity-80"
+                    : "bg-[#173B67] hover:bg-[#0F2643] cursor-pointer"
                 }`}
               >
                 {isGenerating ? (
@@ -704,14 +704,14 @@ const DEFAULT_MIXED_TOPICS = [
                   </>
                 ) : isCopied ? (
                   <>
-                    <CheckCircle2 className="w-4 h-4 text-white" />
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                     Copied! Redirecting to Google...
                   </>
                 ) : (
                   <>
-                    <Copy className="w-4 h-4" />
+                    <Copy className="w-4 h-4 text-[#3478C8]" />
                     Post Review on Google
-                    <ExternalLink className="w-3.5 h-3.5 opacity-70" />
+                    <ExternalLink className="w-3.5 h-3.5 opacity-80" />
                   </>
                 )}
               </motion.button>
@@ -725,12 +725,12 @@ const DEFAULT_MIXED_TOPICS = [
                           : `https://${business.googleReviewUrl.trim()}`)
                       : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(business.name + (business.location ? " " + business.location : ""))}`
                   }
-                  className="block text-center text-xs font-bold text-[#15803D] hover:underline pt-1 animate-pulse"
+                  className="block text-center text-xs font-bold text-[#173B67] hover:underline pt-1 animate-pulse"
                 >
                   Click here if Google doesn't open automatically →
                 </a>
               ) : (
-                <p className="text-center text-[11px] text-slate-400">
+                <p className="text-center text-[11px] text-slate-500">
                   Review is copied automatically. Simply paste and post on Google!
                 </p>
               )}
@@ -741,9 +741,13 @@ const DEFAULT_MIXED_TOPICS = [
       </div>
 
       <div className="text-center mt-8 space-y-1">
-        <p className="text-[11px] text-slate-400 font-medium block">
-          Powered by Welurik Review
-        </p>
+        <Link
+          href="/"
+          className="text-[11px] text-slate-500 hover:text-[#173B67] font-semibold transition-colors inline-flex items-center gap-1"
+        >
+          <span>Powered by SmartReview</span>
+          <span className="text-[10px] text-slate-400">• Minor Project</span>
+        </Link>
       </div>
     </div>
   );

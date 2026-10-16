@@ -4,14 +4,8 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Sparkles, ArrowRight, Lock, Mail, CheckCircle2, ShieldCheck, Zap, Loader2, Eye, EyeOff, Building2, AlertCircle } from "lucide-react";
-import WelurikLogo from "@/components/Logo";
+import Logo from "@/components/Logo";
 import GoogleAuthButton from "@/components/GoogleAuthButton";
-
-declare global {
-  interface Window {
-    Razorpay: any;
-  }
-}
 
 export default function SignupPage() {
   const router = useRouter();
@@ -49,6 +43,7 @@ export default function SignupPage() {
 
       if (typeof window !== "undefined") {
         try {
+          localStorage.setItem("smartreview_remembered_email", email.trim());
           localStorage.setItem("welurik_remembered_email", email.trim());
         } catch {}
       }
@@ -62,17 +57,17 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#ECFDF5] neo-canvas-bg text-black font-sans selection:bg-black selection:text-white flex flex-col justify-between relative overflow-hidden">
+    <div className="min-h-screen bg-[#F4F6F9] academic-bg text-slate-900 font-sans selection:bg-[#173B67] selection:text-white flex flex-col justify-between relative overflow-hidden">
       {/* Top Header */}
       <header className="max-w-6xl w-full mx-auto px-6 sm:px-8 py-6 flex items-center justify-between z-10">
-        <Link href="/" className="group hover:opacity-80 transition-opacity flex items-center">
-          <WelurikLogo className="h-9 sm:h-[48px]" />
+        <Link href="/" className="group hover:opacity-90 transition-opacity flex items-center">
+          <Logo height={36} />
         </Link>
         <div className="flex items-center gap-3">
           <span className="text-xs text-slate-500 font-medium hidden sm:inline">Already registered?</span>
           <Link
             href="/login"
-            className="text-xs font-black text-black px-4 py-2 rounded-full border-2 border-black bg-white hover:bg-slate-50 shadow-[2px_2px_0px_#000000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[1px_1px_0px_#000000] transition-all"
+            className="text-xs font-bold text-[#173B67] px-4 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 shadow-subtle transition-all"
           >
             Sign In
           </Link>
@@ -82,49 +77,49 @@ export default function SignupPage() {
       {/* Main Signup Form Container */}
       <main className="max-w-[480px] w-full mx-auto px-4 sm:px-6 py-4 sm:py-6 my-auto z-10 space-y-5 text-center">
         {/* Title Header */}
-        <div className="space-y-2">
-          <span className="text-[11px] font-black uppercase tracking-widest bg-[#dcfce7] text-[#15803D] border-2 border-black px-3 py-1 rounded-full shadow-[2px_2px_0px_#000000] inline-block">
-            ★ Lifetime License Deal
+        <div className="space-y-1.5">
+          <span className="text-[11px] font-bold uppercase tracking-wider bg-blue-50 text-[#173B67] border border-blue-200 px-3 py-1 rounded-full shadow-subtle inline-block">
+            College Minor Project • Hardik
           </span>
-          <h1 className="text-2xl sm:text-3xl font-black text-black tracking-tight">
-            Claim Your Business License
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+            Register Business Profile
           </h1>
-          <p className="text-xs sm:text-[13px] text-slate-600 font-medium">
-            One-time ₹1,999 only • Lifetime Access • Zero Monthly Fees
+          <p className="text-xs sm:text-sm text-slate-500 font-medium">
+            Setup your business review funnel and printable QR standees
           </p>
         </div>
 
-        {/* Neo-brutalist Main Card */}
-        <div className="bg-white border-2 border-black rounded-[28px] p-6 sm:p-8 space-y-5 text-left shadow-[5px_5px_0px_#000000]">
+        {/* Main Card */}
+        <div className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-8 space-y-5 text-left shadow-card">
           {/* Included Features Box */}
-          <div className="bg-gradient-to-br from-emerald-50 to-amber-50 rounded-2xl p-4 border-2 border-black/10 space-y-2">
-            <span className="text-xs font-black text-black flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-[#15803D]" /> Included with your license:
+          <div className="bg-[#F0F4F9] rounded-xl p-3.5 border border-[#C3D3E7]/60 space-y-1.5">
+            <span className="text-xs font-bold text-[#173B67] flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-[#3478C8]" /> Included with your account:
             </span>
-            <ul className="space-y-1.5 text-xs text-slate-700 font-bold">
+            <ul className="space-y-1 text-xs text-slate-600 font-medium">
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#15803D] shrink-0" />
-                <span>Custom QR Standee & 4" x 6" Frame Studio</span>
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#3478C8] shrink-0" />
+                <span>Custom QR Standee & 4&quot; x 6&quot; Frame Studio</span>
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#15803D] shrink-0" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#3478C8] shrink-0" />
                 <span>AI-Powered 30-Second Google Review Assistant</span>
               </li>
               <li className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-[#15803D] shrink-0" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#3478C8] shrink-0" />
                 <span>Live Analytics Dashboard & Grievance Inbox</span>
               </li>
             </ul>
           </div>
 
           {error && (
-            <div className="p-3.5 bg-rose-50 border-2 border-rose-400 text-rose-800 text-xs font-bold rounded-2xl flex items-start gap-2 animate-in fade-in">
-              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+            <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs font-medium rounded-xl flex items-start gap-2">
+              <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
               <span>{error}</span>
             </div>
           )}
 
-          {/* 1-Click Google Sign-Up */}
+          {/* Google Sign-Up */}
           <div className="space-y-3">
             <GoogleAuthButton
               text="Sign up with Google"
@@ -132,20 +127,20 @@ export default function SignupPage() {
               onSuccess={() => setError("")}
             />
 
-            {/* Clean Divider */}
+            {/* Divider */}
             <div className="relative flex items-center justify-center py-1">
-              <div className="border-t-2 border-black/10 w-full" />
-              <span className="bg-white px-3 text-[11px] font-bold text-slate-400 uppercase tracking-wider shrink-0">
+              <div className="border-t border-slate-200 w-full" />
+              <span className="bg-white px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider shrink-0">
                 or register with email
               </span>
-              <div className="border-t-2 border-black/10 w-full" />
+              <div className="border-t border-slate-200 w-full" />
             </div>
           </div>
 
           {/* Registration Form */}
           <form onSubmit={handleSignup} className="space-y-4">
             <div>
-              <label className="block text-xs font-black text-black mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">
                 Business / Owner Name
               </label>
               <div className="relative">
@@ -155,13 +150,13 @@ export default function SignupPage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. The Coffee House / John Doe"
-                  className="w-full text-xs sm:text-sm pl-10 pr-4 py-3 bg-slate-50 border-2 border-black rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#15803D] font-bold text-black shadow-[2px_2px_0px_#000000] transition-all"
+                  className="w-full text-xs sm:text-sm pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3478C8] font-medium text-slate-900 transition-all"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-black text-black mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">
                 Business Email
               </label>
               <div className="relative">
@@ -172,13 +167,13 @@ export default function SignupPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="owner@yourbusiness.com"
-                  className="w-full text-xs sm:text-sm pl-10 pr-4 py-3 bg-slate-50 border-2 border-black rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#15803D] font-bold text-black shadow-[2px_2px_0px_#000000] transition-all"
+                  className="w-full text-xs sm:text-sm pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3478C8] font-medium text-slate-900 transition-all"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-black text-black mb-1.5">
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">
                 Create Password
               </label>
               <div className="relative">
@@ -190,12 +185,12 @@ export default function SignupPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Minimum 6 characters"
-                  className="w-full text-xs sm:text-sm pl-10 pr-10 py-3 bg-slate-50 border-2 border-black rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#15803D] font-bold text-black shadow-[2px_2px_0px_#000000] transition-all"
+                  className="w-full text-xs sm:text-sm pl-10 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3478C8] font-medium text-slate-900 transition-all"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3.5 top-3.5 text-slate-400 hover:text-black"
+                  className="absolute right-3.5 top-3 text-slate-400 hover:text-slate-600 p-0.5"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -209,15 +204,15 @@ export default function SignupPage() {
                 id="terms"
                 checked={agreedToTerms}
                 onChange={(e) => setAgreedToTerms(e.target.checked)}
-                className="mt-0.5 w-4 h-4 rounded border-2 border-black text-[#15803D] focus:ring-[#15803D]"
+                className="mt-0.5 w-4 h-4 rounded border-slate-300 text-[#173B67] focus:ring-[#3478C8]"
               />
               <label htmlFor="terms" className="cursor-pointer leading-tight">
                 I agree to the{" "}
-                <Link href="/terms" target="_blank" className="font-bold text-black underline">
+                <Link href="/terms" target="_blank" className="font-bold text-[#173B67] underline">
                   Terms of Service
                 </Link>{" "}
                 and{" "}
-                <Link href="/privacy" target="_blank" className="font-bold text-black underline">
+                <Link href="/privacy" target="_blank" className="font-bold text-[#173B67] underline">
                   Privacy Policy
                 </Link>
                 .
@@ -227,7 +222,7 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-4 bg-[#15803D] hover:bg-[#166534] disabled:bg-slate-300 text-white rounded-full text-xs sm:text-sm font-black border-2 border-black shadow-[3px_3px_0px_#000000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all flex items-center justify-center gap-2 cursor-pointer"
+              className="w-full py-3 px-4 bg-[#173B67] hover:bg-[#1C4982] disabled:opacity-50 text-white rounded-xl text-xs sm:text-sm font-bold shadow-subtle hover:shadow transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
               {loading ? (
                 <div className="flex items-center gap-2">
@@ -236,14 +231,14 @@ export default function SignupPage() {
                 </div>
               ) : (
                 <>
-                  <Zap className="w-4 h-4 fill-white text-white" />
-                  <span>Create Account & Continue →</span>
+                  <span>Create Account & Continue</span>
+                  <ArrowRight className="w-4 h-4" />
                 </>
               )}
             </button>
 
-            <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-500 font-bold pt-1">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#15803D]" />
+            <div className="flex items-center justify-center gap-1.5 text-[11px] text-slate-400 font-medium pt-1">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#3478C8]" />
               <span>Step 1 of 3: Setup your business funnel</span>
             </div>
           </form>
@@ -252,21 +247,21 @@ export default function SignupPage() {
         {/* Bottom Sign-In Link */}
         <p className="text-xs text-slate-500 font-medium">
           Already have an account?{" "}
-          <Link href="/login" className="font-bold text-black underline decoration-2 hover:text-[#15803D]">
+          <Link href="/login" className="font-bold text-[#173B67] underline hover:text-[#3478C8]">
             Sign in here
           </Link>
         </p>
       </main>
 
-      {/* Modern Minimal Footer */}
-      <footer className="max-w-6xl w-full mx-auto px-6 py-6 text-center text-xs text-slate-500 font-medium z-10 flex flex-wrap items-center justify-center gap-4 border-t-2 border-black/10">
-        <span>© 2026 Welurik Review. All rights reserved.</span>
+      {/* Footer */}
+      <footer className="max-w-6xl w-full mx-auto px-6 py-4 text-center text-xs text-slate-400 font-medium z-10 flex flex-wrap items-center justify-center gap-4">
+        <span>SmartReview &copy; 2026 • College Minor Project by Hardik</span>
         <div className="flex items-center gap-3">
-          <Link href="/privacy" className="hover:text-black">Privacy Policy</Link>
+          <Link href="/privacy" className="hover:text-slate-600">Privacy Policy</Link>
           <span>•</span>
-          <Link href="/terms" className="hover:text-black">Terms of Service</Link>
+          <Link href="/terms" className="hover:text-slate-600">Terms of Service</Link>
           <span>•</span>
-          <Link href="/refund" className="hover:text-black">Refund Policy</Link>
+          <Link href="/refund" className="hover:text-slate-600">Refund Policy</Link>
         </div>
       </footer>
     </div>

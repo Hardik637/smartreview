@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { CATEGORIES, getCategoryById } from "@/lib/categories";
 import { Sparkles, ArrowRight, ShieldCheck, CheckCircle2, Check, Lock, Zap, ExternalLink, AlertCircle } from "lucide-react";
 import Link from "next/link";
-import WelurikLogo from "@/components/Logo";
+import Logo from "@/components/Logo";
 import { triggerBirthdayPop } from "@/components/BirthdayPopCelebration";
 
 declare global {
@@ -23,7 +23,7 @@ export default function OnboardingPage() {
   const [category, setCategory] = useState("cafe");
   const [location, setLocation] = useState("");
   const [googleReviewUrl, setGoogleReviewUrl] = useState("");
-  const [brandColor, setBrandColor] = useState("#0f172a");
+  const [brandColor, setBrandColor] = useState("#173B67");
   const [loading, setLoading] = useState(false);
   const [paymentError, setPaymentError] = useState("");
 
@@ -147,15 +147,16 @@ export default function OnboardingPage() {
 
       const data = await res.json();
       if (res.ok && data.success) {
-        setPromoSuccess(data.message || "🎉 VIP Access Activated!");
+        setPromoSuccess(data.message || "🎉 Pro Access Activated!");
         triggerBirthdayPop({
-          title: "VIP Access Activated! 🚀",
+          title: "Pro Access Activated! 🚀",
           message: "Welcome aboard! Your review funnel and dashboard are ready.",
           emoji: "🎉",
         });
         if (typeof window !== "undefined") {
           try {
-            sessionStorage.setItem("welurik_pro_activated", "true");
+            sessionStorage.setItem("smartreview_pro_activated", "true");
+            sessionStorage.removeItem("smartreview_dashboard_cache");
             sessionStorage.removeItem("welurik_dashboard_cache");
           } catch {}
           window.dispatchEvent(new Event("refresh_business"));
@@ -166,7 +167,7 @@ export default function OnboardingPage() {
       } else {
         setPromoError(data.error || "Invalid or expired promo code.");
       }
-    } catch (err: any) {
+    } catch {
       setPromoError("Failed to apply promo code. Please try again.");
     } finally {
       setPromoLoading(false);
@@ -235,8 +236,8 @@ export default function OnboardingPage() {
         key: orderData.keyId,
         amount: orderData.amount,
         currency: orderData.currency || "INR",
-        name: "Welurik Review",
-        description: "₹1,999 only Lifetime License Activation",
+        name: "SmartReview",
+        description: "₹1,999 Pro License Activation",
         order_id: orderData.orderId,
         image: "/favicon.png",
         handler: async function (response: any) {
@@ -256,6 +257,7 @@ export default function OnboardingPage() {
             const verifyData = await verifyRes.json();
             if (verifyRes.ok && verifyData.success) {
               if (typeof window !== "undefined") {
+                sessionStorage.removeItem("smartreview_dashboard_cache");
                 sessionStorage.removeItem("welurik_dashboard_cache");
               }
               window.location.href = "/dashboard";
@@ -263,7 +265,7 @@ export default function OnboardingPage() {
               setPaymentError(verifyData.error || "Payment verification failed.");
               setLoading(false);
             }
-          } catch (err: any) {
+          } catch {
             setPaymentError("Error confirming transaction.");
             setLoading(false);
           }
@@ -272,7 +274,7 @@ export default function OnboardingPage() {
           email: orderData.prefill?.email || "",
         },
         theme: {
-          color: "#0f172a",
+          color: "#173B67",
         },
         modal: {
           ondismiss: function () {
@@ -294,24 +296,21 @@ export default function OnboardingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#ECFDF5] neo-canvas-bg text-slate-900 font-sans selection:bg-slate-900 selection:text-white flex flex-col justify-between py-8 px-6 relative overflow-hidden">
-      {/* Ambient Glow */}
-      <div className="absolute top-[10%] right-[15%] w-[500px] h-[500px] bg-gradient-to-tr from-emerald-200/20 via-teal-200/25 to-slate-200/20 rounded-full blur-[130px] pointer-events-none -z-10" />
-
+    <div className="min-h-screen bg-[#F4F6F9] academic-bg text-slate-900 font-sans selection:bg-[#173B67] selection:text-white flex flex-col justify-between py-8 px-6 relative overflow-hidden">
       {/* Top Bar */}
       <header className="max-w-6xl w-full mx-auto px-4 flex items-center justify-between z-10">
-        <WelurikLogo className="h-8 sm:h-9" />
-        <span className="text-xs font-semibold text-slate-400">Step {step} of 3</span>
+        <Logo height={34} />
+        <span className="text-xs font-semibold text-slate-500">Step {step} of 3</span>
       </header>
 
       <div className="w-full max-w-md mx-auto my-auto z-10 space-y-6">
-        <div className="text-center space-y-2">
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-950 tracking-tight">
-            {step === 3 ? "Activate Lifetime License" : "Setup Your Business Funnel"}
+        <div className="text-center space-y-1.5">
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+            {step === 3 ? "Activate Pro Workspace" : "Setup Business Funnel"}
           </h1>
           <p className="text-xs text-slate-500">
             {step === 3
-              ? "Complete payment to unlock your QR standee studio and dashboard."
+              ? "Complete activation to unlock your QR standee studio and dashboard."
               : "Get your custom QR standee and Google Review Assistant ready."}
           </p>
         </div>
@@ -331,24 +330,24 @@ export default function OnboardingPage() {
                   }
                 }}
                 className={`w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold transition-all cursor-pointer ${
-                  step >= s ? "bg-slate-950 text-white" : "bg-slate-200 text-slate-500 hover:bg-slate-300"
+                  step >= s ? "bg-[#173B67] text-white" : "bg-slate-200 text-slate-500 hover:bg-slate-300"
                 }`}
               >
                 {s}
               </button>
-              {s < 3 && <div className={`w-6 h-0.5 ${step > s ? "bg-slate-950" : "bg-slate-200"}`} />}
+              {s < 3 && <div className={`w-6 h-0.5 ${step > s ? "bg-[#173B67]" : "bg-slate-200"}`} />}
             </div>
           ))}
         </div>
 
         {/* Main Step Card */}
-        <div className="bg-white/90 backdrop-blur-xl rounded-[32px] p-7 sm:p-8 border border-slate-200/80 shadow-[0_20px_50px_rgba(15,23,42,0.06)] space-y-5">
+        <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-card space-y-5">
           {/* STEP 1: Basic Info */}
           {step === 1 && (
             <div className="space-y-4">
               <div>
                 <h2 className="text-base font-bold text-slate-900">What is your business?</h2>
-                <p className="text-xs text-slate-400 mt-0.5">Enter your business name and industry.</p>
+                <p className="text-xs text-slate-500 mt-0.5">Enter your business name and industry category.</p>
               </div>
 
               <div className="space-y-3.5">
@@ -360,7 +359,7 @@ export default function OnboardingPage() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="e.g. The Coffee House, Glow Salon"
-                    className="w-full text-xs px-3.5 py-3 bg-slate-50 border border-slate-200/80 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-950 font-medium text-slate-900"
+                    className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3478C8] font-medium text-slate-900"
                   />
                 </div>
 
@@ -369,7 +368,7 @@ export default function OnboardingPage() {
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full text-xs px-3.5 py-3 bg-slate-50 border border-slate-200/80 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-950 font-medium text-slate-900 capitalize"
+                    className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3478C8] font-medium text-slate-900 capitalize"
                   >
                     {CATEGORIES.map((c) => (
                       <option key={c.id} value={c.id}>
@@ -386,7 +385,7 @@ export default function OnboardingPage() {
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                     placeholder="e.g. Indiranagar, Bengaluru"
-                    className="w-full text-xs px-3.5 py-3 bg-slate-50 border border-slate-200/80 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-950 font-medium text-slate-900"
+                    className="w-full text-xs px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#3478C8] font-medium text-slate-900"
                   />
                 </div>
               </div>
@@ -395,7 +394,7 @@ export default function OnboardingPage() {
                 type="button"
                 disabled={!name.trim()}
                 onClick={handleStep1Continue}
-                className="w-full py-3.5 bg-slate-950 hover:bg-slate-900 disabled:bg-slate-200 text-white rounded-full text-xs font-bold flex items-center justify-center gap-1.5 shadow-md shadow-slate-900/10 transition-all cursor-pointer"
+                className="w-full py-3 bg-[#173B67] hover:bg-[#1C4982] disabled:opacity-50 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-subtle transition-all cursor-pointer"
               >
                 Continue to Review Link <ArrowRight className="w-3.5 h-3.5" />
               </button>
@@ -421,10 +420,10 @@ export default function OnboardingPage() {
                         href={googleReviewUrl.startsWith("http") ? googleReviewUrl : `https://${googleReviewUrl}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-[11px] font-bold text-emerald-600 hover:text-emerald-700 inline-flex items-center gap-1 hover:underline cursor-pointer"
+                        className="text-[11px] font-bold text-[#3478C8] hover:text-[#173B67] inline-flex items-center gap-1 hover:underline cursor-pointer"
                       >
                         <span>Test Link</span>
-                        <ExternalLink className="w-3 h-3 text-emerald-600" />
+                        <ExternalLink className="w-3 h-3" />
                       </a>
                     )}
                   </div>
@@ -434,33 +433,33 @@ export default function OnboardingPage() {
                     value={googleReviewUrl}
                     onChange={(e) => setGoogleReviewUrl(e.target.value)}
                     placeholder="https://g.page/r/your-id/review or https://maps.app.goo.gl/..."
-                    className={`w-full text-xs px-3.5 py-3 bg-slate-50 border rounded-xl focus:bg-white focus:outline-none focus:ring-2 font-mono text-slate-900 ${
+                    className={`w-full text-xs px-3.5 py-2.5 bg-slate-50 border rounded-xl focus:bg-white focus:outline-none focus:ring-2 font-mono text-slate-900 ${
                       googleReviewUrl && !isValidGoogleUrl(googleReviewUrl)
                         ? "border-rose-300 focus:ring-rose-500"
-                        : "border-slate-200/80 focus:ring-slate-950"
+                        : "border-slate-200 focus:ring-[#3478C8]"
                     }`}
                   />
 
                   {googleReviewUrl && googleReviewUrl.trim().length > 0 && (
                     <>
                       {isValidGoogleUrl(googleReviewUrl) ? (
-                        <div className="mt-2 flex items-center justify-between bg-emerald-50/90 border border-emerald-200/80 px-3 py-2 rounded-xl text-xs">
-                          <div className="flex items-center gap-1.5 text-emerald-800 font-medium text-[11.5px]">
-                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                            <span>Valid Google Business format</span>
+                        <div className="mt-2 flex items-center justify-between bg-blue-50 border border-blue-200 px-3 py-2 rounded-xl text-xs">
+                          <div className="flex items-center gap-1.5 text-[#173B67] font-medium text-[11.5px]">
+                            <span className="w-2 h-2 rounded-full bg-[#3478C8] animate-pulse" />
+                            <span>Valid Google Business link format</span>
                           </div>
                           <a
                             href={googleReviewUrl.startsWith("http") ? googleReviewUrl : `https://${googleReviewUrl}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-[11px] flex items-center gap-1 shadow-2xs cursor-pointer transition-all"
+                            className="px-2.5 py-1 bg-[#173B67] hover:bg-[#1C4982] text-white rounded-lg font-bold text-[11px] flex items-center gap-1 cursor-pointer transition-all"
                           >
-                            <span>🧪 Click to Test GMB Link</span>
+                            <span>Test Link</span>
                             <ExternalLink className="w-3 h-3" />
                           </a>
                         </div>
                       ) : (
-                        <div className="mt-2 flex items-center gap-2 bg-rose-50 border border-rose-200/80 px-3 py-2 rounded-xl text-xs text-rose-700">
+                        <div className="mt-2 flex items-center gap-2 bg-rose-50 border border-rose-200 px-3 py-2 rounded-xl text-xs text-rose-700">
                           <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
                           <span className="text-[11.5px]">
                             <strong>Invalid format:</strong> Please enter a real Google Review link (e.g. <code>g.page/r/...</code> or <code>maps.app.goo.gl/...</code>).
@@ -471,51 +470,34 @@ export default function OnboardingPage() {
                   )}
                 </div>
 
-                {/* Step-by-Step Visual Procedure Box */}
-                <div className="bg-slate-50/90 border border-slate-200/80 rounded-2xl p-4 space-y-2.5 text-xs text-slate-700 shadow-xs">
+                {/* Procedure Box */}
+                <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-2 text-xs text-slate-700">
                   <p className="text-[11px] font-bold uppercase tracking-wider text-slate-900 flex items-center gap-1.5">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                    <span className="w-2 h-2 rounded-full bg-[#3478C8]" />
                     How to get your review link in 3 steps:
                   </p>
 
-                  <div className="space-y-2 text-[11.5px] leading-snug">
+                  <div className="space-y-1.5 text-[11.5px] leading-snug">
                     <div className="flex items-start gap-2">
-                      <span className="w-4 h-4 rounded-full bg-slate-900 text-white flex items-center justify-center text-[9px] font-black shrink-0 mt-0.5">
+                      <span className="w-4 h-4 rounded-full bg-[#173B67] text-white flex items-center justify-center text-[9px] font-bold shrink-0 mt-0.5">
                         1
                       </span>
-                      <span>
-                        Search your business name on <strong>Google Maps</strong> or Google Search.
-                      </span>
+                      <span>Search your business name on <strong>Google Maps</strong>.</span>
                     </div>
 
                     <div className="flex items-start gap-2">
-                      <span className="w-4 h-4 rounded-full bg-slate-900 text-white flex items-center justify-center text-[9px] font-black shrink-0 mt-0.5">
+                      <span className="w-4 h-4 rounded-full bg-[#173B67] text-white flex items-center justify-center text-[9px] font-bold shrink-0 mt-0.5">
                         2
                       </span>
-                      <span>
-                        Click the blue <strong>&quot;Ask for reviews&quot;</strong> button on your profile card.
-                      </span>
+                      <span>Click the <strong>&quot;Ask for reviews&quot;</strong> button on your profile.</span>
                     </div>
 
                     <div className="flex items-start gap-2">
-                      <span className="w-4 h-4 rounded-full bg-slate-900 text-white flex items-center justify-center text-[9px] font-black shrink-0 mt-0.5">
+                      <span className="w-4 h-4 rounded-full bg-[#173B67] text-white flex items-center justify-center text-[9px] font-bold shrink-0 mt-0.5">
                         3
                       </span>
-                      <span>
-                        Click <strong>&quot;Copy link&quot;</strong> and paste the link in the box above!
-                      </span>
+                      <span>Click <strong>&quot;Copy link&quot;</strong> and paste it in the box above!</span>
                     </div>
-                  </div>
-
-                  <div className="pt-1 border-t border-slate-200/60">
-                    <a
-                      href={`https://www.google.com/search?q=${encodeURIComponent(name || "Google Business Profile")}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-[11px] font-bold text-emerald-700 hover:text-emerald-800 flex items-center gap-1 hover:underline cursor-pointer"
-                    >
-                      <span>🔍 Search &ldquo;{name || "my business"}&rdquo; on Google to copy link ↗</span>
-                    </a>
                   </div>
                 </div>
               </div>
@@ -524,7 +506,7 @@ export default function OnboardingPage() {
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="w-1/3 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all cursor-pointer"
+                  className="w-1/3 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all cursor-pointer"
                 >
                   Back
                 </button>
@@ -532,9 +514,9 @@ export default function OnboardingPage() {
                   type="button"
                   disabled={!googleReviewUrl.trim() || !isValidGoogleUrl(googleReviewUrl)}
                   onClick={handleStep2Continue}
-                  className="flex-1 py-3.5 bg-slate-950 hover:bg-slate-900 disabled:bg-slate-200 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-md transition-all cursor-pointer"
+                  className="flex-1 py-2.5 bg-[#173B67] hover:bg-[#1C4982] disabled:opacity-50 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 shadow-subtle transition-all cursor-pointer"
                 >
-                  Proceed to Payment <ArrowRight className="w-3.5 h-3.5" />
+                  Proceed to Plan Activation <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               </div>
             </div>
@@ -544,75 +526,63 @@ export default function OnboardingPage() {
           {step === 3 && (
             <div className="space-y-5">
               <div className="space-y-1">
-                <div className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-[11px] font-bold">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" /> Instant Lifetime Access
+                <div className="inline-flex items-center gap-1.5 bg-blue-50 text-[#173B67] px-3 py-1 rounded-full text-[11px] font-bold border border-blue-200">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#3478C8]" /> Full Access Activation
                 </div>
-                <h2 className="text-xl font-black text-slate-950 tracking-tight">Activate & Launch Workspace</h2>
+                <h2 className="text-xl font-black text-slate-900 tracking-tight">Activate & Launch Workspace</h2>
                 <p className="text-xs text-slate-500">
-                  Complete your one-time payment to unlock your QR standee studio and dashboard.
+                  Complete your plan activation to unlock your QR standee studio and dashboard.
                 </p>
               </div>
 
-              {/* Ultra-Clean Modern Pricing Card */}
-              <div className="bg-slate-50/90 border border-slate-200/80 rounded-2xl p-5 space-y-4 shadow-sm">
-                <div className="flex items-center justify-between border-b border-slate-200/60 pb-3.5">
+              {/* Pricing Card */}
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-4 shadow-subtle">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-3">
                   <div>
-                    <h3 className="text-sm font-bold text-slate-900">Lifetime Pro License</h3>
-                    <p className="text-[11px] text-slate-500 font-medium">One-time payment • Lifetime access</p>
+                    <h3 className="text-sm font-bold text-slate-900">Standard License</h3>
+                    <p className="text-[11px] text-slate-500 font-medium">Standard license • AI access included</p>
                   </div>
                   <div className="text-right">
                     <div className="flex items-center gap-1.5 justify-end">
                       <span className="text-xs text-slate-400 line-through font-medium">₹4,999</span>
-                      <span className="text-xl font-black text-slate-950">₹1,999 only</span>
+                      <span className="text-xl font-black text-slate-900">₹1,999 only</span>
                     </div>
-                    <span className="text-[10px] font-bold text-emerald-600 bg-emerald-100/60 px-1.5 py-0.5 rounded">SAVE 60%</span>
+                    <span className="text-[10px] font-bold text-[#173B67] bg-blue-100 px-1.5 py-0.5 rounded">SAVE 60%</span>
                   </div>
                 </div>
 
-                <div className="space-y-2.5 text-xs text-slate-700">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
-                      <Check className="w-2.5 h-2.5 stroke-[3]" />
-                    </div>
-                    <span className="font-semibold text-slate-900">Rank #1 on Google Maps & beat local competitors</span>
+                <div className="space-y-2 text-xs text-slate-700">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-[#3478C8] shrink-0" />
+                    <span className="font-semibold text-slate-900">AI-powered 30-second Google Review assistant</span>
                   </div>
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
-                      <Check className="w-2.5 h-2.5 stroke-[3]" />
-                    </div>
-                    <span className="font-semibold text-slate-900">10x More 5-star reviews (AI writes them in 5 secs)</span>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-[#3478C8] shrink-0" />
+                    <span className="font-semibold text-slate-900">Automated private grievance deflection</span>
                   </div>
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
-                      <Check className="w-2.5 h-2.5 stroke-[3]" />
-                    </div>
-                    <span className="font-semibold text-slate-900">Turn everyday footfall into repeat paying customers</span>
-                  </div>
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-4 h-4 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
-                      <Check className="w-2.5 h-2.5 stroke-[3]" />
-                    </div>
-                    <span className="font-semibold text-slate-900">Zero monthly fees • Pays for itself with 1 customer</span>
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-[#3478C8] shrink-0" />
+                    <span className="font-semibold text-slate-900">Printable 4&quot; x 6&quot; QR standees and table tents</span>
                   </div>
                 </div>
 
-                <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between text-xs font-bold text-slate-900">
-                  <span className="text-slate-500 font-semibold">Total Payable:</span>
-                  <span className="text-base font-black text-slate-950">₹1,999 only</span>
+                <div className="pt-2 border-t border-slate-200 flex items-center justify-between text-xs font-bold text-slate-900">
+                  <span className="text-slate-500 font-medium">Total Payable:</span>
+                  <span className="text-base font-black text-slate-900">₹1,999 only</span>
                 </div>
               </div>
 
               {/* VIP Promo Code Option */}
-              <div className="bg-slate-50/80 border border-dashed border-slate-300/80 rounded-2xl p-3.5 space-y-2">
+              <div className="bg-slate-50 border border-dashed border-slate-300 rounded-xl p-3.5 space-y-2">
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <Sparkles className="w-3.5 h-3.5 text-amber-500" /> Have a VIP Promo / Partner Code?
+                    <Sparkles className="w-3.5 h-3.5 text-amber-500" /> Have a VIP Promo / Evaluation Code?
                   </span>
                   {!showPromo && (
                     <button
                       type="button"
                       onClick={() => setShowPromo(true)}
-                      className="text-xs font-bold text-emerald-700 hover:text-emerald-800 underline cursor-pointer"
+                      className="text-xs font-bold text-[#3478C8] hover:text-[#173B67] underline cursor-pointer"
                     >
                       Enter Code
                     </button>
@@ -627,13 +597,13 @@ export default function OnboardingPage() {
                         value={promoCode}
                         onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
                         placeholder="Enter promo code"
-                        className="flex-1 text-xs uppercase px-3 py-2.5 bg-white border border-slate-300 rounded-xl font-mono font-bold focus:outline-none focus:ring-2 focus:ring-slate-900 text-slate-900"
+                        className="flex-1 text-xs uppercase px-3 py-2 bg-white border border-slate-300 rounded-xl font-mono font-bold focus:outline-none focus:ring-2 focus:ring-[#3478C8] text-slate-900"
                       />
                       <button
                         type="button"
                         disabled={promoLoading || !promoCode.trim()}
                         onClick={handleApplyPromo}
-                        className="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shrink-0"
+                        className="px-4 py-2 bg-[#173B67] hover:bg-[#1C4982] disabled:opacity-50 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer shrink-0"
                       >
                         {promoLoading ? (
                           <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -660,8 +630,8 @@ export default function OnboardingPage() {
               </div>
 
               {paymentError && (
-                <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-600 font-medium flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0" />
+                <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-600 font-medium flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 text-rose-500 shrink-0" />
                   <span>{paymentError}</span>
                 </div>
               )}
@@ -671,7 +641,7 @@ export default function OnboardingPage() {
                   type="button"
                   disabled={loading || promoLoading}
                   onClick={() => setStep(2)}
-                  className="w-1/3 py-3.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all cursor-pointer"
+                  className="w-1/3 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition-all cursor-pointer"
                 >
                   Back
                 </button>
@@ -679,12 +649,12 @@ export default function OnboardingPage() {
                   type="button"
                   disabled={loading || promoLoading}
                   onClick={handlePayAndActivate}
-                  className="flex-1 py-3.5 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 text-white rounded-xl text-xs font-black tracking-wide flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20 active:scale-[0.99] transition-all cursor-pointer"
+                  className="flex-1 py-3 bg-[#173B67] hover:bg-[#1C4982] disabled:opacity-50 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-2 shadow-subtle transition-all cursor-pointer"
                 >
                   {loading ? (
                     <>
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      Opening Secure Gateway...
+                      Opening Gateway...
                     </>
                   ) : (
                     <>
@@ -696,8 +666,8 @@ export default function OnboardingPage() {
               </div>
 
               <div className="flex items-center justify-center gap-2 pt-1 text-[11px] text-slate-400 font-medium">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                <span>Secured by Razorpay • UPI (GPay, PhonePe), Cards & NetBanking</span>
+                <ShieldCheck className="w-3.5 h-3.5 text-[#3478C8] shrink-0" />
+                <span>Secured by Razorpay • UPI, Cards & NetBanking</span>
               </div>
             </div>
           )}
@@ -705,7 +675,7 @@ export default function OnboardingPage() {
       </div>
 
       <footer className="text-center text-xs text-slate-400 z-10">
-        © 2026 Welurik Review. Built for local businesses.
+        SmartReview System &copy; 2026 • College Minor Project by Hardik
       </footer>
     </div>
   );
