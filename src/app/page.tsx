@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Star,
   Sparkles,
   CheckCircle2,
   Printer,
@@ -16,15 +15,11 @@ import {
   ChevronDown,
   Menu,
   X,
-  Copy,
-  Check,
   Play,
-  QrCode,
   Layers,
   Cpu,
   Database,
   Lock,
-  ExternalLink,
   GraduationCap,
   Github,
 } from "lucide-react";
@@ -33,18 +28,9 @@ import Logo from "@/components/Logo";
 export default function LandingPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [copiedSample, setCopiedSample] = useState(false);
 
   const toggleFaq = (index: number) => {
     setOpenFaq(openFaq === index ? null : index);
-  };
-
-  const handleCopySample = () => {
-    const text =
-      "Absolutely phenomenal coffee and welcoming atmosphere at The Coffee House! The specialty brew was rich and fragrant, and the artisan pastries were fresh. Exemplary customer service throughout!";
-    navigator.clipboard.writeText(text);
-    setCopiedSample(true);
-    setTimeout(() => setCopiedSample(false), 2500);
   };
 
   const faqs = [
@@ -285,89 +271,71 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* RIGHT COLUMN: Interactive System Preview Card */}
+          {/* RIGHT COLUMN: Google Gemini AI Overview Card */}
           <div className="lg:col-span-5">
-            <div className="bg-white border border-slate-200/90 rounded-2xl p-5 sm:p-6 shadow-card space-y-4">
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-7 shadow-card space-y-5">
               {/* Header */}
-              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-lg bg-[#173B67]/10 flex items-center justify-center text-[#173B67]">
-                    <Sparkles className="w-4 h-4" />
+              <div className="flex items-center justify-between pb-3.5 border-b border-slate-100">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-[#173B67] flex items-center justify-center text-white shadow-subtle">
+                    <Sparkles className="w-5 h-5 text-[#93C5FD]" />
                   </div>
                   <div>
-                    <h3 className="text-xs font-black uppercase tracking-wider text-[#173B67]">SmartReview AI Engine</h3>
-                    <p className="text-[11px] text-slate-500 font-medium">Interactive Prototype Preview</p>
+                    <h3 className="text-sm font-black uppercase tracking-wide text-[#173B67]">
+                      Google Gemini AI
+                    </h3>
+                    <p className="text-xs text-slate-500 font-medium">Review Generation Engine</p>
                   </div>
                 </div>
-                <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
-                  Ready
+                <span className="text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-blue-50 text-[#173B67] border border-blue-200">
+                  AI-Powered
                 </span>
               </div>
 
-              {/* Simulated Customer Experience */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="font-semibold text-slate-700">Customer Rating</span>
-                  <div className="flex text-amber-400">
-                    {[1, 2, 3, 4, 5].map((i) => (
-                      <Star key={i} className="w-4 h-4 fill-amber-400" />
-                    ))}
+              {/* Engine Description */}
+              <div className="space-y-3.5 text-xs text-slate-600 leading-relaxed">
+                <p>
+                  SmartReview integrates <strong>Google Gemini AI</strong> to automatically generate authentic, keyword-optimized reviews for satisfied customers in seconds.
+                </p>
+
+                <div className="bg-[#F0F4F9] border border-[#C3D3E7]/70 rounded-xl p-4 space-y-2.5">
+                  <div className="flex items-start gap-2.5">
+                    <Cpu className="w-4 h-4 text-[#3478C8] shrink-0 mt-0.5" />
+                    <div>
+                      <h4 className="font-bold text-[#173B67]">How Reviews Are Generated</h4>
+                      <p className="text-[11.5px] text-slate-600 mt-0.5">
+                        Customers select quick positive tags (e.g., service, quality, atmosphere). Gemini AI processes these signals and drafts a natural, articulate paragraph ready for Google Reviews.
+                      </p>
+                    </div>
                   </div>
                 </div>
 
-                {/* Selected Keyword Tags */}
-                <div>
-                  <span className="text-[11px] font-semibold text-slate-500 block mb-1.5">Selected Tags:</span>
-                  <div className="flex flex-wrap gap-1.5">
-                    {["Specialty Coffee", "Artisan Pastries", "Cozy Ambience", "Fast WiFi"].map((tag) => (
-                      <span
-                        key={tag}
-                        className="text-[11px] font-semibold bg-[#F0F4F9] text-[#173B67] border border-[#C3D3E7] px-2.5 py-1 rounded-lg"
-                      >
-                        ✓ {tag}
-                      </span>
-                    ))}
+                <div className="space-y-2 pt-1">
+                  <div className="flex items-center gap-2 text-slate-700 font-semibold text-[11.5px]">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#3478C8]" />
+                    <span>Eliminates customer review writer&apos;s block</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-slate-700 font-semibold text-[11.5px]">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#3478C8]" />
+                    <span>Boosts relevant local SEO keywords organically</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-slate-700 font-semibold text-[11.5px]">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#3478C8]" />
+                    <span>1-click copy & paste directly into Google</span>
                   </div>
                 </div>
+              </div>
 
-                {/* AI Review Output Box */}
-                <div className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-2">
-                  <div className="flex items-center justify-between text-[11px]">
-                    <span className="font-bold text-[#173B67] flex items-center gap-1">
-                      <Sparkles className="w-3 h-3 text-[#3478C8]" /> Generated Draft
-                    </span>
-                    <span className="text-slate-400">Tone: Natural</span>
-                  </div>
-                  <p className="text-xs text-slate-700 leading-relaxed italic">
-                    &quot;Absolutely phenomenal coffee and welcoming atmosphere at The Coffee House! The specialty brew was rich and fragrant, and the artisan pastries were fresh. Exemplary customer service throughout!&quot;
-                  </p>
-                </div>
-
-                {/* Action button in preview */}
-                <div className="flex items-center gap-2 pt-1">
-                  <button
-                    type="button"
-                    onClick={handleCopySample}
-                    className="flex-1 py-2.5 px-3 bg-[#173B67] hover:bg-[#1C4982] text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-colors"
-                  >
-                    {copiedSample ? (
-                      <>
-                        <Check className="w-3.5 h-3.5 text-emerald-300" /> Copied to Clipboard!
-                      </>
-                    ) : (
-                      <>
-                        <Copy className="w-3.5 h-3.5" /> 1-Click Copy & Go to Google
-                      </>
-                    )}
-                  </button>
-                  <Link
-                    href="/r/the-coffee-house"
-                    className="p-2.5 border border-slate-200 rounded-xl hover:bg-slate-50 text-slate-600 transition-colors"
-                    title="Open live funnel"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                  </Link>
-                </div>
+              {/* Action Link */}
+              <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+                <span className="text-[11px] text-slate-400 font-medium">Live System Demo</span>
+                <Link
+                  href="/r/the-coffee-house"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#173B67] hover:text-[#3478C8] transition-colors"
+                >
+                  <span>Test AI Review Generator</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
               </div>
             </div>
           </div>
