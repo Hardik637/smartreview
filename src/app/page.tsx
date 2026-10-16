@@ -17,7 +17,6 @@ import {
   X,
   Play,
   Cpu,
-  GraduationCap,
   Github,
 } from "lucide-react";
 import Logo from "@/components/Logo";
@@ -62,21 +61,7 @@ export default function LandingPage() {
       <div className="absolute top-0 right-[10%] w-[500px] h-[500px] bg-[#3478C8]/10 rounded-full blur-[140px] pointer-events-none -z-10" />
       <div className="absolute top-[35%] left-[5%] w-[450px] h-[450px] bg-[#173B67]/8 rounded-full blur-[130px] pointer-events-none -z-10" />
 
-      {/* Top Academic Banner */}
-      <div className="w-full bg-[#173B67] text-white text-xs py-2 px-4 text-center font-medium border-b border-[#235FA9]/40 flex items-center justify-center gap-2">
-        <GraduationCap className="w-4 h-4 text-[#93C5FD]" />
-        <span>
-          <strong>College Minor Project:</strong> SmartReview — AI-Powered Customer Review Management System by Hardik
-        </span>
-        <a
-          href="https://github.com/Hardik637/smartreview"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hidden sm:inline-flex items-center gap-1 text-[#BFDBFE] hover:text-white underline ml-2 text-[11px]"
-        >
-          <Github className="w-3 h-3" /> GitHub Repo
-        </a>
-      </div>
+
 
       {/* 
         ========================================================================
